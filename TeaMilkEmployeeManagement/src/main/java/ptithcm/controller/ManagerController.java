@@ -1,6 +1,7 @@
 package ptithcm.controller;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.hibernate.Query;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ptithcm.entity.ShiftEntity;
 
@@ -21,14 +23,24 @@ public class ManagerController {
 	@Autowired
 	SessionFactory factory;
 	
-	@RequestMapping(value = "Login",method = RequestMethod.GET)
-	public String StringshowForm(ModelMap model)
+	@RequestMapping(value = "Login-Form",method = RequestMethod.GET)
+	public String login()
 	{	
-		
-		List<ShiftEntity> shifts = getShifts();
-		
-		model.addAttribute("shift",shifts.get(0));
 		return "Login";
+	}
+	@RequestMapping(value = "CheckLogin",method = RequestMethod.POST)
+	public String tryLogin(HttpServletRequest request) {
+		String userName = request.getParameter("username");
+		String password = request.getParameter("password");
+		System.out.println(1);
+		if(hasExistedAccount(userName, password))
+		{
+			return "Login";
+		}
+		else
+		{
+			return "index";
+		}
 	}
 	
 	public List<ShiftEntity> getShifts(){
@@ -36,6 +48,13 @@ public class ManagerController {
 		String hql = "FROM ShiftEntity";
 		Query query = session.createQuery(hql);
 		return query.list();
+	}
+	
+	public boolean hasExistedAccount(String userName, String password) {
+		Session session = factory.getCurrentSession();
+		String hql = " COUNT(*) FROM AccountEntity WHERE TENTK = userName AND MK = password";
+		Query query = session.createQuery(hql);
+		return query.getFirstResult()>0;
 	}
 }
 
