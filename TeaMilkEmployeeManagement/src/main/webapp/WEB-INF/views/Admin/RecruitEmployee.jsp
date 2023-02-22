@@ -175,6 +175,9 @@
                                     <button type="button" class="btn btn-danger deleteButton">Delete</button>
                                 </td>
                             </tr>
+                            <c:forEach>
+                            
+                            </c:forEach>
                            	
                         </tbody>
                     </table>
