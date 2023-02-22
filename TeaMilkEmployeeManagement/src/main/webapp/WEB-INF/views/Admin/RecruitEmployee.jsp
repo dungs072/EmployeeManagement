@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -104,9 +105,27 @@
             margin-right:20px;
           }
     </style>
+     <script>
+        $(document).ready(function () {
+
+            //start 
+            var bodyTable = $(document).find('.employeeTable').find("tbody")
+            var rowItem = bodyTable.find('tr:first');
+            rowItem.hide()
+
+            //call function
+           $(document).on('click',".add-save",function(e){
+                
+                var newRowItem = rowItem.clone();
+                newRowItem.show()
+                bodyTable.after(newRowItem);
+           });
+        });
+    </script>
 </head>
 <body>
-	<div class="topnav">
+	
+  	<div class="topnav">
         <a class="active" href="#home">Home</a>
         <a href="#news">Employees</a>
         <a href="#contact">Contact</a>
@@ -126,14 +145,14 @@
                 </button>
             </div>
             <div class="col">
-                
+
             </div>
 
         </div>
         <div class="row mt-3">
             <div class="col">
                 <div class="tableWrap">
-                    <table>
+                    <table class = "employeeTable">
                         <thead>
                             <tr>
                                 <th><span>Employee Id</span></th>
@@ -154,64 +173,9 @@
                                 <td>
                                     <button type="button" class="btn btn-secondary settingButton">Setting</button>
                                     <button type="button" class="btn btn-danger deleteButton">Delete</button>
-
                                 </td>
                             </tr>
-                            <tr>
-                                <td>NV01</td>
-                                <td>Nguyễn Hữu Dũng</td>
-                                <td><span>0866156874</span></td>
-                            </tr>
-                            <tr>
-                                <td>NV01</td>
-                                <td>Nguyễn Hữu Dũng</td>
-                                <td><span>0866156874</span></td>
-                            </tr>
-                            <tr>
-                                <td>NV01</td>
-                                <td>Nguyễn Hữu Dũng</td>
-                                <td><span>0866156874</span></td>
-                            </tr>
-                            <tr>
-                                <td>NV01</td>
-                                <td>Nguyễn Hữu Dũng</td>
-                                <td><span>0866156874</span></td>
-                            </tr>
-                            <tr>
-                                <td>NV01</td>
-                                <td>Nguyễn Hữu Dũng</td>
-                                <td><span>0866156874</span></td>
-                            </tr>
-                            <tr>
-                                <td>NV01</td>
-                                <td>Nguyễn Hữu Dũng</td>
-                                <td><span>0866156874</span></td>
-                            </tr>
-                            <tr>
-                                <td>August</td>
-                                <td>AAA</td>
-                                <td><span>Invite | Delete</span></td>
-                            </tr>
-                            <tr>
-                                <td>NV01</td>
-                                <td>Nguyễn Hữu Dũng</td>
-                                <td><span>0866156874</span></td>
-                            </tr>
-                            <tr>
-                                <td>NV01</td>
-                                <td>Nguyễn Hữu Dũng</td>
-                                <td><span>0866156874</span></td>
-                            </tr>
-                            <tr>
-                                <td>NV01</td>
-                                <td>Nguyễn Hữu Dũng</td>
-                                <td><span>0866156874</span></td>
-                            </tr>
-                            <tr>
-                                <td>NV01</td>
-                                <td>Nguyễn Hữu Dũng</td>
-                                <td><span>0866156874</span></td>
-                            </tr>
+                           	
                         </tbody>
                     </table>
                 </div>
@@ -219,26 +183,6 @@
         </div>
 
     </div>
-
-	 <!--none display item-->
-    <div style="display:none;">
-        <div class = "employee">
-            <tr>
-                <td class ="id">NV01</td>
-                <td class = "name">Nguyễn Hữu Dũng</td>
-                <td class = "phonenumber">
-                    <span>0866156874</span>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-secondary settingButton">Setting</button>
-                    <button type="button" class="btn btn-danger deleteButton">Delete</button>
-    
-                </td>
-            </tr>
-        </div>
-       
-    </div>
-
     <!-- Modal -->
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true">
@@ -251,46 +195,46 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form action = "CheckLogin.htm" method = "post">
                         <div class="form-group">
                             <label for="firstname">First name:</label>
                             <input type="text" class="form-control username" id="firstname" placeholder="First name..."
-                                name="firstname" value="Nguyễn Hữu" maxlength="30" />
+                                name="HO" value="Nguyễn Hữu" maxlength="30" />
                         </div>
                         <div class="form-group">
                             <label for="lastname">Last name:</label>
                             <input type="text" class="form-control username" id="lastname" placeholder="Last name..."
-                                name="lastname" value="Dũng" maxlength="30" />
+                                name="TEN" value="Dũng" maxlength="30" />
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="gender" id="gender1">
+                            <input class="form-check-input" type="radio" name="GIOITINH" id="gender1" value = "Nam">
                             <label class="form-check-label" for="flexRadioDefault1">
                                 Male
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="gender" id="gender2" checked>
+                            <input class="form-check-input" type="radio" name="GIOITINH" id="gender2" value = "Nữ" checked>
                             <label class="form-check-label" for="flexRadioDefault2">
                                 Female
                             </label>
                         </div>
                         <div class="form-group">
                             <label for="idcard">Identification card number:</label>
-                            <input type="text" class="form-control username" id="idcard" name="idcard"
+                            <input type="text" class="form-control username" id="idcard" name="CCCD"
                                 oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
                                 maxlength="12" />
                         </div>
 
                         <div class="form-group">
                             <label for="phoneNumber">Phone number:</label>
-                            <input type="text" class="form-control username" id="phoneNumber" name="phoneNumber"
+                            <input type="text" class="form-control username" id="phoneNumber" name="SDT"
                                 oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
                                 maxlength="10" />
                         </div>
                         <div class="form-group">
                             <label for="address">Address:</label>
-                            <input type="text" class="form-control username" id="adderess" name="address"
-                                value="97 Man Thiện Phường Hiệp Phú Quận 9 Thành phố Hồ Chí Minh" ; maxlength="50" />
+                            <input type="text" class="form-control username" id="adderess" name="DIACHI"
+                                value="97 Man Thiện" maxlength="50" />
                         </div>
                         <div class="form-group">
                             <label for="address">Job position:</label>
@@ -301,12 +245,13 @@
                                 <option value="3">Bartender</option>
                             </select>
                         </div>
+                         <div class="modal-footer">
+                    		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    		<button type="submit" name = "saveAddEmployee" class="btn btn-primary add-save" data-bs-dismiss="modal">Save changes</button>
+                		</div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
-                </div>
+              
             </div>
         </div>
     </div>
