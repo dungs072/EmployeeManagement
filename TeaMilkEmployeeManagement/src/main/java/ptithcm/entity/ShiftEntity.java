@@ -1,8 +1,14 @@
 package ptithcm.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -10,28 +16,52 @@ import javax.persistence.Table;
 public class ShiftEntity {
 	
 	@Id
-	private String IDCA;
+	@GeneratedValue
+	private int IDCA;
 	
-	@Column(name = "TENCA")
-	private int TENCA;
+	@Column(name = "MOTA")
+	private String MOTA;
+	
+	@OneToMany(mappedBy = "shift",fetch = FetchType.EAGER)
+	private Set<ShiftDetailEntity> detailEntities = new HashSet<ShiftDetailEntity>();
 
-	public String getIDCA() {
+	public ShiftEntity() {}
+	
+	public ShiftEntity(String mota) {
+		this.MOTA = mota;
+	}
+		
+	
+	public int getIDCA() {
 		return IDCA;
 	}
 
-	public void setIDCA(String iDCA) {
+
+	public void setIDCA(int iDCA) {
 		IDCA = iDCA;
 	}
 
-	public int getTENCA() {
-		return TENCA;
+	public String getMOTA() {
+		return MOTA;
 	}
 
-	public void setTENCA(int tENCA) {
-		TENCA = tENCA;
+	public void setMOTA(String mOTA) {
+		MOTA = mOTA;
 	}
 
 
+	public Set<ShiftDetailEntity> getDetailEntities() {
+		return detailEntities;
+	}
+
+	public void setDetailEntities(Set<ShiftDetailEntity> detailEntities) {
+		this.detailEntities = detailEntities;
+	}
+
+	public void addShiftDetailEntities(ShiftDetailEntity detailEntity) {
+		this.detailEntities.add(detailEntity);
+	}
+	
 	
 	
 }

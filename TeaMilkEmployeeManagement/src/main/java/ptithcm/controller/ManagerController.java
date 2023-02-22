@@ -34,7 +34,7 @@ public class ManagerController {
 		String password = request.getParameter("password");
 		if(hasExistedAccount(userName, password))
 		{
-			return "/Admin/MainPage";
+			return "/Admin/EmployeeManage";
 		}
 		else
 		{

@@ -14,6 +14,12 @@ public class JobPositionEntity {
 	
 	@Column(name = "TENVITRI")
 	private String TENVITRI;
+	
+	public JobPositionEntity() {}
+	
+	public JobPositionEntity(String positionName) {
+		TENVITRI = positionName;
+	}
 
 	public String getMACV() {
 		return MACV;

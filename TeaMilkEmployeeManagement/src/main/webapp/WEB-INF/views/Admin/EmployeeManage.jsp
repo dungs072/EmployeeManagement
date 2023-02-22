@@ -10,7 +10,7 @@
 	<style>
         /* Set a fixed scrollable wrapper */
         .tableWrap {
-            height: 400px;
+            height: 390px;
             border: 2px solid black;
             overflow: auto;
         }
@@ -220,7 +220,24 @@
 
     </div>
 
-
+	 <!--none display item-->
+    <div style="display:none;">
+        <div class = "employee">
+            <tr>
+                <td class ="id">NV01</td>
+                <td class = "name">Nguyễn Hữu Dũng</td>
+                <td class = "phonenumber">
+                    <span>0866156874</span>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-secondary settingButton">Setting</button>
+                    <button type="button" class="btn btn-danger deleteButton">Delete</button>
+    
+                </td>
+            </tr>
+        </div>
+       
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"

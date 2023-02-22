@@ -3,6 +3,8 @@ package ptithcm.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -18,8 +20,18 @@ public class AccountEntity {
 	@Column(name ="TRANGTHAI")
 	private boolean TRANGTHAI;
 	
-	@Column(name ="MAQUYEN")
-	private String MAQUYEN;
+	@ManyToOne
+	@JoinColumn(name = "MAQUYEN")
+	private PriorityEntity priorityEntity;
+	
+	public AccountEntity() {}
+	
+	public AccountEntity(String userName, String password, boolean active, PriorityEntity priorityEntity) {
+		this.TENTK = userName;
+		this.MK = password;
+		this.TRANGTHAI = active;
+		this.priorityEntity = priorityEntity;
+	}
 	
 	public String getTENTK() {
 		return TENTK;
@@ -45,11 +57,13 @@ public class AccountEntity {
 		TRANGTHAI = tRANGTHAI;
 	}
 
-	public String getMAQUYEN() {
-		return MAQUYEN;
+	public PriorityEntity getPriorityEntity() {
+		return priorityEntity;
 	}
 
-	public void setMAQUYEN(String mAQUYEN) {
-		MAQUYEN = mAQUYEN;
+	public void setPriorityEntity(PriorityEntity priorityEntity) {
+		this.priorityEntity = priorityEntity;
 	}
+
+
 }

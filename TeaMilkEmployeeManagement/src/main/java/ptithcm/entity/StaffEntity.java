@@ -1,10 +1,20 @@
 package ptithcm.entity;
 
+import java.util.HashSet;
+import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "NHANVIEN")
@@ -23,7 +33,9 @@ public class StaffEntity {
 	private String GIOITINH;
 	
 	@Column(name = "NGAYSINH")
-	private String NGAYSINH;
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "DD/MM/YYYY")
+	private Date NGAYSINH;
 	
 	@Column(name = "CCCD")
 	private String CCCD;
@@ -40,9 +52,23 @@ public class StaffEntity {
 	@Column(name = "LUONGTICHLUY")
 	private float LUONGTICHLUY;
 	
-	@Column(name = "MACV")
-	private String MACV;
+	@ManyToOne
+	@JoinColumn(name = "MACV")
+	private JobPositionEntity jobPosition;
 	
+	@OneToMany(mappedBy = "staff")
+	private Set<ShiftDetailEntity> detailEntities = new HashSet<ShiftDetailEntity>();
+	
+	public StaffEntity() {}
+	
+	public StaffEntity(String firstName, String lastName, String gender, String idCardNumber, String phoneNumber, String address){
+		HO = firstName;
+		TEN = lastName;
+		GIOITINH = gender;
+		CCCD = idCardNumber;
+		SDT = phoneNumber;
+		DIACHI = address;
+	}
 	public String getMANV() {
 		return MANV;
 	}
@@ -75,11 +101,11 @@ public class StaffEntity {
 		GIOITINH = gIOITINH;
 	}
 
-	public String getNGAYSINH() {
+	public Date getNGAYSINH() {
 		return NGAYSINH;
 	}
 
-	public void setNGAYSINH(String nGAYSINH) {
+	public void setNGAYSINH(Date nGAYSINH) {
 		NGAYSINH = nGAYSINH;
 	}
 
@@ -122,12 +148,24 @@ public class StaffEntity {
 	public void setLUONGTICHLUY(float lUONGTICHLUY) {
 		LUONGTICHLUY = lUONGTICHLUY;
 	}
+	
 
-	public String getMACV() {
-		return MACV;
+	public JobPositionEntity getJobPosition() {
+		return jobPosition;
+	}
+	public void setJobPosition(JobPositionEntity jobPosition) {
+		this.jobPosition = jobPosition;
+	}
+	
+	public Set<ShiftDetailEntity> getDetailEntities() {
+		return detailEntities;
 	}
 
-	public void setMACV(String mACV) {
-		MACV = mACV;
+	public void setDetailEntities(Set<ShiftDetailEntity> detailEntities) {
+		this.detailEntities = detailEntities;
 	}
+	public void addShiftDetailEntity(ShiftDetailEntity shiftDetailEntity) {
+        this.detailEntities.add(shiftDetailEntity);
+    }  
+	
 }
