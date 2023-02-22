@@ -54,7 +54,7 @@
 				<div class="col-lg-7 px-5 pt-5">
 					<h1 class = "font-weight-boild py-3">TéaMilk Employee Management</h1>
 					<h4>Sign into your account</h4>
-					<form action = "CheckLogin" method = "post">
+					<form action = "CheckLogin.htm" method = "post">
 						<div class="form-row">
 							<div class="col-lg-7">
 								<input name = "username" type = "text" placeholder = "Username" class = "form-control my-3 p-2">
@@ -67,7 +67,7 @@
 						</div>
 						<div class="form-row">
 							<div class="col-lg-7">
-								<button type = "button" class = "btn1 mt-3 mb-2">Login</button>
+								<button type = "submit" class = "btn1 mt-3 mb-2">Login</button>
 							</div>
 						</div>
 						<a href = "#">Forgot Password</a>

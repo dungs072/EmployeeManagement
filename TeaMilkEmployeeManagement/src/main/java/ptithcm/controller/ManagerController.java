@@ -28,18 +28,17 @@ public class ManagerController {
 	{	
 		return "Login";
 	}
-	@RequestMapping(value = "CheckLogin",method = RequestMethod.POST)
+	@RequestMapping(value = "/CheckLogin",method = RequestMethod.POST)
 	public String tryLogin(HttpServletRequest request) {
 		String userName = request.getParameter("username");
 		String password = request.getParameter("password");
-		System.out.println(1);
 		if(hasExistedAccount(userName, password))
 		{
-			return "Login";
+			return "/Admin/MainPage";
 		}
 		else
 		{
-			return "index";
+			return "Login";
 		}
 	}
 	
@@ -52,9 +51,11 @@ public class ManagerController {
 	
 	public boolean hasExistedAccount(String userName, String password) {
 		Session session = factory.getCurrentSession();
-		String hql = " COUNT(*) FROM AccountEntity WHERE TENTK = userName AND MK = password";
+		String hql = "SELECT COUNT(*) FROM AccountEntity WHERE TENTK = :userName AND MK = :password";
 		Query query = session.createQuery(hql);
-		return query.getFirstResult()>0;
+		query.setString("userName", userName);
+		query.setString("password", password);
+		return (Long)query.uniqueResult()>0;
 	}
 }
 
