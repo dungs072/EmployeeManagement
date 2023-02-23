@@ -169,6 +169,17 @@ public class StaffEntity implements Primarykeyable {
 	public void addShiftDetailEntity(ShiftDetailEntity shiftDetailEntity) {
         this.detailEntities.add(shiftDetailEntity);
     }
+	
+	public void updateInfor(StaffEntity staff) {
+		this.HO = staff.getHO();
+		this.TEN = staff.getTEN();
+		this.GIOITINH = staff.getGIOITINH();
+		this.EMAIL = staff.getEMAIL();
+		this.CCCD = staff.getCCCD();
+		this.SDT = staff.getSDT();
+		this.DIACHI = staff.getDIACHI();
+		this.NGAYSINH = staff.getNGAYSINH();
+	}
 
 	@Override
 	public String getPrimaryKey() {

@@ -107,13 +107,32 @@
           }
     </style>
      <script>
+     	var isClickedInfor = "";
         $(document).ready(function () {
+
             //call function
            $(document).on('click',".deleteEmployee",function(e){
+        	   
         	   	var yesButton = $(document).find('.yes-warning')
                 yesButton.val($(this).val())
            });
            
+            
+           $(".detailEmployee").click(function(){
+        	   localStorage.setItem("isClickedInfor","true");
+        	   var saveButton = $(document).find('.saveUpdate');
+        	   saveButton.val($(this).val());
+           }); 
+            
+           $(window).on('load', function(){
+        	   var value = localStorage.getItem("isClickedInfor");
+        	    if(value=="true"){
+        	    	$("#detailModal").modal("show");
+        	    	localStorage.setItem("isClickedInfor","false");
+        	    }
+        	    
+        	});
+          
         });
     </script>
 </head>
@@ -132,7 +151,12 @@
         <div class="row mt-3">
             <div class="col">
                 <div class="search mb-3">
-                    <input type="text" placeholder="Search employee..">
+                    
+                    <form action = "Recruit/SearchStaff.htm" method = "get">
+                    	<input type="text" name = "searchInput" placeholder="Search employee..">
+                    	<button type = "submit" class = "btn btn-outline-dark">Search</button>
+                    </form>
+                    
                 </div>
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal">
                     Add an employee
@@ -166,8 +190,11 @@
                                     	<span>${staff.SDT}</span>
                                 	</td>
                                 	<td>
-                                    	<button type="button" class="btn btn-secondary settingButton">Setting</button>
-                                    	<button type="button" name = deleteEmployee class="btn btn-danger deleteEmployee" value ="${staff.MANV}" data-bs-toggle="modal" data-bs-target="#warning">Delete</button>
+                                		<form action = "Recruit/InforStaff.htm" method = "get" >
+                                			<button type="submit" name ="InforStaff" class="btn btn-secondary detailEmployee" value = "${staff.MANV}">Detail</button>
+                                    		<button type="button" name = "deleteEmployee" class="btn btn-danger deleteEmployee" value ="${staff.MANV}" data-bs-toggle="modal" data-bs-target="#warning">Delete</button>
+                                		</form>
+                                    	
                                 	</td>
                             	</tr>
                             </c:forEach>
@@ -180,6 +207,7 @@
 
     </div>
     <!-- Modal -->
+    <!-- addModal -->
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -251,7 +279,119 @@
             </div>
         </div>
     </div>
+    
+    <!-- detail Modal -->
+    
+    <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Detail information</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action = "Recruit/UpdateStaff.htm" method = "get" modelAttribute = "staff">
+                        <div class="form-group">
+                            <label for="firstname">First name:</label>
+                            <input type="text" class="form-control username" id="firstname" placeholder="First name..."
+                                name="HO" value ="${staff.HO}" maxlength="30" />
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname">Last name:</label>
+                            <input type="text" class="form-control username" id="lastname" placeholder="Last name..."
+                                name="TEN" value ="${staff.TEN}" maxlength="30" />
+                        </div>
+                        
+                        
+                        <c:set var = "gender" scope = "session" value = "${staff.GIOITINH }"/>
+                        <c:if test = "${gender == 'Nam'}">
+   
+                        	<div class="form-check">
+                            	<input class="form-check-input" type="radio" name="GIOITINH" id="gender1" value = "Nam" checked>
+                            	<label class="form-check-label" for="flexRadioDefault1">
+                                	Male
+                            	</label>
+	                        </div>
+	                        <div class="form-check">
+	                            <input class="form-check-input" type="radio" name="GIOITINH" id="gender2" value = "Nữ">
+	                            <label class="form-check-label" for="flexRadioDefault2">
+	                                Female
+	                            </label>
+	                        </div>
+      					</c:if>
+      					
+      					<c:if test = "${gender == 'Nữ'}">
+   
+                        	<div class="form-check">
+                            	<input class="form-check-input" type="radio" name="GIOITINH" id="gender1" value = "Nam">
+                            	<label class="form-check-label" for="flexRadioDefault1">
+                                	Male
+                            	</label>
+	                        </div>
+	                        <div class="form-check">
+	                            <input class="form-check-input" type="radio" name="GIOITINH" id="gender2" value = "Nữ" checked>
+	                            <label class="form-check-label" for="flexRadioDefault2">
+	                                Female
+	                            </label>
+	                        </div>
+      					</c:if>
+      					
+      					
+      					
+                        <div class="form-group">
+                            <label for="birthday">Birthday:</label>
+                            <input type="date" class="form-control username" id="birthday" name="NGAYSINH" value = "${staff.NGAYSINH }"
+                                maxlength="12" />
+                        </div>
+                        <div class="form-group">
+                            <label for="idcard">Identification card number:</label>
+                            <input type="text" class="form-control username" id="idcard" name="CCCD" value = "${staff.CCCD }"
+                                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
+                                maxlength="12" />
+                        </div>
 
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone number:</label>
+                            <input type="text" class="form-control username" id="phoneNumber" name="SDT" value = "${staff.SDT }"
+                                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
+                                maxlength="10" />
+                        </div>
+                         <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control username" id="email" name="EMAIL" value = "${staff.EMAIL }"
+                                maxlength="50" />
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="address">Address:</label>
+                            <input type="text" class="form-control username" id="adderess" name="DIACHI" value = "${staff.DIACHI }" maxlength="50" />
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Job position:</label>
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected>Server</option>
+                                <option value="1">Manager</option>
+                                <option value="2">Server</option>
+                                <option value="3">Bartender</option>
+                            </select>
+                        </div>
+                         <div class="modal-footer">
+          
+                    		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    		<button type="submit" class="btn btn-primary saveUpdate" data-bs-dismiss="modal" name = "saveUpdate">Save changes</button>
+                		</div>
+                    </form>
+                </div>
+              
+            </div>
+        </div>
+    </div>
+    
+	<!--warning Modal-->
+	<!-- delete -->
 	<div class="modal" tabindex="-1" id = "warning">
   		<div class="modal-dialog">
     		<div class="modal-content">
@@ -270,8 +410,10 @@
         	
       	</div>
     </div>
-  </div>
-</div>
+    </div>
+   </div>
+    
+    
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
         integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
