@@ -7,6 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="UTF-8">
 	<%@include file = "/WEB-INF/views/include/header.jsp" %>
+	<base href = "${pageContext.servletContext.contextPath }/">
 	<title>ADMIN</title>
 	<style>
         /* Set a fixed scrollable wrapper */
@@ -107,19 +108,12 @@
     </style>
      <script>
         $(document).ready(function () {
-
-            //start 
-            var bodyTable = $(document).find('.employeeTable').find("tbody")
-            var rowItem = bodyTable.find('tr:first');
-            rowItem.hide()
-
             //call function
-           $(document).on('click',".add-save",function(e){
-                
-                var newRowItem = rowItem.clone();
-                newRowItem.show()
-                bodyTable.after(newRowItem);
+           $(document).on('click',".deleteEmployee",function(e){
+        	   	var yesButton = $(document).find('.yes-warning')
+                yesButton.val($(this).val())
            });
+           
         });
     </script>
 </head>
@@ -164,19 +158,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>NV01</td>
-                                <td>Nguyễn Hữu Dũng</td>
-                                <td>
-                                    <span>0866156874</span>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-secondary settingButton">Setting</button>
-                                    <button type="button" class="btn btn-danger deleteButton">Delete</button>
-                                </td>
-                            </tr>
-                            <c:forEach>
-                            
+                            <c:forEach var = "staff" varStatus = "i" items = "${staffs}">
+                            	<tr>
+                            		<td>${staff.MANV}</td>
+                                	<td>${staff.HO} ${staff.TEN}</td>
+                                	<td>
+                                    	<span>${staff.SDT}</span>
+                                	</td>
+                                	<td>
+                                    	<button type="button" class="btn btn-secondary settingButton">Setting</button>
+                                    	<button type="button" name = deleteEmployee class="btn btn-danger deleteEmployee" value ="${staff.MANV}" data-bs-toggle="modal" data-bs-target="#warning">Delete</button>
+                                	</td>
+                            	</tr>
                             </c:forEach>
                            	
                         </tbody>
@@ -198,7 +191,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action = "CheckLogin.htm" method = "post">
+                    <form action = "Recruit.htm" method = "post">
                         <div class="form-group">
                             <label for="firstname">First name:</label>
                             <input type="text" class="form-control username" id="firstname" placeholder="First name..."
@@ -258,6 +251,27 @@
             </div>
         </div>
     </div>
+
+	<div class="modal" tabindex="-1" id = "warning">
+  		<div class="modal-dialog">
+    		<div class="modal-content">
+      		<div class="modal-header">
+        		<h5 class="modal-title">Warning</h5>
+        		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      		</div>
+      	<div class="modal-body">
+        	<p>Are you sure about deleting it ?</p>
+      	</div>
+      	<div class="modal-footer">
+      		<form action = "Recruit/DeleteStaff.htm" method = "get">
+      			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        		<button type="submit" class="btn btn-primary yes-warning" data-bs-dismiss="modal" name = "yes-warning">Yes</button>
+      		</form>
+        	
+      	</div>
+    </div>
+  </div>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
         integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"

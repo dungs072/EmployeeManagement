@@ -16,9 +16,11 @@ import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import ptithcm.bean.Primarykeyable;
+
 @Entity
 @Table(name = "NHANVIEN")
-public class StaffEntity {
+public class StaffEntity implements Primarykeyable {
 	
 	@Id
 	private String MANV;
@@ -166,6 +168,11 @@ public class StaffEntity {
 	}
 	public void addShiftDetailEntity(ShiftDetailEntity shiftDetailEntity) {
         this.detailEntities.add(shiftDetailEntity);
-    }  
+    }
+
+	@Override
+	public String getPrimaryKey() {
+		return MANV;
+	}  
 	
 }

@@ -8,19 +8,26 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import ptithcm.entity.ShiftEntity;
+import ptithcm.bean.IncrementNumberAndTextKeyHandler;
+import ptithcm.bean.Primarykeyable;
+import ptithcm.entity.StaffEntity;
 
 @Transactional
 @Controller
 public class ManagerController {
 	
+	
 	@Autowired
 	SessionFactory factory;
+	@Autowired
+	@Qualifier("staffKeyHandler")
+	IncrementNumberAndTextKeyHandler staffKeyHandler;
 	
 	@RequestMapping(value = "Login-Form",method = RequestMethod.GET)
 	public String login()
@@ -28,11 +35,14 @@ public class ManagerController {
 		return "Login";
 	}
 	@RequestMapping(value = "/CheckLogin",method = RequestMethod.POST)
-	public String tryLogin(HttpServletRequest request) {
+	public String tryLogin(HttpServletRequest request,ModelMap model) {
 		String userName = request.getParameter("username");
 		String password = request.getParameter("password");
 		if(hasExistedAccount(userName, password))
 		{
+			List<StaffEntity> staffs = getStaffs();
+			castStaffs(staffs);
+			model.addAttribute("staffs",staffs);
 			return "/Admin/RecruitEmployee";
 		}
 		else
@@ -40,10 +50,14 @@ public class ManagerController {
 			return "Login";
 		}
 	}
+	@SuppressWarnings("unchecked")
+	private void castStaffs(List<? extends Primarykeyable> keys) {
+		staffKeyHandler.initialKeyHandler((List<Primarykeyable>) keys);
+	}
 	
-	public List<ShiftEntity> getShifts(){
+	public List<StaffEntity> getStaffs(){
 		Session session = factory.getCurrentSession();
-		String hql = "FROM ShiftEntity";
+		String hql = "FROM StaffEntity WHERE MANV != 'ADMIN'";
 		Query query = session.createQuery(hql);
 		return query.list();
 	}
