@@ -22,7 +22,6 @@ import ptithcm.entity.StaffEntity;
 @Controller
 public class ManagerController {
 	
-	
 	@Autowired
 	SessionFactory factory;
 	@Autowired
@@ -55,9 +54,10 @@ public class ManagerController {
 		staffKeyHandler.initialKeyHandler((List<Primarykeyable>) keys);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<StaffEntity> getStaffs(){
 		Session session = factory.getCurrentSession();
-		String hql = "FROM StaffEntity WHERE MANV != 'ADMIN'";
+		String hql = "FROM StaffEntity WHERE MANV != 'ADMIN' AND MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = True) ORDER BY TEN";
 		Query query = session.createQuery(hql);
 		return query.list();
 	}

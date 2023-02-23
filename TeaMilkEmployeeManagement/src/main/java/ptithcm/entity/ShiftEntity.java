@@ -16,8 +16,7 @@ import javax.persistence.Table;
 public class ShiftEntity {
 	
 	@Id
-	@GeneratedValue
-	private int IDCA;
+	private String IDCA;
 	
 	@Column(name = "MOTA")
 	private String MOTA;
@@ -32,12 +31,12 @@ public class ShiftEntity {
 	}
 		
 	
-	public int getIDCA() {
+
+	public String getIDCA() {
 		return IDCA;
 	}
 
-
-	public void setIDCA(int iDCA) {
+	public void setIDCA(String iDCA) {
 		IDCA = iDCA;
 	}
 
