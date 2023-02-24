@@ -31,7 +31,7 @@ public class ShiftDetailEntity {
 	private String CONGVIEC;
 	
 	@Column(name = "THOIGIANDANGKI")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	private Date THOIGIANDANGKI;
 	
 	@Column(name = "THOIGIANDILAM")
@@ -62,9 +62,7 @@ public class ShiftDetailEntity {
 	public ShiftDetailEntity(Date registerTime) {
 		this.THOIGIANDANGKI = registerTime;
 	}
-	
-	
-	
+
 	public StaffEntity getStaff() {
 		return staff;
 	}
