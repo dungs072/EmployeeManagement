@@ -16,36 +16,34 @@ import javax.persistence.Table;
 public class ShiftEntity {
 	
 	@Id
-	private String IDCA;
-	
-	@Column(name = "MOTA")
-	private String MOTA;
+	private int IDCA;
+
+	@Column(name = "TENCA")
+	private String TENCA;
 	
 	@OneToMany(mappedBy = "shift",fetch = FetchType.EAGER)
 	private Set<ShiftDetailEntity> detailEntities = new HashSet<ShiftDetailEntity>();
 
 	public ShiftEntity() {}
 	
-	public ShiftEntity(String mota) {
-		this.MOTA = mota;
+	public ShiftEntity(String tenca) {
+		this.TENCA = tenca;
 	}
 		
-	
-
-	public String getIDCA() {
+	public int getIDCA() {
 		return IDCA;
 	}
 
-	public void setIDCA(String iDCA) {
+	public void setIDCA(int iDCA) {
 		IDCA = iDCA;
 	}
 
-	public String getMOTA() {
-		return MOTA;
+	public String getTENCA() {
+		return TENCA;
 	}
 
-	public void setMOTA(String mOTA) {
-		MOTA = mOTA;
+	public void setMOTA(String tenca) {
+		TENCA = tenca;
 	}
 
 
