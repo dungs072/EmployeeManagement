@@ -1,9 +1,10 @@
 package ptithcm.entity;
 
 import java.util.HashSet;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -35,8 +36,8 @@ public class StaffEntity implements Primarykeyable {
 	private String GIOITINH;
 	
 	@Column(name = "NGAYSINH")
-	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "DD/MM/YYYY")
+//	@Temporal(TemporalType.DATE)
+//	@DateTimeFormat(pattern = "DD/MM/YYYY")
 	private Date NGAYSINH;
 	
 	@Column(name = "CCCD")
@@ -54,7 +55,7 @@ public class StaffEntity implements Primarykeyable {
 	@Column(name = "LUONGTICHLUY")
 	private float LUONGTICHLUY;
 	
-	@ManyToOne
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "MACV")
 	private JobPositionEntity jobPosition;
 	

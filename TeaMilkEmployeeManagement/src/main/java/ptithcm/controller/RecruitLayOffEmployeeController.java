@@ -1,5 +1,6 @@
 package ptithcm.controller;
 
+import java.sql.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,18 +9,16 @@ import javax.transaction.Transactional;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import ptithcm.bean.IncrementNumberAndTextKeyHandler;
 import ptithcm.entity.AccountEntity;
+import ptithcm.entity.JobPositionEntity;
 import ptithcm.entity.StaffEntity;
 
 @Transactional
@@ -36,6 +35,13 @@ public class RecruitLayOffEmployeeController {
 	
 	private List<StaffEntity> staffList;
 	private String currentStaffId;
+	
+	@RequestMapping
+	public String recruitLayOffDisplay(ModelMap model) {
+		staffList = getStaffs();
+		model.addAttribute("staffs",staffList);
+		return "/Admin/RecruitEmployee";
+	}
 	
 	@RequestMapping(params = "saveAddEmployee")
 	public String addEmloyee(ModelMap model,StaffEntity staff) {
@@ -60,19 +66,28 @@ public class RecruitLayOffEmployeeController {
 	@RequestMapping(value = "/InforStaff", method = RequestMethod.GET)
 	public String showInforEmployee(HttpServletRequest request, ModelMap model) {
 		currentStaffId = request.getParameter("InforStaff");
-		StaffEntity staff = getStaff(currentStaffId);
 		
+		StaffEntity staff = getStaff(currentStaffId);
+		List<JobPositionEntity> jobs = getJobs();
 		if(staffList==null) {
 			staffList = getStaffs();
 		}
+		
 		model.addAttribute("staffs",staffList);
 		model.addAttribute("staff",staff);
+		model.addAttribute("jobs",jobs);
 		return "/Admin/RecruitEmployee";
 	}
 	@RequestMapping(value = "/UpdateStaff", method = RequestMethod.GET)
-	public String updateInforEmployee(ModelMap model, StaffEntity staff) {
+	public String updateInforEmployee(HttpServletRequest request,ModelMap model, StaffEntity staff, Date birthday ) {
 		Session session = factory.getCurrentSession();
+		String maCV = request.getParameter("jobPosition");
 		staff.setMANV(currentStaffId);
+		staff.setNGAYSINH(birthday);
+		
+		System.out.print(maCV);
+		JobPositionEntity job = (JobPositionEntity) session.get(JobPositionEntity.class, maCV);
+		staff.setJobPosition(job);
 		updateStaff(session,staff);
 		staffList = getStaffs();
 		model.addAttribute("staffs",staffList);
@@ -120,6 +135,7 @@ public class RecruitLayOffEmployeeController {
 		session.update(account);
 	}
 	private void updateStaff(Session session,StaffEntity newStaff) {
+
 		StaffEntity oldStaff = (StaffEntity) session.get(StaffEntity.class,newStaff.getMANV());
 		oldStaff.updateInfor(newStaff);
 		
@@ -148,12 +164,21 @@ public class RecruitLayOffEmployeeController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<StaffEntity> getStaffs(){
+	private List<StaffEntity> getStaffs(){
 		Session session = factory.getCurrentSession();
 		String hql = "FROM StaffEntity WHERE MANV != 'ADMIN' AND MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = True) ORDER BY TEN";
 		Query query = session.createQuery(hql);
 		return query.list();
 	}
+	
+	@SuppressWarnings("unchecked")
+	private List<JobPositionEntity> getJobs(){
+		Session session = factory.getCurrentSession();
+		String hql = "FROM JobPositionEntity";
+		Query query = session.createQuery(hql);
+		return query.list();
+	}
+	
 	public StaffEntity getStaff(String id) {
 		Session session = factory.getCurrentSession();
 		String hql = "FROM StaffEntity WHERE MANV = :id";

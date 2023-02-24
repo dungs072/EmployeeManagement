@@ -5,9 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import ptithcm.bean.Primarykeyable;
+
 @Entity
 @Table(name = "VITRICV")
-public class JobPositionEntity {
+public class JobPositionEntity implements Primarykeyable{
 
 	@Id
 	private String MACV;
@@ -35,6 +37,11 @@ public class JobPositionEntity {
 
 	public void setTENVITRI(String tENVITRI) {
 		TENVITRI = tENVITRI;
+	}
+
+	@Override
+	public String getPrimaryKey() {
+		return MACV;
 	}
 	
 	
