@@ -15,16 +15,11 @@
 			http://www.springframework.org/schema/mvc 
 			http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 	
-	<!-- Spring MVC Annotation -->
-	<context:annotation-config />
-	<mvc:annotation-driven/>
-	
-	<!-- Cấu hình view -->
-	<bean id="viewResolver" 
-		p:prefix="/WEB-INF/views/" p:suffix=".jsp"
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver"/>
-   	
-   	<!-- Cấu hình package chứa các controller -->
-	<context:component-scan base-package="ptithcm.controller,ptithcm.bean"/>
+	<bean id="staffKeyHandler" class="ptithcm.bean.IncrementNumberAndTextKeyHandler">
+	</bean>
+	<bean id="jobKeyHandler" class="ptithcm.bean.IncrementNumberAndTextKeyHandler">
+	</bean>
+	<bean id="faultKeyHandler" class="ptithcm.bean.IncrementNumberAndTextKeyHandler">
+	</bean>
 
 </beans>

@@ -1,6 +1,7 @@
 package ptithcm.entity;
 
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,8 +14,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+//import javax.persistence.Temporal;
+//import javax.persistence.TemporalType;
+//
+//import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "CHITIETCA")
@@ -31,16 +34,16 @@ public class ShiftDetailEntity {
 	private String CONGVIEC;
 	
 	@Column(name = "THOIGIANDANGKI")
-	@Temporal(TemporalType.DATE)
+
 	private Date THOIGIANDANGKI;
 	
 	@Column(name = "THOIGIANDILAM")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date THOIGIANDILAM;
+//	@Temporal(TemporalType.TIMESTAMP)
+	private Time THOIGIANDILAM;
 	
 	@Column(name = "THOIGIANCHAMCONG")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date THOIGIANCHAMCONG;
+//	@Temporal(TemporalType.TIMESTAMP)
+	private Time THOIGIANCHAMCONG;
 	
 	@Column(name = "XACNHAN")
 	private boolean XACNHAN;
@@ -114,19 +117,20 @@ public class ShiftDetailEntity {
 		THOIGIANDANGKI = tHOIGIANDANGKI;
 	}
 
-	public Date getTHOIGIANDILAM() {
+	
+	public Time getTHOIGIANDILAM() {
 		return THOIGIANDILAM;
 	}
 
-	public void setTHOIGIANDILAM(Date tHOIGIANDILAM) {
+	public void setTHOIGIANDILAM(Time tHOIGIANDILAM) {
 		THOIGIANDILAM = tHOIGIANDILAM;
 	}
 
-	public Date getTHOIGIANCHAMCONG() {
+	public Time getTHOIGIANCHAMCONG() {
 		return THOIGIANCHAMCONG;
 	}
 
-	public void setTHOIGIANCHAMCONG(Date tHOIGIANCHAMCONG) {
+	public void setTHOIGIANCHAMCONG(Time tHOIGIANCHAMCONG) {
 		THOIGIANCHAMCONG = tHOIGIANCHAMCONG;
 	}
 

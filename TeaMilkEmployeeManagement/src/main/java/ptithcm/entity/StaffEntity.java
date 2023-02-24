@@ -1,9 +1,10 @@
 package ptithcm.entity;
 
 import java.util.HashSet;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -16,9 +17,11 @@ import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import ptithcm.bean.Primarykeyable;
+
 @Entity
 @Table(name = "NHANVIEN")
-public class StaffEntity {
+public class StaffEntity implements Primarykeyable {
 	
 	@Id
 	private String MANV;
@@ -33,8 +36,8 @@ public class StaffEntity {
 	private String GIOITINH;
 	
 	@Column(name = "NGAYSINH")
-	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "DD/MM/YYYY")
+//	@Temporal(TemporalType.DATE)
+//	@DateTimeFormat(pattern = "DD/MM/YYYY")
 	private Date NGAYSINH;
 	
 	@Column(name = "CCCD")
@@ -52,7 +55,7 @@ public class StaffEntity {
 	@Column(name = "LUONGTICHLUY")
 	private float LUONGTICHLUY;
 	
-	@ManyToOne
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "MACV")
 	private JobPositionEntity jobPosition;
 	
@@ -166,6 +169,22 @@ public class StaffEntity {
 	}
 	public void addShiftDetailEntity(ShiftDetailEntity shiftDetailEntity) {
         this.detailEntities.add(shiftDetailEntity);
-    }  
+    }
+	
+	public void updateInfor(StaffEntity staff) {
+		this.HO = staff.getHO();
+		this.TEN = staff.getTEN();
+		this.GIOITINH = staff.getGIOITINH();
+		this.EMAIL = staff.getEMAIL();
+		this.CCCD = staff.getCCCD();
+		this.SDT = staff.getSDT();
+		this.DIACHI = staff.getDIACHI();
+		this.NGAYSINH = staff.getNGAYSINH();
+	}
+
+	@Override
+	public String getPrimaryKey() {
+		return MANV;
+	}  
 	
 }

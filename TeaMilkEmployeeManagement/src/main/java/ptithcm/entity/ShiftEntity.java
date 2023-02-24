@@ -17,7 +17,7 @@ public class ShiftEntity {
 	
 	@Id
 	private int IDCA;
-	
+
 	@Column(name = "TENCA")
 	private String TENCA;
 	
