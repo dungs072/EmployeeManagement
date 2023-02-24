@@ -16,7 +16,10 @@
 			http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 	
 	<bean id="staffKeyHandler" class="ptithcm.bean.IncrementNumberAndTextKeyHandler">
-
+	</bean>
+	<bean id="jobKeyHandler" class="ptithcm.bean.IncrementNumberAndTextKeyHandler">
+	</bean>
+	<bean id="faultKeyHandler" class="ptithcm.bean.IncrementNumberAndTextKeyHandler">
 	</bean>
 
 </beans>

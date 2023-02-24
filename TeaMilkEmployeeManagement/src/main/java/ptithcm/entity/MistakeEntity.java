@@ -10,9 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import ptithcm.bean.Primarykeyable;
+
 @Entity
 @Table(name = "LOI")
-public class MistakeEntity {
+public class MistakeEntity implements Primarykeyable {
 	@Id
 	private String IDLOI;
 	
@@ -54,6 +56,11 @@ public class MistakeEntity {
 	
 	public void addMistakeHistoryEntity(MistakeHistoryEntity mistakeHistoryEntity) {
 		this.mistakeHistoryEntities.add(mistakeHistoryEntity);
+	}
+
+	@Override
+	public String getPrimaryKey() {
+		return IDLOI;
 	}
 	
 	

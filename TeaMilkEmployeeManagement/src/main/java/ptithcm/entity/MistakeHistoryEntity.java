@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "LICHSULOI")
-public class MistakeHistoryEntity {
+public class MistakeHistoryEntity{
 	
 	@Id
 	private String ID_LSLOI;

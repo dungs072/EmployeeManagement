@@ -6,7 +6,7 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="UTF-8">
-	<%@include file = "/WEB-INF/views/include/header.jsp" %>
+	<%@include file = "/WEB-INF/views/include/headerAfterLogin.jsp" %>
 	<base href = "${pageContext.servletContext.contextPath }/">
 	<title>ADMIN</title>
 	<style>
@@ -71,40 +71,6 @@
             background: #e6f7ff;
         }
 
-
-        /*Top menu*/
-        .topnav {
-            background-color: #333;
-            overflow: hidden;
-        }
-
-        /* Style the links inside the navigation bar */
-        .topnav a {
-            float: left;
-            color: #f2f2f2;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-            font-size: 17px;
-        }
-
-        /* Change the color of links on hover */
-        .topnav a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-
-        /* Add a color to the active/current link */
-        .topnav a.active {
-            background-color: #04AA6D;
-            color: white;
-        }
-
-        .topnav-right {
-            float: right;
-            margin-top: 15px;
-            margin-right:20px;
-          }
     </style>
      <script>
      	var isClickedInfor = "";
@@ -138,15 +104,7 @@
 </head>
 <body>
 	
-  	<div class="topnav">
-        <a class="active" href="#home">Home</a>
-        <a href="#news">Employees</a>
-        <a href="#contact">Contact</a>
-        <a href="#about">About</a>
-        <div class="topnav-right text-light">
-            <p>ADMIN</p>
-        </div>
-    </div>
+  	
     <div class="container">
         <div class="row mt-3">
             <div class="col">
@@ -343,7 +301,7 @@
       					
                         <div class="form-group">
                             <label for="birthday">Birthday:</label>
-                            <input type="date" class="form-control username" id="birthday" name="NGAYSINH" value = "${staff.NGAYSINH }"
+                            <input type="date" class="form-control username" id="birthday" name="birthday" value = "${staff.NGAYSINH }"
                                 maxlength="12" />
                         </div>
                         <div class="form-group">
@@ -370,12 +328,11 @@
                             <input type="text" class="form-control username" id="adderess" name="DIACHI" value = "${staff.DIACHI }" maxlength="50" />
                         </div>
                         <div class="form-group">
-                            <label for="address">Job position:</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Server</option>
-                                <option value="1">Manager</option>
-                                <option value="2">Server</option>
-                                <option value="3">Bartender</option>
+                            <label for="jobPosition">Job position:</label>
+                            <select name="jobPosition" class="form-select" aria-label="Default select example">
+                            	<c:forEach var = "job" varStatus = "i" items = "${jobs}">
+									<option value="${job.MACV}">${job.TENVITRI}</option>
+                            	</c:forEach>
                             </select>
                         </div>
                          <div class="modal-footer">
