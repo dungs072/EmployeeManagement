@@ -151,7 +151,6 @@ public class StaffEntity implements Primarykeyable {
 	public void setLUONGTICHLUY(float lUONGTICHLUY) {
 		LUONGTICHLUY = lUONGTICHLUY;
 	}
-	
 
 	public JobPositionEntity getJobPosition() {
 		return jobPosition;
@@ -188,4 +187,7 @@ public class StaffEntity implements Primarykeyable {
 		return MANV;
 	}  
 	
+	public void updateSalary(float salaryOfShift) {
+		LUONGTICHLUY = LUONGTICHLUY + salaryOfShift;
+	}
 }

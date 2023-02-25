@@ -3,7 +3,7 @@
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/fmt" prefix = "fmt" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/xml" prefix = "x" %>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>  
 
 <!DOCTYPE html>
 <html>
@@ -116,10 +116,12 @@ textarea {
 				<div class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 shift-now">
 					<div class="row">
 						<div class=" col-md-6">
-							<h3>Shift number:</h3>
+						<c:set var="num" value="${shiftNow[0].shift.IDCA}"/>
+							<h3>Shift number: ${fn:substring(num,3,4)} </h3>
+							
 						</div>
 						<div class="col-md-6 text-left">
-							<h3>Date:</h3>
+							<h3>Date: </h3>
 						</div>
 					</div>
 					<table class="table table-bordered table-hover">
@@ -135,12 +137,12 @@ textarea {
 						<tbody>
 						<c:forEach var ="s" items= "${shiftNow}">
 							<tr>
-								<td>${s.MANV}</td>
-								<td>${s.MANV.TEN}</td>
-								<td></td>
-								<td><form class="form-inline">
-										<input placeholder="Add salary">
-										<button type="button" class="btn btn-primary">Update salary</button>
+								<td>${s.staff.MANV}</td>
+								<td>${s.staff.HO} ${s.staff.TEN}</td>
+								<td>${s.CONGVIEC }</td>
+								<td><form action="updateSalary.htm" method="get" class="form-inline" >
+										<input name="salaryOfShift" type="text" value = "100000" placeholder="Add salary">
+										<button name = "updateSalary" type="submit" class="btn btn-primary" value= "${s.staff.MANV}" >Update salary</button>
 									</form></td>
 								<td align="center"><button name="btnRemove"
 										class="btn btn-danger">
@@ -150,7 +152,6 @@ textarea {
 						</c:forEach>
 						</tbody>
 					</table>
-					<button type="button" class="btn btn-primary">Add staff</button>
 					<hr>
 					<textarea rows="5" cols="109" placeholder="Note"></textarea>
 					<button type="button" class="btn btn-primary">Save Note</button>
