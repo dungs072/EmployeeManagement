@@ -152,7 +152,6 @@
                                 			<button type="submit" name ="InforStaff" class="btn btn-secondary detailEmployee" value = "${staff.MANV}">Detail</button>
                                     		<button type="button" name = "deleteEmployee" class="btn btn-danger deleteEmployee" value ="${staff.MANV}" data-bs-toggle="modal" data-bs-target="#warning">Delete</button>
                                 		</form>
-                                    	
                                 	</td>
                             	</tr>
                             </c:forEach>
