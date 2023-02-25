@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import ptithcm.bean.Primarykeyable;
 
@@ -17,7 +18,16 @@ public class JobPositionEntity implements Primarykeyable{
 	@Column(name = "TENVITRI")
 	private String TENVITRI;
 	
-	public JobPositionEntity() {}
+	@Transient
+	private boolean canDelete;
+	@Transient
+	private boolean canUpdate = true;
+	
+	
+
+	public JobPositionEntity()
+	{
+	}
 	
 	public JobPositionEntity(String positionName) {
 		TENVITRI = positionName;
@@ -43,6 +53,21 @@ public class JobPositionEntity implements Primarykeyable{
 	public String getPrimaryKey() {
 		return MACV;
 	}
+
+	public boolean isCanDelete() {
+		return canDelete;
+	}
+
+	public void setCanDelete(boolean canDelete) {
+		this.canDelete = canDelete;
+	}
 	
+	public boolean isCanUpdate() {
+		return canUpdate;
+	}
+
+	public void setCanUpdate(boolean canUpdate) {
+		this.canUpdate = canUpdate;
+	}
 	
 }

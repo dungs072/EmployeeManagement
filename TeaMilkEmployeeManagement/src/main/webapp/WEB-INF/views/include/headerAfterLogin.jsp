@@ -24,6 +24,10 @@
             background-color: #ddd;
             color: black;
         }
+        .topnav:checked > a {
+        	background-color: #04AA6D;
+            color: white;
+        }
 
         /* Add a color to the active/current link */
         .topnav a.active {
@@ -38,6 +42,9 @@
           }
           
 	</style>
+	<script>
+
+	</script>
     
 </head>
 <body>

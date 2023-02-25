@@ -1,5 +1,6 @@
 package ptithcm.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -20,7 +21,7 @@ public class AccountEntity {
 	@Column(name ="TRANGTHAI")
 	private boolean TRANGTHAI;
 	
-	@ManyToOne
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "MAQUYEN")
 	private PriorityEntity priorityEntity;
 	

@@ -18,16 +18,18 @@ public class ShiftEntity {
 	@Id
 	private String IDCA;
 	
-	@Column(name = "MOTA")
-	private String MOTA;
+	@Column(name = "TENCA")
+	private String TENCA;
 	
+
+
 	@OneToMany(mappedBy = "shift",fetch = FetchType.EAGER)
 	private Set<ShiftDetailEntity> detailEntities = new HashSet<ShiftDetailEntity>();
 
 	public ShiftEntity() {}
 	
-	public ShiftEntity(String mota) {
-		this.MOTA = mota;
+	public ShiftEntity(String tenca) {
+		this.TENCA = tenca;
 	}
 		
 	
@@ -40,12 +42,12 @@ public class ShiftEntity {
 		IDCA = iDCA;
 	}
 
-	public String getMOTA() {
-		return MOTA;
+	public String getTENCA() {
+		return TENCA;
 	}
 
-	public void setMOTA(String mOTA) {
-		MOTA = mOTA;
+	public void setTENCA(String tENCA) {
+		TENCA = tENCA;
 	}
 
 
