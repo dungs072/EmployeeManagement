@@ -32,13 +32,11 @@ public class ShiftEntity {
 		this.TENCA = tenca;
 	}
 		
-	
-
-	public String getIDCA() {
+	public int getIDCA() {
 		return IDCA;
 	}
 
-	public void setIDCA(String iDCA) {
+	public void setIDCA(int iDCA) {
 		IDCA = iDCA;
 	}
 
