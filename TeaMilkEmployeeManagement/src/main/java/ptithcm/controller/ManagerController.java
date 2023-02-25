@@ -10,6 +10,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +20,7 @@ import ptithcm.bean.Primarykeyable;
 import ptithcm.entity.JobPositionEntity;
 import ptithcm.entity.MistakeEntity;
 import ptithcm.entity.StaffEntity;
+
 
 @Transactional
 @Controller
@@ -37,6 +39,11 @@ public class ManagerController {
 	@Autowired
 	@Qualifier("faultKeyHandler")
 	IncrementNumberAndTextKeyHandler faultKeyHandler;
+
+	
+	@Autowired
+	ManagerRegistrationController managerRegistrationController;
+	
 	
 	@RequestMapping(value = "Login-Form",method = RequestMethod.GET)
 	public String login()
@@ -47,16 +54,26 @@ public class ManagerController {
 	public String tryLogin(HttpServletRequest request,ModelMap model) {
 		String userName = request.getParameter("username");
 		String password = request.getParameter("password");
-		if(hasExistedAccount(userName, password))
+		String priority = hasExistedAccount(userName,password);
+		if(priority.strip().equals("AD"))
 		{
 			List<StaffEntity> staffs = getStaffs();
+			List<StaffEntity> internalStaffs = getInteralStaffs();
 			List<JobPositionEntity> jobs = getJobs();
 			List<MistakeEntity> faults = getMistakes();
-			castStaffs(staffs);
+			castStaffs(internalStaffs);
 			castJobs(jobs);
 			castFaults(faults);
 			model.addAttribute("staffs",staffs);
 			return "/Admin/RecruitEmployee";
+		}
+		else if(priority.strip().equals("QL"))
+		{
+			return "redirect:/ManagerRegistration.htm";
+		}
+		else if(priority.strip().equals("NV"))
+		{
+			return "Login";
 		}
 		else
 		{
@@ -85,6 +102,13 @@ public class ManagerController {
 		Query query = session.createQuery(hql);
 		return query.list();
 	}
+	@SuppressWarnings("unchecked")
+	private List<StaffEntity> getInteralStaffs(){
+		Session session = factory.getCurrentSession();
+		String hql = "FROM StaffEntity WHERE MANV != 'ADMIN'";
+		Query query = session.createQuery(hql);
+		return query.list();
+	}
 	
 	@SuppressWarnings("unchecked")
 	public List<MistakeEntity> getMistakes(){
@@ -101,13 +125,15 @@ public class ManagerController {
 		return query.list();
 	}
 	
-	public boolean hasExistedAccount(String userName, String password) {
+	public String hasExistedAccount(String userName, String password) {
+		String priority = "";
 		Session session = factory.getCurrentSession();
-		String hql = "SELECT COUNT(*) FROM AccountEntity WHERE TENTK = :userName AND MK = :password";
+		String hql = "SELECT priorityEntity.MAQUYEN FROM AccountEntity WHERE TENTK = :userName AND MK = :password AND TRANGTHAI = true";
 		Query query = session.createQuery(hql);
 		query.setString("userName", userName);
 		query.setString("password", password);
-		return (Long)query.uniqueResult()>0;
+		priority = (String) query.uniqueResult();
+		return priority;
 	}
 }
 

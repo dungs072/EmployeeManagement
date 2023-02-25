@@ -30,7 +30,7 @@ public class ShiftEntity {
 	public ShiftEntity(String tenca) {
 		this.TENCA = tenca;
 	}
-		
+
 	public String getIDCA() {
 		return IDCA;
 	}
@@ -38,7 +38,7 @@ public class ShiftEntity {
 	public void setIDCA(String iDCA) {
 		IDCA = iDCA;
 	}
-
+		
 	public String getTENCA() {
 		return TENCA;
 	}
