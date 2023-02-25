@@ -180,6 +180,7 @@ public class StaffEntity implements Primarykeyable {
 		this.SDT = staff.getSDT();
 		this.DIACHI = staff.getDIACHI();
 		this.NGAYSINH = staff.getNGAYSINH();
+		this.jobPosition = staff.getJobPosition();
 	}
 
 	@Override

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ptithcm.bean.IncrementNumberAndTextKeyHandler;
 import ptithcm.entity.AccountEntity;
 import ptithcm.entity.JobPositionEntity;
+import ptithcm.entity.PriorityEntity;
 import ptithcm.entity.StaffEntity;
 
 @Transactional
@@ -28,6 +29,7 @@ public class RecruitLayOffEmployeeController {
 	
 	@Autowired
 	SessionFactory factory;
+	
 	
 	@Autowired
 	@Qualifier("staffKeyHandler")
@@ -43,14 +45,27 @@ public class RecruitLayOffEmployeeController {
 		return "/Admin/RecruitEmployee";
 	}
 	
+	@RequestMapping(value = "/ShowJobPosition",method = RequestMethod.GET)
+	public String showJobPosition(ModelMap model) {
+		List<JobPositionEntity> jobs = getJobs();
+		staffList = getStaffs();
+		model.addAttribute("jobs",jobs);
+		model.addAttribute("staffs",staffList);
+		return "/Admin/RecruitEmployee";
+	}
+	
 	@RequestMapping(params = "saveAddEmployee")
-	public String addEmloyee(ModelMap model,StaffEntity staff) {
-		
+	public String addEmloyee(HttpServletRequest request,ModelMap model,StaffEntity staff) {
+		Session session = factory.getCurrentSession();
+		String jobId = request.getParameter("add-jobId");
 		String staffId = staffKeyHandler.getNewKey("NV");
-		
+		JobPositionEntity job = (JobPositionEntity) session.get(JobPositionEntity.class, jobId);
+		staff.setJobPosition(job);
 		addEmloyeeToDB(staff,staffId);
 		staffList = getStaffs();
+		List<JobPositionEntity> jobs = getJobs();
 		model.addAttribute("staffs",staffList);
+		model.addAttribute("jobs",jobs);
 		return "/Admin/RecruitEmployee";
 	}
 	
@@ -59,7 +74,9 @@ public class RecruitLayOffEmployeeController {
 		String staffId = request.getParameter("yes-warning");
 		deleteEmployeeFromDB(staffId);
 		staffList = getStaffs();
+		List<JobPositionEntity> jobs = getJobs();
 		model.addAttribute("staffs",staffList);
+		model.addAttribute("jobs",jobs);
 		return "/Admin/RecruitEmployee";
 	}
 	
@@ -79,14 +96,20 @@ public class RecruitLayOffEmployeeController {
 		return "/Admin/RecruitEmployee";
 	}
 	@RequestMapping(value = "/UpdateStaff", method = RequestMethod.GET)
-	public String updateInforEmployee(HttpServletRequest request,ModelMap model, StaffEntity staff, Date birthday ) {
+	public String updateInforEmployee(HttpServletRequest request,ModelMap model, StaffEntity staff) {
 		Session session = factory.getCurrentSession();
-		String maCV = request.getParameter("jobPosition");
-		staff.setMANV(currentStaffId);
-		staff.setNGAYSINH(birthday);
+		String maCV = request.getParameter("jobId");
+		String birthdayStr = request.getParameter("birthday");
+		if(!birthdayStr.isEmpty())
+		{
+			Date birthday = Date.valueOf(birthdayStr);
+			staff.setNGAYSINH(birthday);
+		}
 		
-		System.out.print(maCV);
+		staff.setMANV(currentStaffId);
+		
 		JobPositionEntity job = (JobPositionEntity) session.get(JobPositionEntity.class, maCV);
+		
 		staff.setJobPosition(job);
 		updateStaff(session,staff);
 		staffList = getStaffs();
@@ -105,8 +128,13 @@ public class RecruitLayOffEmployeeController {
 	private void addEmloyeeToDB(StaffEntity staff,String id) {
 		if(staff==null) {return;}
 		staff.setMANV(id);
-		AccountEntity account = new AccountEntity(id,"123",true,null);
 		Session session = factory.getCurrentSession();
+		PriorityEntity priority = (PriorityEntity) session.get(PriorityEntity.class, "NV");
+		if(staff.getJobPosition().getTENVITRI().equals("Manager")) {
+			priority = (PriorityEntity) session.get(PriorityEntity.class, "QL");
+		}
+		AccountEntity account = new AccountEntity(id,"123",true,priority);
+		
 		session.save(staff);
 		session.save(account);
 	}
@@ -135,10 +163,14 @@ public class RecruitLayOffEmployeeController {
 		session.update(account);
 	}
 	private void updateStaff(Session session,StaffEntity newStaff) {
-
+		PriorityEntity priority = (PriorityEntity) session.get(PriorityEntity.class, "NV");
+		if(newStaff.getJobPosition().getTENVITRI().equals("Manager")) {
+			priority = (PriorityEntity) session.get(PriorityEntity.class, "QL");
+		}
+		AccountEntity account = (AccountEntity) session.get(AccountEntity.class, newStaff.getMANV());
+		account.setPriorityEntity(priority);
 		StaffEntity oldStaff = (StaffEntity) session.get(StaffEntity.class,newStaff.getMANV());
 		oldStaff.updateInfor(newStaff);
-		
 		session.saveOrUpdate(oldStaff);
 	}
 	@SuppressWarnings("unchecked")
@@ -179,11 +211,21 @@ public class RecruitLayOffEmployeeController {
 		return query.list();
 	}
 	
-	public StaffEntity getStaff(String id) {
+	private StaffEntity getStaff(String id) {
 		Session session = factory.getCurrentSession();
-		String hql = "FROM StaffEntity WHERE MANV = :id";
-		Query query = session.createQuery(hql);
-		query.setString("id", id);
-		return (StaffEntity) query.uniqueResult();
+		return (StaffEntity) session.get(StaffEntity.class, id);
+//		String hql = "FROM StaffEntity WHERE MANV = :id";
+//		Query query = session.createQuery(hql);
+//		query.setString("id", id);
+//		return (StaffEntity) query.uniqueResult();
 	}
+	@SuppressWarnings("unused")
+	private JobPositionEntity getJob(String id) {
+		Session session = factory.getCurrentSession();
+		String hql = "FROM JobPositionEntity WHERE MACV = :id";
+		Query query = session.createQuery(hql);
+		query.setString("id",id);
+		return (JobPositionEntity) query.uniqueResult();
+	}
+	
 }
