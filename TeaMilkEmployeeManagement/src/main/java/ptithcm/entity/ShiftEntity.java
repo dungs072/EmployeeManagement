@@ -17,7 +17,6 @@ public class ShiftEntity {
 	
 	@Id
 	private String IDCA;
-	
 	@Column(name = "TENCA")
 	private String TENCA;
 	
@@ -32,11 +31,11 @@ public class ShiftEntity {
 		this.TENCA = tenca;
 	}
 		
-	public int getIDCA() {
+	public String getIDCA() {
 		return IDCA;
 	}
 
-	public void setIDCA(int iDCA) {
+	public void setIDCA(String iDCA) {
 		IDCA = iDCA;
 	}
 
@@ -60,7 +59,4 @@ public class ShiftEntity {
 	public void addShiftDetailEntities(ShiftDetailEntity detailEntity) {
 		this.detailEntities.add(detailEntity);
 	}
-	
-	
-	
 }
