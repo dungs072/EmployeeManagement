@@ -12,7 +12,6 @@
 <style>
 /* Set a fixed scrollable wrapper */
 .tableWrap {
-	
 	margin-top: 40px;
 	height: 450px;
 	border: 2px solid black;
@@ -57,7 +56,6 @@ th {
 table {
 	width: 100%;
 	font-family: sans-serif;
-	
 }
 
 table td {
@@ -93,8 +91,8 @@ tbody tr:hover {
 			var yesButton = $(document).find('.yes-job-warning')
 			yesButton.val($(this).val())
 		});
-		$(document).on('click',".deleteFault",function(e){
-			var yesButton  =$(document).find('.yes-fault-warning')
+		$(document).on('click', ".deleteFault", function(e) {
+			var yesButton = $(document).find('.yes-fault-warning')
 			yesButton.val($(this).val())
 		});
 
@@ -103,8 +101,8 @@ tbody tr:hover {
 			var saveButton = $(document).find('.saveJobUpdate');
 			saveButton.val($(this).val());
 		});
-		$(".detailFault").click(function(){
-			localStorage.setItem("isClickedFaultInfor","true");
+		$(".detailFault").click(function() {
+			localStorage.setItem("isClickedFaultInfor", "true");
 			var saveButton = $(document).find('.saveFaultUpdate');
 			saveButton.val($(this).val());
 		});
@@ -115,11 +113,11 @@ tbody tr:hover {
 				$("#jobDetailModal").modal("show");
 				localStorage.setItem("isClickedJobInfor", "false");
 			}
-			
+
 			var faultValue = localStorage.getItem("isClickedFaultInfor");
-			if(faultValue=="true"){
+			if (faultValue == "true") {
 				$("#faultDetailModal").modal("show");
-				localStorage.setItem("isClickedFaultInfor","false");
+				localStorage.setItem("isClickedFaultInfor", "false");
 			}
 
 		});
@@ -130,7 +128,7 @@ tbody tr:hover {
 <body>
 	<div class="container"></div>
 	<div class="container">
-		
+
 		<div class="row mt-3">
 			<div class="col-6">
 				<div class="tableWrap">
@@ -149,20 +147,19 @@ tbody tr:hover {
 									<td>${job.TENVITRI}</td>
 									<td>
 										<form action="JobAndFault/ShowJob.htm" method="get">
-										
+
 											<c:choose>
-												<c:when test = "${job.canUpdate==true}">
+												<c:when test="${job.canUpdate==true}">
 													<button type="submit" name="InforJob"
-													class="btn btn-secondary detailJob"
-													value="${job.MACV}">Detail</button>
+														class="btn btn-secondary detailJob" value="${job.MACV}">Detail</button>
 												</c:when>
 												<c:otherwise>
 													<button type="submit" name="InforJob"
-													class="btn btn-secondary detailJob"
-													value="${job.MACV}" disabled>Detail</button>
+														class="btn btn-secondary detailJob" value="${job.MACV}"
+														disabled>Detail</button>
 												</c:otherwise>
 											</c:choose>
-											
+
 											<c:choose>
 
 												<c:when test="${job.canDelete==true}">
@@ -174,11 +171,11 @@ tbody tr:hover {
 												<c:otherwise>
 													<button type="button" name="deleteJob"
 														class="btn btn-danger deleteJob" value="${job.MACV}"
-														data-bs-toggle="modal" data-bs-target="#jobWarning" disabled>Delete
-													</button>
+														data-bs-toggle="modal" data-bs-target="#jobWarning"
+														disabled>Delete</button>
 												</c:otherwise>
 											</c:choose>
-											
+
 
 										</form>
 
@@ -219,8 +216,7 @@ tbody tr:hover {
 									<td>
 										<form action="JobAndFault/ShowFault.htm" method="get">
 											<button type="submit" name=InforFault
-												class="btn btn-secondary detailFault"
-												value="${fault.IDLOI}">Detail</button>
+												class="btn btn-secondary detailFault" value="${fault.IDLOI}">Detail</button>
 											<c:choose>
 
 												<c:when test="${fault.canDelete==true}">
@@ -232,8 +228,8 @@ tbody tr:hover {
 												<c:otherwise>
 													<button type="button" name="deleteFault"
 														class="btn btn-danger deleteFault" value="${fault.IDLOI}"
-														data-bs-toggle="modal" data-bs-target="#faultWarning" disabled>Delete
-													</button>
+														data-bs-toggle="modal" data-bs-target="#faultWarning"
+														disabled>Delete</button>
 												</c:otherwise>
 											</c:choose>
 
@@ -332,8 +328,7 @@ tbody tr:hover {
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLongTitle">Update
-						job</h5>
+					<h5 class="modal-title" id="exampleModalLongTitle">Update job</h5>
 					<button type="button" class="close" data-bs-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -343,15 +338,15 @@ tbody tr:hover {
 					<form action="JobAndFault/UpdateJob.htm" method="get">
 						<div class="form-group">
 							<label for="firstname">Job title:</label> <input type="text"
-								class="form-control username" id="TENVITRI"
-								placeholder="...." name="updateTENVITRI" value="${showJob.TENVITRI}"
-								maxlength="30" />
+								class="form-control username" id="TENVITRI" placeholder="...."
+								name="updateTENVITRI" value="${showJob.TENVITRI}" maxlength="30" />
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Close</button>
 							<button type="submit" class="btn btn-primary saveJobUpdate"
-								data-bs-dismiss="modal" name="updateJobId" value = "${showJob.MACV}">Save changes</button>
+								data-bs-dismiss="modal" name="updateJobId"
+								value="${showJob.MACV}">Save changes</button>
 						</div>
 					</form>
 				</div>
@@ -359,10 +354,11 @@ tbody tr:hover {
 			</div>
 		</div>
 	</div>
-	
+
 	<!-- Fault detail modal -->
-	<div class="modal fade" id="faultDetailModal" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	<div class="modal fade" id="faultDetailModal" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalCenterTitle"
+		aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -377,15 +373,15 @@ tbody tr:hover {
 					<form action="JobAndFault/UpdateFault.htm" method="get">
 						<div class="form-group">
 							<label for="firstname">Fault title:</label> <input type="text"
-								class="form-control username" id="MOTA"
-								placeholder="...." name="updateMOTA" value="${showFault.MOTA}"
-								maxlength="30" />
+								class="form-control username" id="MOTA" placeholder="...."
+								name="updateMOTA" value="${showFault.MOTA}" maxlength="30" />
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Close</button>
 							<button type="submit" class="btn btn-primary saveFaultUpdate"
-								data-bs-dismiss="modal" name="updateFaultId" value = "${showFault.IDLOI}">Save changes</button>
+								data-bs-dismiss="modal" name="updateFaultId"
+								value="${showFault.IDLOI}">Save changes</button>
 						</div>
 					</form>
 				</div>
@@ -418,7 +414,7 @@ tbody tr:hover {
 			</div>
 		</div>
 	</div>
-	
+
 	<!-- delete fault -->
 	<div class="modal" tabindex="-1" id="faultWarning">
 		<div class="modal-dialog">
@@ -443,6 +439,6 @@ tbody tr:hover {
 		</div>
 	</div>
 
-	
+
 </body>
 </html>

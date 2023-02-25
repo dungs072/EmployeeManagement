@@ -203,6 +203,7 @@ public class RecruitLayOffEmployeeController {
 		return query.list();
 	}
 	
+	
 	@SuppressWarnings("unchecked")
 	private List<JobPositionEntity> getJobs(){
 		Session session = factory.getCurrentSession();

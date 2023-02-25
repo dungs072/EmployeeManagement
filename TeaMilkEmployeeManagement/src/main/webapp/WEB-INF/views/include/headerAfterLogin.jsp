@@ -48,11 +48,12 @@
     
 </head>
 <body>
+	 
 	<div class="topnav">
         <a class="active" href="#home">Home</a>
         <a href="Recruit.htm">Employees</a>
         <a href="JobAndFault.htm">Job&Fault</a>
-        <a href="#about">About</a>
+        <a href="ManagerRegistration.htm">Registration-shift</a>
         <div class="topnav-right text-light">
             <p>ADMIN</p>
         </div>
