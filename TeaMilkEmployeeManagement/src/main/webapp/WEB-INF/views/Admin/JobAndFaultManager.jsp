@@ -12,7 +12,9 @@
 <style>
 /* Set a fixed scrollable wrapper */
 .tableWrap {
-	height: 390px;
+	
+	margin-top: 40px;
+	height: 450px;
 	border: 2px solid black;
 	overflow: auto;
 }
@@ -55,6 +57,7 @@ th {
 table {
 	width: 100%;
 	font-family: sans-serif;
+	
 }
 
 table td {
@@ -85,23 +88,38 @@ tbody tr:hover {
 	$(document).ready(function() {
 
 		//call function
-		$(document).on('click', ".deleteEmployee", function(e) {
+		$(document).on('click', ".deleteJob", function(e) {
 
-			var yesButton = $(document).find('.yes-warning')
+			var yesButton = $(document).find('.yes-job-warning')
+			yesButton.val($(this).val())
+		});
+		$(document).on('click',".deleteFault",function(e){
+			var yesButton  =$(document).find('.yes-fault-warning')
 			yesButton.val($(this).val())
 		});
 
-		$(".detailEmployee").click(function() {
-			localStorage.setItem("isClickedInfor", "true");
-			var saveButton = $(document).find('.saveUpdate');
+		$(".detailJob").click(function() {
+			localStorage.setItem("isClickedJobInfor", "true");
+			var saveButton = $(document).find('.saveJobUpdate');
+			saveButton.val($(this).val());
+		});
+		$(".detailFault").click(function(){
+			localStorage.setItem("isClickedFaultInfor","true");
+			var saveButton = $(document).find('.saveFaultUpdate');
 			saveButton.val($(this).val());
 		});
 
 		$(window).on('load', function() {
-			var value = localStorage.getItem("isClickedInfor");
-			if (value == "true") {
-				$("#detailModal").modal("show");
-				localStorage.setItem("isClickedInfor", "false");
+			var jobValue = localStorage.getItem("isClickedJobInfor");
+			if (jobValue == "true") {
+				$("#jobDetailModal").modal("show");
+				localStorage.setItem("isClickedJobInfor", "false");
+			}
+			
+			var faultValue = localStorage.getItem("isClickedFaultInfor");
+			if(faultValue=="true"){
+				$("#faultDetailModal").modal("show");
+				localStorage.setItem("isClickedFaultInfor","false");
 			}
 
 		});
@@ -110,40 +128,16 @@ tbody tr:hover {
 </script>
 </head>
 <body>
-	<div class = "container">
-		
-	</div>
+	<div class="container"></div>
 	<div class="container">
-		<div class="row mt-3">
-			<div class="col">
-				<div class="search mb-2">
-
-					<form action="Recruit/SearchStaff.htm" method="get">
-						<input type="text" name="searchInput" placeholder="Search Job..">
-						<button type="submit" class="btn btn-outline-dark">Search</button>
-					</form>
-
-				</div>
-
-			</div>
-			<div class="col">
-				<div class="search mb-2">
-
-					<form action="Recruit/SearchStaff.htm" method="get">
-						<input type="text" name="searchInput" placeholder="Search fault..">
-						<button type="submit" class="btn btn-outline-dark">Search</button>
-					</form>
-
-				</div>
-			</div>
-
-		</div>
+		
 		<div class="row mt-3">
 			<div class="col-6">
 				<div class="tableWrap">
 					<table class="employeeTable">
 						<thead>
 							<tr>
+								<th><span>STT</span></th>
 								<th><span>Job type</span></th>
 								<th><span>Action</span></th>
 							</tr>
@@ -151,22 +145,50 @@ tbody tr:hover {
 						<tbody>
 							<c:forEach var="job" varStatus="i" items="${jobs}">
 								<tr>
+									<td>${i.count}</td>
 									<td>${job.TENVITRI}</td>
 									<td>
-										<form action="Recruit/InforStaff.htm" method="get">
-											<button type="submit" name="InforStaff"
-												class="btn btn-secondary detailEmployee" value="${job.MACV}">Detail</button>
-											<button type="button" name="deleteEmployee"
-												class="btn btn-danger deleteEmployee" value="${job.MACV}"
-												data-bs-toggle="modal" data-bs-target="#warning">Delete</button>
+										<form action="JobAndFault/ShowJob.htm" method="get">
+										
+											<c:choose>
+												<c:when test = "${job.canUpdate==true}">
+													<button type="submit" name="InforJob"
+													class="btn btn-secondary detailJob"
+													value="${job.MACV}">Detail</button>
+												</c:when>
+												<c:otherwise>
+													<button type="submit" name="InforJob"
+													class="btn btn-secondary detailJob"
+													value="${job.MACV}" disabled>Detail</button>
+												</c:otherwise>
+											</c:choose>
+											
+											<c:choose>
+
+												<c:when test="${job.canDelete==true}">
+													<button type="button" name="deleteJob"
+														class="btn btn-danger deleteJob" value="${job.MACV}"
+														data-bs-toggle="modal" data-bs-target="#jobWarning">Delete
+													</button>
+												</c:when>
+												<c:otherwise>
+													<button type="button" name="deleteJob"
+														class="btn btn-danger deleteJob" value="${job.MACV}"
+														data-bs-toggle="modal" data-bs-target="#jobWarning" disabled>Delete
+													</button>
+												</c:otherwise>
+											</c:choose>
+											
+
 										</form>
+
 
 									</td>
 								</tr>
 							</c:forEach>
 
 							<tr class="footButton">
-								<td colspan="2">
+								<td colspan="3">
 									<button type="button" class="btn btn-success addBtn"
 										data-bs-toggle="modal" data-bs-target="#addJobModal">
 										+</button>
@@ -184,6 +206,7 @@ tbody tr:hover {
 					<table class="employeeTable">
 						<thead>
 							<tr>
+								<th><span>STT</span></th>
 								<th><span>Fault type</span></th>
 								<th><span>Action</span></th>
 							</tr>
@@ -191,15 +214,29 @@ tbody tr:hover {
 						<tbody>
 							<c:forEach var="fault" varStatus="i" items="${faults}">
 								<tr>
+									<td>${i.count}</td>
 									<td>${fault.MOTA}</td>
 									<td>
-										<form action="Recruit/InforStaff.htm" method="get">
-											<button type="submit" name="InforStaff"
-												class="btn btn-secondary detailEmployee"
+										<form action="JobAndFault/ShowFault.htm" method="get">
+											<button type="submit" name=InforFault
+												class="btn btn-secondary detailFault"
 												value="${fault.IDLOI}">Detail</button>
-											<button type="button" name="deleteEmployee"
-												class="btn btn-danger deleteEmployee" value="${fault.IDLOI}"
-												data-bs-toggle="modal" data-bs-target="#warning">Delete</button>
+											<c:choose>
+
+												<c:when test="${fault.canDelete==true}">
+													<button type="button" name="deleteFaults"
+														class="btn btn-danger deleteFault" value="${fault.IDLOI}"
+														data-bs-toggle="modal" data-bs-target="#faultWarning">Delete
+													</button>
+												</c:when>
+												<c:otherwise>
+													<button type="button" name="deleteFault"
+														class="btn btn-danger deleteFault" value="${fault.IDLOI}"
+														data-bs-toggle="modal" data-bs-target="#faultWarning" disabled>Delete
+													</button>
+												</c:otherwise>
+											</c:choose>
+
 										</form>
 
 									</td>
@@ -207,7 +244,7 @@ tbody tr:hover {
 							</c:forEach>
 
 							<tr class="footButton">
-								<td colspan="2">
+								<td colspan="3">
 									<button type="button" class="btn btn-success addBtn"
 										data-bs-toggle="modal" data-bs-target="#addFaultModal">
 										+</button>
@@ -289,34 +326,66 @@ tbody tr:hover {
 	</div>
 
 	<!-- detail Modal -->
-
-	<div class="modal fade" id="detailModal" tabindex="-1" role="dialog"
+	<!-- Job detail modal -->
+	<div class="modal fade" id="jobDetailModal" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLongTitle">Detail
-						information</h5>
+					<h5 class="modal-title" id="exampleModalLongTitle">Update
+						job</h5>
 					<button type="button" class="close" data-bs-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
-					<form action="Recruit/UpdateStaff.htm" method="get"
-						modelAttribute="staff">
+					<form action="JobAndFault/UpdateJob.htm" method="get">
 						<div class="form-group">
-							<label for="firstname">First name:</label> <input type="text"
-								class="form-control username" id="firstname"
-								placeholder="First name..." name="HO" value="${staff.HO}"
+							<label for="firstname">Job title:</label> <input type="text"
+								class="form-control username" id="TENVITRI"
+								placeholder="...." name="updateTENVITRI" value="${showJob.TENVITRI}"
 								maxlength="30" />
 						</div>
 						<div class="modal-footer">
-
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Close</button>
-							<button type="submit" class="btn btn-primary saveUpdate"
-								data-bs-dismiss="modal" name="saveUpdate">Save changes</button>
+							<button type="submit" class="btn btn-primary saveJobUpdate"
+								data-bs-dismiss="modal" name="updateJobId" value = "${showJob.MACV}">Save changes</button>
+						</div>
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	
+	<!-- Fault detail modal -->
+	<div class="modal fade" id="faultDetailModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Update
+						fault</h5>
+					<button type="button" class="close" data-bs-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form action="JobAndFault/UpdateFault.htm" method="get">
+						<div class="form-group">
+							<label for="firstname">Fault title:</label> <input type="text"
+								class="form-control username" id="MOTA"
+								placeholder="...." name="updateMOTA" value="${showFault.MOTA}"
+								maxlength="30" />
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">Close</button>
+							<button type="submit" class="btn btn-primary saveFaultUpdate"
+								data-bs-dismiss="modal" name="updateFaultId" value = "${showFault.IDLOI}">Save changes</button>
 						</div>
 					</form>
 				</div>
@@ -326,8 +395,8 @@ tbody tr:hover {
 	</div>
 
 	<!--warning Modal-->
-	<!-- delete -->
-	<div class="modal" tabindex="-1" id="warning">
+	<!-- delete job -->
+	<div class="modal" tabindex="-1" id="jobWarning">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -339,36 +408,41 @@ tbody tr:hover {
 					<p>Are you sure about deleting it ?</p>
 				</div>
 				<div class="modal-footer">
-					<form action="Recruit/DeleteStaff.htm" method="get">
+					<form action="JobAndFault/DeleteJob.htm" method="get">
 						<button type="button" class="btn btn-secondary"
 							data-bs-dismiss="modal">No</button>
-						<button type="submit" class="btn btn-primary yes-warning"
-							data-bs-dismiss="modal" name="yes-warning">Yes</button>
+						<button type="submit" class="btn btn-primary yes-job-warning"
+							data-bs-dismiss="modal" name="yes-job-warning">Yes</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- delete fault -->
+	<div class="modal" tabindex="-1" id="faultWarning">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Warning</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Are you sure about deleting it ?</p>
+				</div>
+				<div class="modal-footer">
+					<form action="JobAndFault/DeleteFault.htm" method="get">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">No</button>
+						<button type="submit" class="btn btn-primary yes-fault-warning"
+							data-bs-dismiss="modal" name="yes-fault-warning">Yes</button>
 					</form>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<!--cannot delete notification-->
-	<div class="modal" id = "cannotDelete" tabindex="-1">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Notification</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<p>Cannot delete this !!!</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary"
-						data-bs-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
-				</div>
-			</div>
-		</div>
-	</div>
+	
 </body>
 </html>

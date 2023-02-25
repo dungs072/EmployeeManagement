@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import ptithcm.bean.Primarykeyable;
 
@@ -23,11 +24,15 @@ public class MistakeEntity implements Primarykeyable {
 	
 	@OneToMany(mappedBy = "mistakeEntity",fetch = FetchType.EAGER)
 	private Set<MistakeHistoryEntity> mistakeHistoryEntities = new HashSet<MistakeHistoryEntity>();
+	
+	@Transient
+	private boolean canDelete;
 
 	public MistakeEntity() {}
 	
 	public MistakeEntity(String description) {
 		this.MOTA = description;
+		canDelete = true;
 	}
 	public String getIDLOI() {
 		return IDLOI;
@@ -61,6 +66,14 @@ public class MistakeEntity implements Primarykeyable {
 	@Override
 	public String getPrimaryKey() {
 		return IDLOI;
+	}
+
+	public boolean isCanDelete() {
+		return canDelete;
+	}
+
+	public void setCanDelete(boolean canDelete) {
+		this.canDelete = canDelete;
 	}
 	
 	
