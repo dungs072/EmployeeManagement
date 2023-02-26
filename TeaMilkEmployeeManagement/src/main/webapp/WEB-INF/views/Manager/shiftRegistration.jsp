@@ -46,18 +46,24 @@ td {
 </style>
 
 <script type="text/javascript">
-	$(window).on(
-			'load',
-			function() {
-				
-				$("#weeklyDatePicker").val(localStorage.getItem("weekDates"));
-				
+	$(window).on('load', function() {
+
+		var value = localStorage.getItem("isClickedAdd");
+		if (value == "true") {
+			$('.saveChangesAddStaff').val(localStorage.getItem("addValue"));
+			$('#addStaff').modal('show');
+			localStorage.setItem("isClickedAdd", "false");
+		}
+
+		if (!$("#weeklyDatePicker").val()) {
+			$("#weeklyDatePicker").val(localStorage.getItem("weekDates"));
+		}
+
 	});
-	
+
 	$(function() {
 		$('#week-button').click(function() {
 			var value = $("#weeklyDatePicker").val();
-			alert(value)
 			const search = new URLSearchParams(location.search);
 			search.set('week_start', value.split(" ")[0]);
 			search.set('week_end', value.split(" ")[2]);
@@ -65,8 +71,18 @@ td {
 		});
 
 	});
+	$(document).on('click', ".cancelButton", function(e) {
+
+		var yesButton = $(document).find('.yesWarningButton')
+		yesButton.val($(this).val())
+	});
+	$(document).on('click', ".addButton", function(e) {
+		localStorage.setItem("addValue",$(this).val());
+		localStorage.setItem("isClickedAdd", "true");
+	})
 
 	$(document).ready(
+
 			function() {
 				moment.updateLocale('en', {
 					week : {
@@ -92,7 +108,9 @@ td {
 									.format("DD/MM/YYYY");
 							$("#weeklyDatePicker").val(
 									firstDate + " - " + lastDate);
-							localStorage.setItem("weekDates",firstDate+" - "+lastDate);
+							var v = firstDate + " - " + lastDate;
+							localStorage.setItem("weekDates", v);
+							$('.searchButton').val(v);
 						});
 			});
 </script>
@@ -104,21 +122,33 @@ td {
 				class="badge rounded-pill bg-primary " style="font-size: 1rem;">Week</span>
 			</label>
 			<div class="col-sm-3">
-				<form action=ManagerRegistration/Search.htm method="get" class = "headerForm">
-					<input autocomplete="off" class="week-picker form-control"
-						type='text' name="week" id="weeklyDatePicker"
-						style="text-align: center;" placeholder="Select Week" value = "${weekSelection}" />
-
-					<div class="col-sm-1">
-						<button type="submit" class="btn btn-primary">Search</button>
+				<input autocomplete="off" class="week-picker form-control"
+					type='text' name="week" id="weeklyDatePicker"
+					style="text-align: center;" placeholder="Select Week"
+					value="${weekSelection}" />
+			</div>
+			<div class="col-sm-1">
+				<form action=ManagerRegistration/Search.htm method="get"
+					class="headerForm">
+					<div class="col-auto">
+						<button type="submit" name="searchButton"
+							class="btn btn-primary searchButton">Search</button>
 					</div>
-					<div class="col-sm-2">
+				</form>
+			</div>
+			<div class="col-sm-1">
+				<form action=ManagerRegistration/Search.htm method="get"
+					class="headerForm">
+					<div class="col-auto">
 						<button type="button" class="btn btn-primary"
 							data-bs-toggle="modal" data-bs-target="#confirmWarning">Confirm</button>
 					</div>
 				</form>
-
 			</div>
+
+
+
+
 
 
 			<div class="mt-2 row align-items-center scrollit">
@@ -153,7 +183,7 @@ td {
 					</thead>
 					<tbody>
 
-						<c:forEach var="shift" varStatus="i" items="${shifts}">
+						<c:forEach var="shift" varStatus="indexShift" items="${shifts}">
 							<tr>
 								<th class="bg-primary">
 									<h6 class="text-center text-light">Shift ${shift.IDCA}</h6>
@@ -161,29 +191,56 @@ td {
 								</th>
 								<c:forEach var="i" begin="1" end="7">
 									<td>
-										<p>${i}</p>
-										<div id="list11">
+										<div>
 											<ul>
+												
 
 											</ul>
-										</div>
+										</div> <c:choose>
 
-										<div class="text-center d-flex justify-content-center">
-											<div class="card bg-secondary" style="width: 10rem;">
-												<div class="card-body">
-													<button type="button" class="btn btn-success addButton"
-														value="1,1">Add</button>
+											<c:when
+												test="${canDisplayCancelButton[indexShift.index][i-1] == false}">
+												<div class="text-center d-flex justify-content-center">
+													<div class="card bg-secondary" style="width: 10rem;">
+														<div class="card-body">
+															<form action=ManagerRegistration/Open.htm method="get">
+																<button type=submit name="openShift"
+																	class="btn btn-success functionButton"
+																	value="${indexShift.count},${i}">Open</button>
+															</form>
+														</div>
+													</div>
 												</div>
-											</div>
-										</div>
-										<div class="text-center d-flex justify-content-center">
-											<div class="card bg-secondary" style="width: 10rem;">
-												<div class="card-body">
-													<button type="button" class="btn btn-success addButton"
-														value="1,1">Open</button>
+											</c:when>
+											<c:otherwise>
+												<div class="text-center d-flex justify-content-center mb-1">
+													<div class="card bg-secondary" style="width: 10rem;">
+														<div class="card-body">
+
+															<form action="ManagerRegistration/AddStaff.htm"
+																method="get">
+																<button type="submit" class="btn btn-success addButton"
+																	data-bs-toggle="modal" data-bs-target="#addStaff"
+																	name="addStaffButton" value="${indexShift.count},${i}">Add</button>
+															</form>
+														</div>
+													</div>
 												</div>
-											</div>
-										</div>
+
+												<div class="text-center d-flex justify-content-center">
+													<div class="card bg-secondary" style="width: 10rem;">
+														<div class="card-body">
+															<button type="button"
+																class="btn btn-danger functionButton cancelButton"
+																data-bs-toggle="modal" data-bs-target="#cancelWarning"
+																value="${indexShift.count},${i}">Cancel</button>
+
+														</div>
+													</div>
+												</div>
+											</c:otherwise>
+										</c:choose>
+
 									</td>
 								</c:forEach>
 							</tr>
@@ -200,63 +257,7 @@ td {
 		<!--Function generate-->
 		<!--infor card-->
 		<div style="display: none;">
-			<div id="infor_card">
-				<li>
-					<div class="text-center d-flex justify-content-center">
-						<div class="card btn-outline-primary" style="width: 10rem;">
-							<div class="card-body">
-								<div class="orderNumber">
-									<h3>1</h3>
-								</div>
-								<h5 class="card-title" style="font-size: 10px;">Nguyễn Hữu
-									Dũng</h5>
-								<button type="button" class="btn btn-outline-secondary mb-1"
-									data-bs-toggle="modal" data-bs-target="#setShift">Setting</button>
-								<button type="button"
-									class="btn btn-outline-danger deleteButton"
-									data-bs-toggle="modal" data-bs-target="#warning">Delete</button>
-							</div>
-						</div>
-					</div>
-				</li>
-			</div>
-
-		</div>
-		<!--waiting card-->
-		<div style="display: none;">
-			<div id="waiting-card">
-				<li>
-					<div class="text-center d-flex justify-content-center">
-						<div class="card btn-outline-primary" style="width: 10rem;">
-							<div class="card-body">
-								<div class="orderNumber">
-									<h6>1</h6>
-								</div>
-
-								<h5 class="card-title">Waiting response</h5>
-								<button type="button"
-									class="btn btn-outline-secondary px-4 py-3 mb-1 "
-									data-bs-toggle="modal" data-bs-target="#setShift">Thiết
-									lập</button>
-								<button type="button"
-									class="btn btn-outline-danger px-4 py-1 deleteButton"
-									data-bs-toggle="modal" data-bs-target="#warning">Xóa</button>
-							</div>
-						</div>
-					</div>
-				</li>
-
-			</div>
-		</div>
-
-		<div style="display: none;">
-			<div class="text-center d-flex justify-content-center">
-				<div class="card bg-secondary" style="width: 10rem;">
-					<div class="card-body">
-						<button type="button" class="btn btn-success px-4 py-3">Thêm</button>
-					</div>
-				</div>
-			</div>
+			<div id="infor_card"></div>
 		</div>
 
 
@@ -305,6 +306,56 @@ td {
 				</div>
 			</div>
 		</div>
+
+		<!--add-->
+		<div class="modal fade" id="addStaff" tabindex="-1" role="dialog"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div
+				class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+				role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Employee's
+							shift detail</h5>
+						<button type="button" class="close" data-bs-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form action="ManagerRegistration/SaveAddStaff.htm" method="get">
+							<div class="mb-3">
+								<label for="exampleInputEmail1" class="form-label">Job
+									Positions</label> <select name="staffId" class="form-select"
+									aria-label="Default select example">
+									<option checked>None</option>
+									<c:forEach var="staff" varStatus="i" items="${staffs}">
+										<option value="${staff.MANV}">${staff.HO}
+											${staff.TEN} ${staff.jobPosition.TENVITRI }</option>
+									</c:forEach>
+								</select>
+
+							</div>
+							<div class="mb-3">
+								<label for="exampleInputPassword1" class="form-label">To
+									do list</label> <input type="text" name="TodoList" class="form-control"
+									id="exampleInputPassword1">
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" id="close" class="btn btn-secondary"
+									data-bs-dismiss="modal">Close</button>
+								<button type="submit"
+									class="btn btn-primary saveChangesAddStaff"
+									name="saveAddChangeButton" data-bs-dismiss="modal">Save</button>
+							</div>
+						</form>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
 		<!--delete-warning-->
 		<div class="modal" id="warning" tabindex="-1">
 			<div class="modal-dialog">
@@ -322,6 +373,30 @@ td {
 							data-bs-dismiss="modal">No</button>
 						<button type="button" class="btn btn-primary yesWarningButton"
 							data-bs-dismiss="modal">Yes</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--cancel-warning-->
+		<div class="modal" id="cancelWarning" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title text-warning">Warning !!!</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>Are you sure you want to cancel this shift?</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">No</button>
+						<form action=ManagerRegistration/Cancel.htm method="get">
+							<button type="submit" class="btn btn-primary yesWarningButton"
+								name="cancelShift" data-bs-dismiss="modal">Yes</button>
+						</form>
+
 					</div>
 				</div>
 			</div>

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ptithcm.bean.IncrementNumberAndTextKeyHandler;
+import ptithcm.bean.PassDataBetweenControllerHandler;
 import ptithcm.bean.Primarykeyable;
 import ptithcm.entity.JobPositionEntity;
 import ptithcm.entity.MistakeEntity;
@@ -42,7 +43,8 @@ public class ManagerController {
 
 	
 	@Autowired
-	ManagerRegistrationController managerRegistrationController;
+	@Qualifier("managerPassDataHandler")
+	PassDataBetweenControllerHandler passDataBetweenControllerHandler;
 	
 	
 	@RequestMapping(value = "Login-Form",method = RequestMethod.GET)
@@ -69,6 +71,7 @@ public class ManagerController {
 		}
 		else if(priority.strip().equals("QL"))
 		{
+			passDataBetweenControllerHandler.setData(userName);
 			return "redirect:/ManagerRegistration.htm";
 		}
 		else if(priority.strip().equals("NV"))
