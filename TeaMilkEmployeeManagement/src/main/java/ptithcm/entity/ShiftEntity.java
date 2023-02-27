@@ -21,10 +21,6 @@ public class ShiftEntity {
 	private String TENCA;
 	
 
-
-	@OneToMany(mappedBy = "shift",fetch = FetchType.EAGER)
-	private Set<ShiftDetailEntity> detailEntities = new HashSet<ShiftDetailEntity>();
-
 	public ShiftEntity() {}
 	
 	public ShiftEntity(String tenca) {
@@ -45,18 +41,5 @@ public class ShiftEntity {
 
 	public void setTENCA(String tENCA) {
 		TENCA = tENCA;
-	}
-
-
-	public Set<ShiftDetailEntity> getDetailEntities() {
-		return detailEntities;
-	}
-
-	public void setDetailEntities(Set<ShiftDetailEntity> detailEntities) {
-		this.detailEntities = detailEntities;
-	}
-
-	public void addShiftDetailEntities(ShiftDetailEntity detailEntity) {
-		this.detailEntities.add(detailEntity);
 	}
 }
