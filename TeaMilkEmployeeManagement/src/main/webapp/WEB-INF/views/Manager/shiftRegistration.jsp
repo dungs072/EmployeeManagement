@@ -43,6 +43,33 @@ table {
 td {
 	text-align: center;
 }
+
+span {
+	cursor: pointer;
+}
+
+.minus, .plus {
+	width: 20px;
+	height: 20px;
+	background: #f2f2f2;
+	border-radius: 4px;
+	border: 1px solid #ddd;
+	display: inline-block;
+	vertical-align: middle;
+	text-align: center;
+	border: 1px solid #ddd;
+}
+
+input {
+	height: 34px;
+	width: 100px;
+	text-align: center;
+	font-size: 26px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	display: inline-block;
+	vertical-align: middle;
+}
 </style>
 
 <script type="text/javascript">
@@ -80,6 +107,45 @@ td {
 		localStorage.setItem("addValue", $(this).val());
 		localStorage.setItem("isClickedAdd", "true");
 	})
+
+	$(document).on('click', ".openButton", function(e) {
+		var yesButton = $(document).find('.yesOpenButton');
+		yesButton.val($(this).val())
+	})
+
+	$(document).on('click',".setStaffShiftButton",function(e) {
+						var value = $(this).val();
+						var values = value.split('+');
+						document.getElementById('settingNameModal').innerHTML = values[0];
+						document.getElementById('settingJobPositionModal').innerHTML = values[1];
+
+						$('#settingToDoListModal').val(values[2]);
+						$('.saveChangeSettingShift').val(values[3]);
+
+	})
+	
+	$(document).on('click',".deleteStaffButton",function(e){
+		
+		$('#yesWarningStaffButton').val($(this).val());
+	})
+
+	$(document).ready(function() {
+
+		$('.minus').click(function() {
+			var $input = $(this).parent().find('input');
+			var count = parseInt($input.val()) - 1;
+			count = count < 1 ? 1 : count;
+			$input.val(count);
+			$input.change();
+			return false;
+		});
+		$('.plus').click(function() {
+			var $input = $(this).parent().find('input');
+			$input.val(parseInt($input.val()) + 1);
+			$input.change();
+			return false;
+		});
+	});
 
 	$(document).ready(
 
@@ -190,12 +256,23 @@ td {
 									<h6 class="text-center text-light small">${shift.TENCA}</h6>
 								</th>
 								<c:forEach var="i" begin="1" end="7">
-									<td>
+									<td><c:if
+											test="${not empty shiftStaffs[indexShift.index][i-1]}">
+											<div class="text-center d-flex justify-content-center mb-1">
+												<div class="card bg-secondary" style="width: 10rem;">
+													<div class="card-body">
+														<h5 class="card-title" style="font-size: 10px;">Staff
+															left: ${shiftStaffs[indexShift.index][i-1].maxStaff}</h5>
+													</div>
+												</div>
+											</div>
+										</c:if>
 										<div>
 											<ul>
+
 												<c:if test="${not empty shiftStaffs[indexShift.index][i-1]}">
 													<c:forEach var="shiftStaff" varStatus="indexStaff"
-														items="${shiftStaffs[tindexShift.index][i-1].listShiftDataUI}">
+														items="${shiftStaffs[indexShift.index][i-1].getListShiftDataUI()}">
 														<li>
 															<div class="text-center d-flex justify-content-center">
 																<div class="card btn-outline-primary"
@@ -206,11 +283,13 @@ td {
 																		</div>
 																		<h5 class="card-title" style="font-size: 10px;">${shiftStaff.fullName}</h5>
 																		<button type="button"
-																			class="btn btn-outline-secondary mb-1"
-																			data-bs-toggle="modal" data-bs-target="#setShift">Setting</button>
+																			class="btn btn-outline-secondary mb-1 setStaffShiftButton"
+																			data-bs-toggle="modal" data-bs-target="#setShift"
+																			value="${shiftStaff.fullName}+${shiftStaff.jobPositionName}+${shiftStaff.additionalJobs}+${shiftStaff.shiftDetailId}">Setting</button>
 																		<button type="button"
-																			class="btn btn-outline-danger deleteButton"
-																			data-bs-toggle="modal" data-bs-target="#warning">Delete</button>
+																			class="btn btn-outline-danger deleteStaffButton"
+																			data-bs-toggle="modal" data-bs-target="#warning" value = "${shiftStaff.shiftDetailId}">Delete</button>
+
 																	</div>
 																</div>
 															</div>
@@ -230,16 +309,17 @@ td {
 												<div class="text-center d-flex justify-content-center">
 													<div class="card bg-secondary" style="width: 10rem;">
 														<div class="card-body">
-															<form action=ManagerRegistration/Open.htm method="get">
-																<button type=submit name="openShift"
-																	class="btn btn-success functionButton"
-																	value="${indexShift.count},${i}">Open</button>
-															</form>
+															<button type=button name="openShift"
+																class="btn btn-success openButton"
+																data-bs-toggle="modal" data-bs-target="#openSetting"
+																value="${indexShift.count},${i}">Open</button>
 														</div>
 													</div>
 												</div>
 											</c:when>
 											<c:otherwise>
+
+
 												<div class="text-center d-flex justify-content-center mb-1">
 													<div class="card bg-secondary" style="width: 10rem;">
 														<div class="card-body">
@@ -266,9 +346,7 @@ td {
 													</div>
 												</div>
 											</c:otherwise>
-										</c:choose>
-
-									</td>
+										</c:choose></td>
 								</c:forEach>
 							</tr>
 
@@ -279,14 +357,6 @@ td {
 
 
 		</div>
-
-
-		<!--Function generate-->
-		<!--infor card-->
-		<div style="display: none;">
-			<div id="infor_card"></div>
-		</div>
-
 
 		<!-- Modal -->
 		<!--setting-->
@@ -307,29 +377,27 @@ td {
 					<div class="modal-body">
 						<form>
 							<div class="mb-3">
-								<label for="exampleInputEmail1" class="form-label">Employee</label>
-								<select class="form-select form-select-lg mb-3"
-									id="employeeSelect" aria-label=".form-select-lg example">
-									<option selected>Open this select menu</option>
-									<option value="1">One</option>
-									<option value="2">Two</option>
-									<option value="3">Three</option>
-								</select>
+								<label for="settingName">Name: </label>
+								<h6 id="settingNameModal">ABC</h6>
+								<label for="settingJobPosition">Job Position: </label>
+								<h6 id="settingJobPositionModal">CBA</h6>
 							</div>
 							<div class="mb-3">
 								<label for="exampleInputPassword1" class="form-label">To
 									do list</label> <input type="text" class="form-control"
-									id="exampleInputPassword1">
+									id="settingToDoListModal">
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" id="close" class="btn btn-secondary"
+									data-bs-dismiss="modal">Close</button>
+								<button type="button"
+									class="btn btn-primary saveChangeSettingShift"
+									data-bs-dismiss="modal">Save changes</button>
 							</div>
 						</form>
 					</div>
-					<div class="modal-footer">
-						<button type="button" id="close" class="btn btn-secondary"
-							data-bs-dismiss="modal">Close</button>
-						<button type="button"
-							class="btn btn-primary saveChangeSettingShift"
-							data-bs-dismiss="modal">Save changes</button>
-					</div>
+
 				</div>
 			</div>
 		</div>
@@ -353,11 +421,11 @@ td {
 						<form action="ManagerRegistration/SaveAddStaff.htm" method="get">
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Job
-									Positions</label> <select name="staffId" class="form-select"
+									Positions</label> <select name="staffInfor" class="form-select"
 									aria-label="Default select example">
-									<option checked>None</option>
 									<c:forEach var="staff" varStatus="i" items="${staffs}">
-										<option value="${staff.MANV}">${staff.HO}
+										<option
+											value="${staff.MANV},${staff.HO} ${staff.TEN},${staff.jobPosition.TENVITRI}">${staff.HO}
 											${staff.TEN} ${staff.jobPosition.TENVITRI }</option>
 									</c:forEach>
 								</select>
@@ -383,6 +451,37 @@ td {
 			</div>
 		</div>
 
+
+		<!--open setting-->
+		<div class="modal" id="openSetting" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title text-warning">Setting</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<form action="ManagerRegistration/Open.htm">
+						<div class="modal-body">
+							<label for="exampleInputEmail1" class="form-label">Max
+								staff: </label>
+							<div class="number">
+								<span class="minus">-</span> <input type="text" value="1"
+									name="maxStaff" /> <span class="plus">+</span>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">No</button>
+							<button type="submit" class="btn btn-primary yesOpenButton"
+								name="yesOpenShift" data-bs-dismiss="modal">Yes</button>
+						</div>
+					</form>
+
+				</div>
+			</div>
+		</div>
+
 		<!--delete-warning-->
 		<div class="modal" id="warning" tabindex="-1">
 			<div class="modal-dialog">
@@ -393,14 +492,17 @@ td {
 							aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-						<p>Are you sure you want to delete this?</p>
+						<p>Are you sure you want to delete this staff from the shift?</p>
 					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">No</button>
-						<button type="button" class="btn btn-primary yesWarningButton"
-							data-bs-dismiss="modal">Yes</button>
-					</div>
+					<form action = "ManagerRegistration/DeleteStaffFromShift.htm" method = "get">
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">No</button>
+							<button type="submit" class="btn btn-primary" id = "yesWarningStaffButton"
+								data-bs-dismiss="modal" name = "yesWarningStaffButton">Yes</button>
+						</div>
+					</form>
+
 				</div>
 			</div>
 		</div>
@@ -449,29 +551,6 @@ td {
 				</div>
 			</div>
 		</div>
-		<!--add more employee-->
-		<div class="modal" id="addMoreEmployee" tabindex="-1">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title">Number of employees for this shift</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<label for="quantity">Quantity (between 1 and 15):</label> <input
-							type="number" id="quantity" name="quantity" min="1" max="15">
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary quantitySetting"
-							data-bs-dismiss="modal">Set</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
 	</div>
 </body>
 </html>
