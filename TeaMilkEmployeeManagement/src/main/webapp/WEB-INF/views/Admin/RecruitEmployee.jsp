@@ -111,8 +111,6 @@ tbody tr:hover {
 </script>
 </head>
 <body>
-
-
 	<div class="container">
 		<div class="row mt-3">
 			<div class="col">
@@ -172,7 +170,6 @@ tbody tr:hover {
 				</div>
 			</div>
 		</div>
-
 	</div>
 	<!-- Modal -->
 	<!-- addModal -->
@@ -407,9 +404,6 @@ tbody tr:hover {
 			</div>
 		</div>
 	</div>
-
-
-
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
 		integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
