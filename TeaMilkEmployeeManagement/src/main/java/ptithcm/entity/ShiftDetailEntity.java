@@ -1,6 +1,5 @@
 package ptithcm.entity;
 
-import java.sql.Date;
 import java.sql.Time;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,9 +32,7 @@ public class ShiftDetailEntity {
 	@Column(name = "CONGVIEC")
 	private String CONGVIEC;
 	
-	@Column(name = "THOIGIANDANGKI")
 
-	private Date THOIGIANDANGKI;
 	
 	@Column(name = "THOIGIANDILAM")
 //	@Temporal(TemporalType.TIMESTAMP)
@@ -54,17 +51,16 @@ public class ShiftDetailEntity {
 	private StaffEntity staff;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "IDCA")  
-	private ShiftEntity shift;
+	@JoinColumn(name = "ID_CA_MO")
+	private OpenShiftEntity openshift;
+	
+
 	
 	@OneToMany(mappedBy = "shiftDetailEntity",fetch = FetchType.EAGER)
 	private Set<MistakeHistoryEntity> mistakeHistoryEntities = new HashSet<MistakeHistoryEntity>();
 	
 	public ShiftDetailEntity() {}
 	
-	public ShiftDetailEntity(Date registerTime) {
-		this.THOIGIANDANGKI = registerTime;
-	}
 
 	public StaffEntity getStaff() {
 		return staff;
@@ -75,13 +71,6 @@ public class ShiftDetailEntity {
 	}
 
 	
-	public ShiftEntity getShift() {
-		return shift;
-	}
-
-	public void setShift(ShiftEntity shift) {
-		this.shift = shift;
-	}
 	
 	public String getID_CTCA() {
 		return ID_CTCA;
@@ -109,14 +98,6 @@ public class ShiftDetailEntity {
 	}
 	
 
-	public Date getTHOIGIANDANGKI() {
-		return THOIGIANDANGKI;
-	}
-
-	public void setTHOIGIANDANGKI(Date tHOIGIANDANGKI) {
-		THOIGIANDANGKI = tHOIGIANDANGKI;
-	}
-
 	
 	public Time getTHOIGIANDILAM() {
 		return THOIGIANDILAM;
@@ -141,8 +122,19 @@ public class ShiftDetailEntity {
 	public void setXACNHAN(boolean xACNHAN) {
 		XACNHAN = xACNHAN;
 	}
+	
 
 	
+	public OpenShiftEntity getOpenshift() {
+		return openshift;
+	}
+
+
+	public void setOpenshift(OpenShiftEntity openshift) {
+		this.openshift = openshift;
+	}
+
+
 	public Set<MistakeHistoryEntity> getMistakeHistoryEntities() {
 		return mistakeHistoryEntities;
 	}

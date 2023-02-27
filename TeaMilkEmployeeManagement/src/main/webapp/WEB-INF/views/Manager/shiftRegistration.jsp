@@ -77,7 +77,7 @@ td {
 		yesButton.val($(this).val())
 	});
 	$(document).on('click', ".addButton", function(e) {
-		localStorage.setItem("addValue",$(this).val());
+		localStorage.setItem("addValue", $(this).val());
 		localStorage.setItem("isClickedAdd", "true");
 	})
 
@@ -193,7 +193,34 @@ td {
 									<td>
 										<div>
 											<ul>
-												
+												<c:if test="${not empty shiftStaffs[indexShift.index][i-1]}">
+													<c:forEach var="shiftStaff" varStatus="indexStaff"
+														items="${shiftStaffs[tindexShift.index][i-1].listShiftDataUI}">
+														<li>
+															<div class="text-center d-flex justify-content-center">
+																<div class="card btn-outline-primary"
+																	style="width: 10rem;">
+																	<div class="card-body">
+																		<div class="orderNumber">
+																			<h3>${indexStaff.count}</h3>
+																		</div>
+																		<h5 class="card-title" style="font-size: 10px;">${shiftStaff.fullName}</h5>
+																		<button type="button"
+																			class="btn btn-outline-secondary mb-1"
+																			data-bs-toggle="modal" data-bs-target="#setShift">Setting</button>
+																		<button type="button"
+																			class="btn btn-outline-danger deleteButton"
+																			data-bs-toggle="modal" data-bs-target="#warning">Delete</button>
+																	</div>
+																</div>
+															</div>
+														</li>
+													</c:forEach>
+
+												</c:if>
+
+
+
 
 											</ul>
 										</div> <c:choose>
