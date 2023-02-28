@@ -5,12 +5,15 @@ public class ShiftDataUI {
 	private String fullName;
 	
 	private String jobPositionName;
-	private String staffId;
+	private String shiftDetailId;
+	
+	private String additionalJobs;
 
-	public ShiftDataUI(String staffId,String fullName, String jobPositionName) {
+	public ShiftDataUI(String shiftDetailId,String fullName, String jobPositionName,String additionalJobs) {
 		this.fullName = fullName;
-		this.setStaffId(staffId);
+		this.shiftDetailId = shiftDetailId;
 		this.jobPositionName = jobPositionName;
+		this.additionalJobs = additionalJobs;
 	}
 	public String getFullName() {
 		return fullName;
@@ -27,11 +30,17 @@ public class ShiftDataUI {
 	public void setJobPositionName(String jobPositionName) {
 		this.jobPositionName = jobPositionName;
 	}
-	public String getStaffId() {
-		return staffId;
+	public String getShiftDetailId() {
+		return shiftDetailId;
 	}
-	public void setStaffId(String staffId) {
-		this.staffId = staffId;
+	public void setShiftDetailId(String id) {
+		this.shiftDetailId = id;
+	}
+	public String getAdditionalJobs() {
+		return additionalJobs;
+	}
+	public void setAdditionalJobs(String additionalJobs) {
+		this.additionalJobs = additionalJobs;
 	}
 	
 	
