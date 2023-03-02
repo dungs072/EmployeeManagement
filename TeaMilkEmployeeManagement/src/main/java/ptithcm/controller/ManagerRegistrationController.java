@@ -41,7 +41,7 @@ public class ManagerRegistrationController {
 	SessionFactory factory;
 	
 	@Autowired
-	@Qualifier("managerPassDataHandler")
+	@Qualifier("staffPassDataHandler")
 	PassDataBetweenControllerHandler passDataBetweenControllerHandler;
 	
 	@Autowired
@@ -53,6 +53,7 @@ public class ManagerRegistrationController {
 
 	
 	private boolean[][] canDisplayCancelButtons = new boolean[3][7];
+	private boolean[][] canDisplayOpenButtons = new boolean[3][7];
 	private ListShiftDataUI[][] shiftUIHash = new ListShiftDataUI[3][7];
 	
 	
@@ -109,8 +110,12 @@ public class ManagerRegistrationController {
 		String openShiftId = primaryKeyWithMoreDataHandler.getPrimaryKeyBaseOnDatas(primaryDateAfterPlus,shift_Date[0]);
 		
 		OpenShiftEntity openShiftEntity = (OpenShiftEntity) session.get(OpenShiftEntity.class, openShiftId);
-		openShiftEntity.setShift(null);
-		openShiftEntity.setStaff(null);
+		
+		openShiftEntity.deleteAllLinks();
+		for(var item:openShiftEntity.getDetailEntities()) {
+			item.deleteLink();
+			session.delete(item);
+		}
 		deleteShiftDetails(openShiftId,session);
 		session.delete(openShiftEntity);
 		
@@ -151,6 +156,9 @@ public class ManagerRegistrationController {
 	@RequestMapping(value = "/SaveAddStaff",method = RequestMethod.GET)
 	public String saveAddStaff(HttpServletRequest request, ModelMap map) {
 		Session session = factory.getCurrentSession();
+		if(request.getParameter("staffInfor")==null) {
+			return functionDisplayMainView(request,map);
+		}
 		String toDoList = request.getParameter("TodoList");
 		String[] staffInfor = (request.getParameter("staffInfor").toString()).split(",");
 		String[] shift_date = (request.getParameter("saveAddChangeButton").toString()).split(",");
@@ -175,15 +183,208 @@ public class ManagerRegistrationController {
 		int col = Integer.parseInt(shift_date[1])-1;
 		
 		shiftUIHash[row][col].addShiftDataUI(new ShiftDataUI(shiftDetailId,staffInfor[1],staffInfor[2],toDoList));
+		shiftUIHash[row][col].calculateLeftStaff();
+		
 		return functionDisplayMainView(request,map);
 		
 	}
 	@RequestMapping(value = "/DeleteStaffFromShift",method = RequestMethod.GET)
 	public String deleteStaffFromShift(HttpServletRequest request,ModelMap map) {
-		
+		Session session = factory.getCurrentSession();
 		String shiftDetailId = request.getParameter("yesWarningStaffButton");
+		if(!checkCanDeleteStaffFromShift(shiftDetailId)) {return functionDisplayMainView(request,map);}
+		ShiftDetailEntity shiftDetailEntity = getDateAndShiftId(shiftDetailId);
+		String[] first_last_Date = weekDateFromTo.split(" - ");
+		String firstDateStr = castToJavaSQLDateFormat(first_last_Date[0]);
+		Date firstDate=Date.valueOf(firstDateStr);
+		String currentDateStr = shiftDetailEntity.getOpenshift().getNGAYLAMVIEC().toString().strip();
+		Date currentDate = Date.valueOf(currentDateStr);
 		
+		int dateIndex = sqlDateMinsDays(firstDate,currentDate);
+		int shiftIndex = Integer.parseInt(shiftDetailEntity.getOpenshift().getShift().getIDCA().toString().strip())-1;
+		
+		shiftUIHash[shiftIndex][dateIndex].deleteShiftDataUI(shiftDetailId);
+		shiftUIHash[shiftIndex][dateIndex].calculateLeftStaff();
+		shiftDetailEntity.setOpenshift(null);
+		shiftDetailEntity.setStaff(null);
+		shiftDetailEntity.setMistakeHistoryEntities(null);
+		session.delete(shiftDetailEntity);
 		return functionDisplayMainView(request,map);
+	}
+	@RequestMapping(value = "/SettingStaffInShift",method = RequestMethod.GET)
+	public String settingStaffInShift(HttpServletRequest request,ModelMap map) {
+		Session session = factory.getCurrentSession();
+		String toDoList = request.getParameter("toDoListInput");
+		String shiftDetailId = request.getParameter("saveChangeSettingShift");
+		
+		ShiftDetailEntity shiftDetail = (ShiftDetailEntity) session.get(ShiftDetailEntity.class, shiftDetailId);
+		shiftDetail.setCONGVIEC(toDoList);
+		session.saveOrUpdate(shiftDetail);
+		
+		String[] first_last_Date = weekDateFromTo.split(" - ");
+		String firstDateStr = castToJavaSQLDateFormat(first_last_Date[0]);
+		Date firstDate=Date.valueOf(firstDateStr);
+		String currentDateStr = shiftDetail.getOpenshift().getNGAYLAMVIEC().toString().strip();
+		Date currentDate = Date.valueOf(currentDateStr);
+		
+		int dateIndex = sqlDateMinsDays(firstDate,currentDate);
+		int shiftIndex = Integer.parseInt(shiftDetail.getOpenshift().getShift().getIDCA().toString().strip())-1;
+		shiftUIHash[shiftIndex][dateIndex].getShiftDataUI(shiftDetailId).setAdditionalJobs(toDoList);
+		return functionDisplayMainView(request,map);
+	}
+	
+	@RequestMapping(value = "/updateMaxStaff",method = RequestMethod.GET)
+	public String setMaxStaff(HttpServletRequest request, ModelMap map) {
+		Session session = factory.getCurrentSession();
+		String shift_date = request.getParameter("yesSettingMaxStaff");
+		String openShiftId = getOpenShiftId(shift_date);
+		String maxStaffStr = request.getParameter("maxStaffSetting");
+		OpenShiftEntity openShiftEntity = (OpenShiftEntity) session.get(OpenShiftEntity.class, openShiftId);
+		openShiftEntity.setSOLUONGDANGKI(Integer.parseInt(maxStaffStr));
+		session.saveOrUpdate(openShiftEntity);
+		
+		String[] shift_dates = shift_date.split(",");
+		Integer row = Integer.parseInt(shift_dates[0])-1;
+		Integer col = Integer.parseInt(shift_dates[1])-1;
+		shiftUIHash[row][col].setMaxStaff(Integer.parseInt(maxStaffStr));
+		System.out.println(maxStaffStr);
+		return functionDisplayMainView(request,map);
+	}
+	
+	@RequestMapping(value = "/confirmShifts",method = RequestMethod.GET)
+	public String confirmShifts(HttpServletRequest request,ModelMap map) {
+		updateConfirmState(true);
+		return displayMainViewDontDeleteOldUI(request, map);
+	}
+	@RequestMapping(value = "/cancelConfirmShifts",method = RequestMethod.GET)
+	public String cancelConfirmShifts(HttpServletRequest request,ModelMap map){
+		updateConfirmState(false);
+		return displayMainViewDontDeleteOldUI(request, map);
+	}
+	private void updateConfirmState(boolean state) {
+		Session session = factory.getCurrentSession();
+		long millis=System.currentTimeMillis();  
+		Date currentDate = new Date(millis);
+		currentDate = sqlDatePlusDays(currentDate, 1);
+		String[] first_last_Date = weekDateFromTo.split(" - ");
+		String firstDateStr = castToJavaSQLDateFormat(first_last_Date[0]);
+		Date firstDate=Date.valueOf(firstDateStr);
+		String lastSateStr = castToJavaSQLDateFormat(first_last_Date[1]);
+		Date lastDate=Date.valueOf(lastSateStr);
+		Date firstDateCanChoose = null;
+		if(firstDate.compareTo(currentDate)==1) {
+			firstDateCanChoose = firstDate;
+		}
+		else {
+			firstDateCanChoose = currentDate;
+		}
+		
+		List<ShiftDetailEntity> shiftDetails = getShiftDetails(firstDateCanChoose.toString(),lastDate.toString());
+		for(var shiftDetail: shiftDetails) {
+			shiftDetail.setXACNHAN(state);
+			session.saveOrUpdate(shiftDetail);
+			int row = Integer.parseInt(shiftDetail.getOpenshift().getShift().getIDCA().strip())-1;
+			int col = sqlDateMinsDays(firstDate, shiftDetail.getOpenshift().getNGAYLAMVIEC());
+			shiftUIHash[row][col].getShiftDataUI(shiftDetail.getID_CTCA().strip()).setConfirmed(state);
+		}
+
+	}
+	private void getConfirmState() {
+		Session session = factory.getCurrentSession();
+		long millis=System.currentTimeMillis();  
+		Date currentDate = new Date(millis);
+		currentDate = sqlDatePlusDays(currentDate, 1);
+		String[] first_last_Date = weekDateFromTo.split(" - ");
+		String firstDateStr = castToJavaSQLDateFormat(first_last_Date[0]);
+		Date firstDate=Date.valueOf(firstDateStr);
+		String lastSateStr = castToJavaSQLDateFormat(first_last_Date[1]);
+		Date lastDate=Date.valueOf(lastSateStr);
+		Date firstDateCanChoose = null;
+		if(firstDate.compareTo(currentDate)==1) {
+			firstDateCanChoose = firstDate;
+		}
+		else {
+			firstDateCanChoose = currentDate;
+		}
+		
+		List<ShiftDetailEntity> shiftDetails = getShiftDetails(firstDateCanChoose.toString(),lastDate.toString());
+		for(var shiftDetail: shiftDetails) {
+			int row = Integer.parseInt(shiftDetail.getOpenshift().getShift().getIDCA().strip())-1;
+			int col = sqlDateMinsDays(firstDate, shiftDetail.getOpenshift().getNGAYLAMVIEC());
+			shiftUIHash[row][col].getShiftDataUI(shiftDetail.getID_CTCA().strip()).setConfirmed(shiftDetail.isXACNHAN());
+		}
+
+	}
+	@SuppressWarnings("unchecked")
+	private List<ShiftDetailEntity> getShiftDetails(String firstDay,String lastDay){
+		Session session = factory.getCurrentSession();
+		String hql = "FROM ShiftDetailEntity WHERE openshift.NGAYLAMVIEC BETWEEN :firstDay AND :lastDay";
+		Query query =session.createQuery(hql);
+		query.setString("firstDay", firstDay);
+		query.setString("lastDay", lastDay);
+		return query.list();
+	}
+	private void setCanInteractWithUI() {
+		String[] first_last_Date = weekDateFromTo.split(" - ");
+		String firstDateStr = castToJavaSQLDateFormat(first_last_Date[0]);
+		Date firstDate=Date.valueOf(firstDateStr);
+	    long millis=System.currentTimeMillis();  
+		Date currentDate = new Date(millis);
+		int dateIndex = sqlDateMinsDays(firstDate,currentDate);
+
+		for(int i =0;i<3;i++) {
+			for(int j =0;j<7;j++) {
+				if(j<=dateIndex) {
+					canDisplayOpenButtons[i][j] = false;
+				}
+				else {
+					canDisplayOpenButtons[i][j] = true;
+				}
+				if(shiftUIHash[i][j]==null) {continue;}
+				if(j<=dateIndex) {
+					shiftUIHash[i][j].setCanInteract(false);
+					
+				}
+				else {
+					shiftUIHash[i][j].setCanInteract(true);
+					
+				}
+			}
+		}
+		
+	}
+	
+	private String getOpenShiftId(String shift_date) {
+		String[] shift_Date = shift_date.split(",");
+		String[] first_last_Date = weekDateFromTo.split(" - ");
+		
+		String firstDateStr = castToJavaSQLDateFormat(first_last_Date[0]);
+		Date firstDate=Date.valueOf(firstDateStr);
+		
+		Date dateAfterPlus = sqlDatePlusDays(firstDate,Integer.parseInt(shift_Date[1])-1);
+		String primaryDateAfterPlus = castToCreatePrimaryKeyFormat(dateAfterPlus.toString());
+		return primaryKeyWithMoreDataHandler.getPrimaryKeyBaseOnDatas(primaryDateAfterPlus,shift_Date[0]);
+	}
+	
+	private boolean checkCanDeleteStaffFromShift(String shiftDetailId) {
+		Session session = factory.getCurrentSession();
+		String hql = "SELECT COUNT(*) FROM ShiftDetailEntity AS S WHERE S.ID_CTCA = :shiftDetailId"
+				+ " AND S.mistakeHistoryEntities IS NOT EMPTY";
+		Query query =session.createQuery(hql);
+		query.setString("shiftDetailId", shiftDetailId);
+		return (long)query.uniqueResult()==0;
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	private ShiftDetailEntity getDateAndShiftId(String shiftDetailId){
+		
+		Session session = factory.getCurrentSession();
+		String hql = "FROM ShiftDetailEntity WHERE ID_CTCA = :shiftDetailId";
+		Query query = session.createQuery(hql);
+		query.setString("shiftDetailId",shiftDetailId);
+		List<ShiftDetailEntity> list =  query.list();
+		return list.get(0);
 	}
 	
 //	private boolean canDeleteShiftDetailId = 
@@ -238,23 +439,6 @@ public class ManagerRegistrationController {
 		return date[2]+"-"+date[1]+"-"+date[0];
 	}
 	
-	private void deleteAllStaffRegistrationsAtThisShift(String idPattern) {
-		Session session = factory.getCurrentSession();
-		String sql = "DELETE CHITIETCA WHERE ID_CTCA LIKE CONCAT('%',:idPattern)";
-		Query query = session.createSQLQuery(sql);
-		query.setString("idPattern", idPattern);
-	}
-	@SuppressWarnings("unchecked")
-	private List<Object[]> getShiftDetailsData(String fromDate, String toDate){
-		Session session = factory.getCurrentSession();
-		String sql = "SELECT IDCA, DATEDIFF(day,:fromDate,(SELECT NGAYLAMVIEC FROM CA_MO WHERE CA_MO.ID_CA_MO = ID_CA_MO)) FROM CHITIETCA "
-					+ "WHERE THOIGIANDANGKI BETWEEN :fromDate AND :toDate";
-		Query query = session.createSQLQuery(sql);
-		query.setString("fromDate", fromDate);
-		query.setString("toDate",toDate);
-		return query.list();
-	}
-	
 	@SuppressWarnings("unchecked")
 	private List<ShiftEntity> getShifts(){
 		Session session = factory.getCurrentSession();
@@ -263,6 +447,19 @@ public class ManagerRegistrationController {
 		return query.list();
 	}
 
+	private String displayMainViewDontDeleteOldUI(HttpServletRequest request, ModelMap map) {
+		if(shifts==null) {
+			shifts = getShifts();
+		}
+		setCanInteractWithUI();
+		//putStaffRegistrationDataToView();
+		map.addAttribute("weekSelection", weekDateFromTo);
+		map.addAttribute("shifts",shifts);
+		map.addAttribute("canDisplayCancelButton",canDisplayCancelButtons);
+		map.addAttribute("canDisplayOpenButton",canDisplayOpenButtons);
+		map.addAttribute("shiftStaffs",shiftUIHash);
+		return "/Manager/shiftRegistration"; 
+	}
 	private String displayMainView(HttpServletRequest request, ModelMap map,String weekDateFromTo) {
 		if(shifts==null) {
 			shifts = getShifts();
@@ -270,10 +467,13 @@ public class ManagerRegistrationController {
 		
 		resetUI();
 		putDataToView(weekDateFromTo);
+		getConfirmState();
+		setCanInteractWithUI();
 		//putStaffRegistrationDataToView();
 		map.addAttribute("weekSelection", weekDateFromTo);
 		map.addAttribute("shifts",shifts);
 		map.addAttribute("canDisplayCancelButton",canDisplayCancelButtons);
+		map.addAttribute("canDisplayOpenButton",canDisplayOpenButtons);
 		map.addAttribute("shiftStaffs",shiftUIHash);
 		return "/Manager/shiftRegistration"; 
 	}
@@ -305,19 +505,21 @@ public class ManagerRegistrationController {
 			{
 				shiftUIHash[shiftIndex-1][dateIndex] = new ListShiftDataUI();
 			}
+			shiftUIHash[shiftIndex-1][dateIndex].setMaxStaff(maxStaff);
+			canDisplayCancelButtons[shiftIndex-1][dateIndex] = true;
 			if(openShifts[1]!=null) {
 				ShiftDetailEntity shiftDetailEntity = (ShiftDetailEntity) openShifts[1];
 				StaffEntity staff = shiftDetailEntity.getStaff();
-				String staffId = staff.getMANV().strip();
 				String fullName = staff.getHO().strip()+" "+staff.getTEN().strip();
 				String jobName = staff.getJobPosition().getTENVITRI().strip();
 				ShiftDataUI dataUI = new ShiftDataUI(shiftDetailEntity.getID_CTCA().strip(),fullName,jobName,shiftDetailEntity.getCONGVIEC());
 				shiftUIHash[shiftIndex-1][dateIndex].addShiftDataUI(dataUI);
+				
+				shiftUIHash[shiftIndex-1][dateIndex].calculateLeftStaff();
 			}
 			
 			
-			shiftUIHash[shiftIndex-1][dateIndex].setMaxStaff(maxStaff);
-			canDisplayCancelButtons[shiftIndex-1][dateIndex] = true;
+		
 		}
 	
 	}
@@ -339,6 +541,7 @@ public class ManagerRegistrationController {
 		map.addAttribute("shifts",shifts);
 		map.addAttribute("canDisplayCancelButton",canDisplayCancelButtons);
 		map.addAttribute("shiftStaffs",shiftUIHash);
+		map.addAttribute("canDisplayOpenButton",canDisplayOpenButtons);
 		return "/Manager/shiftRegistration"; 
 	}
 	

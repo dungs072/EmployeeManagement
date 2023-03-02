@@ -98,4 +98,10 @@ public class OpenShiftEntity {
 		this.shiftDetailEntites.add(detailEntity);
 	}
 	
+	public void deleteAllLinks()
+	{
+		setShift(null);
+		setStaff(null);
+	}
+	
 }

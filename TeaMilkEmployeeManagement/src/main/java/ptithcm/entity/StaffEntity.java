@@ -179,6 +179,7 @@ public class StaffEntity implements Primarykeyable {
 		this.SDT = staff.getSDT();
 		this.DIACHI = staff.getDIACHI();
 		this.NGAYSINH = staff.getNGAYSINH();
+		if(staff.getJobPosition()==null) {return;}
 		this.jobPosition = staff.getJobPosition();
 	}
 

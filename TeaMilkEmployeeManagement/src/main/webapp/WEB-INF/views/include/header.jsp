@@ -17,7 +17,36 @@
 
     <link rel="stylesheet" href="extensions/sticky-header/bootstrap-table-sticky-header.css">
     <script src="extensions/sticky-header/bootstrap-table-sticky-header.js"></script>
-    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+	<Script>
+	$(document).ready(
+			function() {
+				$("#show_hide_password a")
+						.on(
+								'click',
+								function(event) {
+									event.preventDefault();
+									if ($('#show_hide_password input').attr(
+											"type") == "text") {
+										$('#show_hide_password input').attr(
+												'type', 'password');
+										$('#show_hide_password i').addClass(
+												"fa-eye-slash");
+										$('#show_hide_password i').removeClass(
+												"fa-eye");
+									} else if ($('#show_hide_password input')
+											.attr("type") == "password") {
+										$('#show_hide_password input').attr(
+												'type', 'text');
+										$('#show_hide_password i').removeClass(
+												"fa-eye-slash");
+										$('#show_hide_password i').addClass(
+												"fa-eye");
+									}
+								});
+			});
+	</Script>
 </head>
 <body>
 </body>

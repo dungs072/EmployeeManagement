@@ -73,39 +73,63 @@ tbody tr:hover {
 	var isClickedInfor = "";
 	$(document).ready(function() {
 
-		//call function
-		$(document).on('click', ".deleteEmployee", function(e) {
+						//call function
+						$(document).on('click', ".deleteEmployee", function(e) {
 
-			var yesButton = $(document).find('.yes-warning')
-			yesButton.val($(this).val())
-		});
-		
+							var yesButton = $(document).find('.yes-warning')
+							yesButton.val($(this).val())
+						});
 
-		$(".detailEmployee").click(function() {
-			localStorage.setItem("isClickedInfor", "true");
-			var saveButton = $(document).find('.saveUpdate');
-			saveButton.val($(this).val());
-		});
-		
-		$(".addModalButton").click(function(){
-			
-			localStorage.setItem("isClickedAddStaffButton","true");
-		});
+						$(".detailEmployee").click(function() {
+							localStorage.setItem("isClickedInfor", "true");
+							var saveButton = $(document).find('.saveUpdate');
+							saveButton.val($(this).val());
+						});
 
-		$(window).on('load', function() {
-			var value = localStorage.getItem("isClickedInfor");
-			if (value == "true") {
-				$("#detailModal").modal("show");
-				localStorage.setItem("isClickedInfor", "false");
-			}
-			var addValue = localStorage.getItem("isClickedAddStaffButton");
-			if(addValue=="true"){
-				$("#addModal").modal("show");
-				localStorage.setItem("isClickedAddStaffButton", "false");
-			}
+						$(".addModalButton").click(function() {
 
-		});
-		
+							localStorage.setItem("isClickedAddStaffButton", "true");
+						});
+
+						$(".add-save-created").click(function() {
+							
+							localStorage.setItem("isClickedSaveStaffButton","true");
+							
+						});
+						$(".resetPassword").click(function(){
+							var yesResetButton = $(document).find('.yes-reset-warning');
+							yesResetButton.val($(this).val());
+						});
+						$('.yes-reset-warning').click(function(){
+							localStorage.setItem("isClickedReset","true");
+							localStorage.setItem("resetId",$(this).val());
+						});
+						$(window).on('load',function() {
+								var value = localStorage.getItem("isClickedInfor");
+								if (value == "true") {
+									$("#detailModal").modal("show");
+									localStorage.setItem("isClickedInfor","false");
+								}
+								var addValue = localStorage.getItem("isClickedAddStaffButton");
+								if (addValue == "true") {
+									$("#addModal").modal("show");
+									localStorage.setItem("isClickedAddStaffButton","false");
+								}
+								var saveAddValue = localStorage.getItem("isClickedSaveStaffButton");
+								if (saveAddValue == "true") {
+									$('#createdModal').modal("show");
+									$(document).find('#username').val($('.add-save-created').val());
+									localStorage.setItem("isClickedSaveStaffButton","false");
+								}
+								var resetValue = localStorage.getItem("isClickedReset");
+								if(resetValue == "true"){
+									$('#ResetSuccessfullyModal').modal('show');
+									$(document).find('#ResetUsername').val(localStorage.getItem('resetId'));
+									localStorage.setItem("isClickedReset","false");
+									
+								}
+
+							});
 
 	});
 </script>
@@ -123,10 +147,11 @@ tbody tr:hover {
 					</form>
 
 				</div>
-				<form action = "Recruit/ShowJobPosition.htm" method = "get">
-					<button type="submit" class="btn btn-success addModalButton">Add an employee</button>
+				<form action="Recruit/ShowJobPosition.htm" method="get">
+					<button type="submit" class="btn btn-success addModalButton">Add
+						an employee</button>
 				</form>
-				
+
 			</div>
 			<div class="col"></div>
 
@@ -156,9 +181,13 @@ tbody tr:hover {
 											<button type="submit" name="InforStaff"
 												class="btn btn-secondary detailEmployee"
 												value="${staff.MANV}">Detail</button>
+											<button type="button" name="resetPassword"
+												class="btn btn-secondary resetPassword" value="${staff.MANV}"
+												data-bs-toggle="modal" data-bs-target="#ResetWarning">Reset</button>
 											<button type="button" name="deleteEmployee"
 												class="btn btn-danger deleteEmployee" value="${staff.MANV}"
 												data-bs-toggle="modal" data-bs-target="#warning">Delete</button>
+											
 										</form>
 
 									</td>
@@ -190,14 +219,12 @@ tbody tr:hover {
 						<div class="form-group">
 							<label for="firstname">First name:</label> <input type="text"
 								class="form-control username" id="firstname"
-								placeholder="First name..." name="HO"
-								maxlength="30" />
+								placeholder="First name..." name="HO" maxlength="30" />
 						</div>
 						<div class="form-group">
 							<label for="lastname">Last name:</label> <input type="text"
 								class="form-control username" id="lastname"
-								placeholder="Last name..." name="TEN" 
-								maxlength="30" />
+								placeholder="Last name..." name="TEN" maxlength="30" />
 						</div>
 						<div class="form-check">
 							<input class="form-check-input" type="radio" name="GIOITINH"
@@ -231,7 +258,8 @@ tbody tr:hover {
 						</div>
 						<div class="form-group">
 							<label for="add-jobId">Job position:</label> <select
-								name = "add-jobId" class="form-select" aria-label="Default select example">
+								name="add-jobId" class="form-select"
+								aria-label="Default select example">
 								<c:forEach var="job" varStatus="i" items="${jobs}">
 									<option value="${job.MACV}">${job.TENVITRI}</option>
 								</c:forEach>
@@ -242,7 +270,7 @@ tbody tr:hover {
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Close</button>
 							<button type="submit" name="saveAddEmployee"
-								class="btn btn-primary add-save" data-bs-dismiss="modal">Save
+								class="btn btn-primary add-save-created" data-bs-dismiss="modal" value = "${staffIdValue}">Save
 								changes</button>
 						</div>
 					</form>
@@ -379,6 +407,41 @@ tbody tr:hover {
 		</div>
 	</div>
 
+	<!-- successfully created account -->
+	<div class="modal" tabindex="-1" id="createdModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">New account</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="mb-3 row">
+						<label for="staticEmail" class="col-sm-2 col-form-label">Username</label>
+						<div class="col-sm-10">
+							<input type="text" readonly class="form-control-plaintext"
+								id="username">
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" value = "123" readonly>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<form action="Recruit/DeleteStaff.htm" method="get">
+						<button type="button" class="btn btn-success"
+							data-bs-dismiss="modal">Ok</button>
+					</form>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!--warning Modal-->
 	<!-- delete -->
 	<div class="modal" tabindex="-1" id="warning">
@@ -398,6 +461,66 @@ tbody tr:hover {
 							data-bs-dismiss="modal">No</button>
 						<button type="submit" class="btn btn-primary yes-warning"
 							data-bs-dismiss="modal" name="yes-warning">Yes</button>
+					</form>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Reset -->
+	<div class="modal" tabindex="-1" id="ResetWarning">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">!!!</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Do you want to reset this password account to 123 ?</p>
+				</div>
+				<div class="modal-footer">
+					<form action="Recruit/ResetPassword.htm" method="get">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">No</button>
+						<button type="submit" class="btn btn-primary yes-reset-warning"
+							data-bs-dismiss="modal" name="yes-reset-warning">Yes</button>
+					</form>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- ResetPassword successfully -->
+	<div class="modal" tabindex="-1" id="ResetSuccessfullyModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">New Password</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="mb-3 row">
+						<label for="staticEmail" class="col-sm-2 col-form-label">Username</label>
+						<div class="col-sm-10">
+							<input type="text" readonly class="form-control-plaintext"
+								id="ResetUsername">
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" value = "123" readonly>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<form action="Recruit/DeleteStaff.htm" method="get">
+						<button type="button" class="btn btn-success"
+							data-bs-dismiss="modal">Ok</button>
 					</form>
 
 				</div>

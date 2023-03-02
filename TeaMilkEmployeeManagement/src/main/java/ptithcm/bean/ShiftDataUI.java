@@ -8,6 +8,9 @@ public class ShiftDataUI {
 	private String shiftDetailId;
 	
 	private String additionalJobs;
+	
+	private boolean isConfirmed = false;
+	
 
 	public ShiftDataUI(String shiftDetailId,String fullName, String jobPositionName,String additionalJobs) {
 		this.fullName = fullName;
@@ -43,6 +46,12 @@ public class ShiftDataUI {
 		this.additionalJobs = additionalJobs;
 	}
 	
+	public boolean getIsConfirmed() {
+		return isConfirmed;
+	}
+	public void setConfirmed(boolean isConfirmed) {
+		this.isConfirmed = isConfirmed;
+	}
 	
 	
 }

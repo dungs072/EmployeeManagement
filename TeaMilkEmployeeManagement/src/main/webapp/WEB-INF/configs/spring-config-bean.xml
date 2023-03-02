@@ -21,7 +21,7 @@
 	</bean>
 	<bean id="faultKeyHandler" class="ptithcm.bean.IncrementNumberAndTextKeyHandler">
 	</bean>
-	<bean id="managerPassDataHandler" class = "ptithcm.bean.PassDataBetweenControllerHandler"></bean>
 	<bean id="primaryKeyHandler" class = "ptithcm.bean.PrimaryKeyWithMoreDataHandler"></bean>
+	<bean  id="staffPassDataHandler" class = "ptithcm.bean.PassDataBetweenControllerHandler"></bean>
 	
 </beans>
