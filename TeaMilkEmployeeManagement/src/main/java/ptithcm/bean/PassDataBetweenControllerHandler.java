@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 @Service()
 public class PassDataBetweenControllerHandler {
-	
+
 	private String data;
 
 	public String getData() {

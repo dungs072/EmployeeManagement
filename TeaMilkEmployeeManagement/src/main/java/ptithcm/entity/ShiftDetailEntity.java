@@ -21,47 +21,46 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "CHITIETCA")
 public class ShiftDetailEntity {
-	
+
 	@Id
 	private String ID_CTCA;
-	
-	
+
 	@Column(name = "LUONGCA")
 	private float LUONGCA;
-	
+
 	@Column(name = "CONGVIEC")
 	private String CONGVIEC;
-	
+  
 	@Column(name = "THOIGIANDILAM")
 //	@Temporal(TemporalType.TIMESTAMP)
 	private Time THOIGIANDILAM;
-	
+
 	@Column(name = "THOIGIANCHAMCONG")
 //	@Temporal(TemporalType.TIMESTAMP)
 	private Time THOIGIANCHAMCONG;
-	
+
 	@Column(name = "XACNHAN")
 	private boolean XACNHAN;
+
 	
 	@Column(name = "TRANGTHAILUONG")
 	private boolean TRANGTHAILUONG;
 	
+
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "MANV")  
+	@JoinColumn(name = "MANV")
 	private StaffEntity staff;
-	
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "ID_CA_MO")
 	private OpenShiftEntity openshift;
-	
 
-	
-	@OneToMany(mappedBy = "shiftDetailEntity",fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "shiftDetailEntity", fetch = FetchType.EAGER)
 	private Set<MistakeHistoryEntity> mistakeHistoryEntities = new HashSet<MistakeHistoryEntity>();
-	
-	public ShiftDetailEntity() {}
-	
+
+	public ShiftDetailEntity() {
+	}
 
 	public StaffEntity getStaff() {
 		return staff;
@@ -71,8 +70,6 @@ public class ShiftDetailEntity {
 		this.staff = staff;
 	}
 
-	
-	
 	public String getID_CTCA() {
 		return ID_CTCA;
 	}
@@ -80,7 +77,6 @@ public class ShiftDetailEntity {
 	public void setID_CTCA(String iD_CTCA) {
 		ID_CTCA = iD_CTCA;
 	}
-
 
 	public float getLUONGCA() {
 		return LUONGCA;
@@ -97,9 +93,7 @@ public class ShiftDetailEntity {
 	public void setCONGVIEC(String cONGVIEC) {
 		CONGVIEC = cONGVIEC;
 	}
-	
 
-	
 	public Time getTHOIGIANDILAM() {
 		return THOIGIANDILAM;
 	}
@@ -124,25 +118,22 @@ public class ShiftDetailEntity {
 		XACNHAN = xACNHAN;
 	}
 
+	
 	public boolean isTRANGTHAILUONG() {
 		return TRANGTHAILUONG;
 	}
-
 
 	public void setTRANGTHAILUONG(boolean tRANGTHAILUONG) {
 		TRANGTHAILUONG = tRANGTHAILUONG;
 	}
 
-	
 	public OpenShiftEntity getOpenshift() {
 		return openshift;
 	}
 
-
 	public void setOpenshift(OpenShiftEntity openshift) {
 		this.openshift = openshift;
 	}
-
 
 	public Set<MistakeHistoryEntity> getMistakeHistoryEntities() {
 		return mistakeHistoryEntities;
@@ -151,13 +142,14 @@ public class ShiftDetailEntity {
 	public void setMistakeHistoryEntities(Set<MistakeHistoryEntity> mistakeHistoryEntities) {
 		this.mistakeHistoryEntities = mistakeHistoryEntities;
 	}
+
 	public void addMistakeHistoryEntity(MistakeHistoryEntity mistakeHistoryEntity) {
 		this.mistakeHistoryEntities.add(mistakeHistoryEntity);
 	}
-	
 	public void deleteLink() {
 		staff = null;
 		openshift = null;
 		setMistakeHistoryEntities(null);
 	}
+
 }

@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/fmt" prefix = "fmt" %>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/xml" prefix = "x" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>  
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 <!DOCTYPE html>
 <html>
@@ -22,30 +22,7 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<link
-	href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/base/jquery-ui.css"
-	rel="stylesheet" />
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-	crossorigin="anonymous" />
-
-<link rel="stylesheet"
-	href="extensions/sticky-header/bootstrap-table-sticky-header.css">
-<script src="extensions/sticky-header/bootstrap-table-sticky-header.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
-	integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
-	crossorigin="anonymous"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
-	integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
-	crossorigin="anonymous"></script>
 <title>Trang chủ</title>
 <style>
 .info-shift {
@@ -69,16 +46,8 @@
 	color: black;
 }
 
-.btn-form {
-	
-}
-
 textarea {
 	border-radius: 15px;
-}
-
-.table {
-	
 }
 </style>
 </head>
@@ -86,75 +55,149 @@ textarea {
 	<div class="container-fluid">
 		<div class="shift">
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-md-3">
 					<h2>Shift on day</h2>
 					<div class="row">
 						<div class="col-md-12 info-shift">
 							<h3>Shift 1</h3>
-							<label>Num of employees</label> <br>
-							<button type="button" class="btn btn-primary">More
-								Information</button>
+							
+							<form action="showDetail.htm" method="get">
+								<button name="idCa" value="1" type="submit"
+									class="btn btn-primary">More Information</button>
+							</form>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-12 info-shift">
 							<h3>Shift 2</h3>
-							<label>Num of employees</label> <br>
-							<button type="button" class="btn btn-primary">More
-								Information</button>
+							
+							<form action="showDetail.htm" method="get">
+								<button name="idCa" value="2" type="submit"
+									class="btn btn-primary">More Information</button>
+							</form>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-12 info-shift">
 							<h3>Shift 3</h3>
-							<label>Num of employees</label> <br>
-							<button type="button" class="btn btn-primary">More
-								Information</button>
+							
+							<form action="showDetail.htm" method="get">
+								<button name="idCa" value="3" type="submit"
+									class="btn btn-primary">More Information</button>
+							</form>
 						</div>
 					</div>
 				</div>
-				<div class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 shift-now">
+				<div class=" col-xs-9 col-sm-9 col-md-9 col-lg-9 shift-now">
 					<div class="row">
 						<div class=" col-md-6">
-						<c:set var="num" value="${shiftNow[0].shift.IDCA}"/>
-							<h3>Shift number: ${fn:substring(num,3,4)} </h3>
-							
+							<h3>Shift number: ${idca}</h3>
+
 						</div>
 						<div class="col-md-6 text-left">
-							<h3>Date: </h3>
+							<h3>Date: ${getDate}</h3>
 						</div>
 					</div>
-					<table class="table table-bordered table-hover">
+					<table class="table table-striped table-hover">
 						<thead>
 							<tr>
 								<th>Employee Code</th>
 								<th>Fullname</th>
 								<th>Position at shift</th>
 								<th>Salary</th>
-								<th>Delete employee</th>
+								<th>Fault</th>
+								<th>CheckIn</th>
 							</tr>
 						</thead>
 						<tbody>
-						<c:forEach var ="s" items= "${shiftNow}">
-							<tr>
-								<td>${s.staff.MANV}</td>
-								<td>${s.staff.HO} ${s.staff.TEN}</td>
-								<td>${s.CONGVIEC }</td>
-								<td><form action="updateSalary.htm" method="get" class="form-inline" >
-										<input name="salaryOfShift" type="text" value = "100000" placeholder="Add salary">
-										<button name = "updateSalary" type="submit" class="btn btn-primary" value= "${s.staff.MANV}" >Update salary</button>
-									</form></td>
-								<td align="center"><button name="btnRemove"
-										class="btn btn-danger">
-										<span class="glyphicon glyphicon-remove"></span>
-									</button></td>
-							</tr>
-						</c:forEach>
+							<c:forEach var="s" items="${shiftNow}">
+								<tr>
+									<td>${s.staff.MANV}</td>
+									<td>${s.staff.HO} ${s.staff.TEN}</td>
+									<td>${s.CONGVIEC }</td>
+									<c:choose>
+										<c:when test="${s.TRANGTHAILUONG == false}">
+											<td><form action="updateSalary.htm" method="get"
+													class="form-inline">
+													<input name="salaryOfShift" type="text"
+														placeholder="Add salary" value="" required>
+													<button name="updateSalary" type="submit"
+														class="btn btn-primary" value="${s.staff.MANV}">Update
+														</button>
+												</form></td>
+										</c:when>
+										<c:when test="${s.TRANGTHAILUONG == true}">
+											<td><form class="form-inline">
+													<div>${s.LUONGCA}</div>
+												</form></td>
+										</c:when>
+									</c:choose>
+									<td>
+										<!-- Button trigger modal -->
+										<button type="button" class="btn btn-primary"
+											data-toggle="modal" data-target="#exampleModal"
+											value="${s.staff.MANV}">Fault</button>
+											
+										<form action ="setFault.htm">
+										<div class="modal fade" id="exampleModal" tabindex="-1"
+											role="dialog" aria-labelledby="exampleModalLabel"
+											aria-hidden="true">
+											<div class="modal-dialog" role="document">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h2 class="modal-title" id="exampleModalLabel">Ghi
+															nhận lỗi</h2>
+														<button type="button" class="close" data-dismiss="modal"
+															aria-label="Close">
+															<span aria-hidden="true">&times;</span>
+														</button>
+													</div>
+													<div class="modal-body">
+															<div class="form-group">
+																<label for="idStaff">ID Staff</label> 
+																<input name="idStaff" id="idStaff" value="${s.staff.MANV}">
+															</div>
+															<div class="form-group" >
+																<label for="Fault">Fault</label> 
+																<select name ="fault" id="Fault">
+																	<c:forEach var="f" items="${faults}">
+																		<option >${f.MOTA}</option>
+																	</c:forEach>
+																</select>
+															</div>
+															<div class="form-group">
+																<label for="times">Times</label>
+																<input name="times" type="number"class="form-check-input" id="times" value="1">
+															</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary"
+															data-dismiss="modal">Close</button>
+														<button type="submit" class="btn btn-primary">Save changes</button>
+													</div>
+												</div>
+											</div>
+										</div>
+										</form>
+									</td>
+									<c:choose>
+										<c:when test = "${empty s.THOIGIANDILAM}">
+										<td>
+										<form action="checkin.htm">
+										 	<button name="maNV" type ="submit" class="btn btn-primary" value= "${s.staff.MANV}">CheckIn</button>
+										</form>
+										</td>
+										</c:when>
+										<c:when test = "${not empty s.THOIGIANDILAM}">
+										<td>
+											<div> ${s.THOIGIANDILAM} </div>
+										</td>
+										</c:when>
+									</c:choose>
+								</tr>
+							</c:forEach>
 						</tbody>
 					</table>
-					<hr>
-					<textarea rows="5" cols="109" placeholder="Note"></textarea>
-					<button type="button" class="btn btn-primary">Save Note</button>
 				</div>
 			</div>
 		</div>

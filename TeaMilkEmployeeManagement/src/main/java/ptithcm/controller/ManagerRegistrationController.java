@@ -39,29 +39,27 @@ public class ManagerRegistrationController {
 
 	@Autowired
 	SessionFactory factory;
-	
+
 	@Autowired
 	@Qualifier("staffPassDataHandler")
 	PassDataBetweenControllerHandler passDataBetweenControllerHandler;
-	
+
 	@Autowired
 	@Qualifier("primaryKeyHandler")
 	PrimaryKeyWithMoreDataHandler primaryKeyWithMoreDataHandler;
-	
+
 	private List<ShiftEntity> shifts;
 	private String weekDateFromTo;
 
-	
 	private boolean[][] canDisplayCancelButtons = new boolean[3][7];
 	private boolean[][] canDisplayOpenButtons = new boolean[3][7];
 	private ListShiftDataUI[][] shiftUIHash = new ListShiftDataUI[3][7];
-	
-	
+
 	@RequestMapping
-	public String displayRegistrationTable(HttpServletRequest request,ModelMap map)
-	{	setCanDisplayCancelButtons(false);
+	public String displayRegistrationTable(HttpServletRequest request, ModelMap map) {
+		setCanDisplayCancelButtons(false);
 		weekDateFromTo = getFirstDateAndLastDayOfCurrentWeek();
-		return displayMainView(request,map,weekDateFromTo);
+		return displayMainView(request, map, weekDateFromTo);
 	}
 	
 	@RequestMapping(value = "/Open",method = RequestMethod.GET)
@@ -135,12 +133,11 @@ public class ManagerRegistrationController {
 			weekDateFromTo = getFirstDateAndLastDayOfCurrentWeek();
 		}
 		return displayMainView(request,map,weekDateFromTo);
-
 	}
-	
-	@RequestMapping(value = "/AddStaff",method = RequestMethod.GET)
+
+	@RequestMapping(value = "/AddStaff", method = RequestMethod.GET)
 	public String addStaff(HttpServletRequest request, ModelMap map) {
-		
+
 		String shift_Date = request.getParameter("addStaffButton");
 		String[] shift_Dates = shift_Date.split(",");
 		String[] days = weekDateFromTo.split(" - ");
@@ -410,37 +407,39 @@ public class ManagerRegistrationController {
 	}
 	
 	private void setCanDisplayCancelButtons(boolean state) {
-		for(int i =0;i<3;i++) {
-			for(int j = 0;j<7;j++) {
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 7; j++) {
 				canDisplayCancelButtons[i][j] = state;
 			}
 		}
 	}
-	
-	
+
 	private Date sqlDatePlusDays(Date date, int days) {
-	    return Date.valueOf(date.toLocalDate().plusDays(days));
+		return Date.valueOf(date.toLocalDate().plusDays(days));
 	}
-	private int sqlDateMinsDays(Date date1,Date date2) {
-		long time_difference = date2.getTime() - date1.getTime();  
- 
-       return (int) ((time_difference / (1000*60*60*24)) % 365);  
+
+	private int sqlDateMinsDays(Date date1, Date date2) {
+		long time_difference = date2.getTime() - date1.getTime();
+
+		return (int) ((time_difference / (1000 * 60 * 60 * 24)) % 365);
 	}
+
 	private String castToSQLDateFormat(String dateStr) {
 		String[] date = dateStr.split("/");
-		return date[2]+"/"+date[1]+"/"+date[0];
+		return date[2] + "/" + date[1] + "/" + date[0];
 	}
+
 	private String castToCreatePrimaryKeyFormat(String dateStr) {
 		String[] date = dateStr.split("-");
-		return date[2]+date[1]+date[0];
+		return date[2] + date[1] + date[0];
 	}
+
 	private String castToJavaSQLDateFormat(String dateStr) {
 		String[] date = dateStr.split("/");
-		return date[2]+"-"+date[1]+"-"+date[0];
+		return date[2] + "-" + date[1] + "-" + date[0];
 	}
-	
 	@SuppressWarnings("unchecked")
-	private List<ShiftEntity> getShifts(){
+	private List<ShiftEntity> getShifts() {
 		Session session = factory.getCurrentSession();
 		String hql = "FROM ShiftEntity";
 		Query query = session.createQuery(hql);
@@ -518,15 +517,14 @@ public class ManagerRegistrationController {
 				shiftUIHash[shiftIndex-1][dateIndex].calculateLeftStaff();
 			}
 			
-			
-		
 		}
 	
 	}
+
 	private void resetUI() {
-		
 		for(int i =0;i<3;i++) {
 			for(int j =0;j<7;j++) {
+
 				shiftUIHash[i][j] = null;
 			}
 		}
@@ -545,14 +543,13 @@ public class ManagerRegistrationController {
 		return "/Manager/shiftRegistration"; 
 	}
 	
-	
 
 	private String getFirstDateAndLastDayOfCurrentWeek() {
-		 LocalDate now = LocalDate.now();
-	     LocalDate first = now.with(previousOrSame(DayOfWeek.MONDAY));
-	     LocalDate last = now.with(nextOrSame(DayOfWeek.SUNDAY));
-	     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	     
-	     return first.format(dateTimeFormatter)+" - "+ last.format(dateTimeFormatter);
+		LocalDate now = LocalDate.now();
+		LocalDate first = now.with(previousOrSame(DayOfWeek.MONDAY));
+		LocalDate last = now.with(nextOrSame(DayOfWeek.SUNDAY));
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+		return first.format(dateTimeFormatter) + " - " + last.format(dateTimeFormatter);
 	}
 }

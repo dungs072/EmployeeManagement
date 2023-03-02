@@ -1,4 +1,5 @@
 package ptithcm.controller;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,13 +23,12 @@ import ptithcm.entity.JobPositionEntity;
 import ptithcm.entity.MistakeEntity;
 import ptithcm.entity.StaffEntity;
 
-
 @Transactional
 @Controller
 public class ManagerController {
-	
+
 	@Autowired
-	SessionFactory factory;
+	SessionFactory factory; 
 	
 	@Autowired
 	@Qualifier("staffPassDataHandler")
@@ -41,8 +41,9 @@ public class ManagerController {
 	{	
 		return "Login";
 	}
-	@RequestMapping(value = "/CheckLogin",method = RequestMethod.POST)
-	public String tryLogin(HttpServletRequest request,ModelMap model) {
+
+	@RequestMapping(value = "/CheckLogin", method = RequestMethod.POST)
+	public String tryLogin(HttpServletRequest request, ModelMap model) {
 		String userName = request.getParameter("username");
 		String password = request.getParameter("password");
 		if(userName.isEmpty()&&password.isEmpty()) {
@@ -89,8 +90,7 @@ public class ManagerController {
 			return "Login";
 		}
 	}
-	
-	
+
 	public String hasExistedAccount(String userName, String password) {
 		String priority = "";
 		Session session = factory.getCurrentSession();
@@ -102,4 +102,3 @@ public class ManagerController {
 		return priority;
 	}
 }
-

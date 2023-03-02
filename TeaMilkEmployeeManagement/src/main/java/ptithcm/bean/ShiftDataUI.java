@@ -3,7 +3,7 @@ package ptithcm.bean;
 public class ShiftDataUI {
 
 	private String fullName;
-	
+
 	private String jobPositionName;
 	private String shiftDetailId;
 	
@@ -18,6 +18,7 @@ public class ShiftDataUI {
 		this.jobPositionName = jobPositionName;
 		this.additionalJobs = additionalJobs;
 	}
+
 	public String getFullName() {
 		return fullName;
 	}
@@ -33,6 +34,8 @@ public class ShiftDataUI {
 	public void setJobPositionName(String jobPositionName) {
 		this.jobPositionName = jobPositionName;
 	}
+
+
 	public String getShiftDetailId() {
 		return shiftDetailId;
 	}
@@ -52,6 +55,5 @@ public class ShiftDataUI {
 	public void setConfirmed(boolean isConfirmed) {
 		this.isConfirmed = isConfirmed;
 	}
-	
 	
 }

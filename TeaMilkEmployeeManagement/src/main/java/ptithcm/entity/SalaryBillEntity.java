@@ -21,19 +21,35 @@ public class SalaryBillEntity {
 	@Id
 	@GeneratedValue
 	private int MAPHIEU;
-	
-	
+
 	@Column(name = "THOIGIANNHAN")
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "DD/MM/YYYY")
 	private Date THOIGIANNHAN;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "MANV")
 	private StaffEntity staffEntity;
 	
 	@Column(name = "LUONGNHAN")
 	private float LUONGNHAN;
+
+	public StaffEntity getStaffEntity() {
+		return staffEntity;
+	}
+
+	public void setStaffEntity(StaffEntity staffEntity) {
+		this.staffEntity = staffEntity;
+	}
+
+	public float getLUONGNHAN() {
+		return LUONGNHAN;
+	}
+
+	public void setLUONGNHAN(float lUONGNHAN) {
+		LUONGNHAN = lUONGNHAN;
+	}
+
 	
 	public SalaryBillEntity() {}
 	public SalaryBillEntity(Date pickupDay, StaffEntity staffEntity) {
@@ -41,10 +57,10 @@ public class SalaryBillEntity {
 		this.staffEntity = staffEntity;
 	}
 
-
 	public int getMAPHIEU() {
 		return MAPHIEU;
 	}
+
 	public void setMAPHIEU(int mAPHIEU) {
 		MAPHIEU = mAPHIEU;
 	}
@@ -68,8 +84,6 @@ public class SalaryBillEntity {
 	public void setLUONGNHAN(float lUONGNHAN) {
 		LUONGNHAN = lUONGNHAN;
 	}
-	
-	
-	
+
 
 }

@@ -27,14 +27,13 @@ import ptithcm.entity.StaffEntity;
 @RequestMapping("/JobAndFault")
 public class JobAndFaultController {
 
-	
 	@Autowired
 	SessionFactory factory;
-	
+
 	@Autowired
 	@Qualifier("jobKeyHandler")
 	IncrementNumberAndTextKeyHandler jobKeyHandler;
-	
+
 	@Autowired
 	@Qualifier("faultKeyHandler")
 	IncrementNumberAndTextKeyHandler faultKeyHandler;
@@ -43,9 +42,17 @@ public class JobAndFaultController {
 	
 	@RequestMapping
 	public String jobFaultDisplay(ModelMap model) {
-		
+
 		List<MistakeEntity> mistakes = getFaults();
 		List<JobPositionEntity> jobs = getJobs();
+
+
+		toggleJobDeleteButton(jobs);
+		toggleFaultDeleteButton(mistakes);
+
+		model.addAttribute("faults", mistakes);
+		model.addAttribute("jobs", jobs);
+
 		shifts = getShifts();
 		toggleJobDeleteButton(jobs);
 		toggleFaultDeleteButton(mistakes);
@@ -54,77 +61,77 @@ public class JobAndFaultController {
 		model.addAttribute("jobs",jobs);
 		model.addAttribute("shifts",shifts);
 		
-		
 		return "/Admin/JobAndFaultManager";
 	}
-	@RequestMapping(value = "/AddJob",method = RequestMethod.GET)
-	public String addJob(ModelMap model,JobPositionEntity job) {
+
+	@RequestMapping(value = "/AddJob", method = RequestMethod.GET)
+	public String addJob(ModelMap model, JobPositionEntity job) {
 		String jobId = jobKeyHandler.getNewKey("CV");
-		addJobToDB(job,jobId);
+		addJobToDB(job, jobId);
 		updateAllTable(model);
-		
+
 		return "/Admin/JobAndFaultManager";
 	}
-	
-	@RequestMapping(value = "/AddFault",method = RequestMethod.GET)
+
+	@RequestMapping(value = "/AddFault", method = RequestMethod.GET)
 	public String addFault(ModelMap model, MistakeEntity fault) {
 		String faultId = faultKeyHandler.getNewKey("L");
-		addFaultToDB(fault,faultId);
+		addFaultToDB(fault, faultId);
 		updateAllTable(model);
 		return "/Admin/JobAndFaultManager";
 	}
-	
+
 	@RequestMapping(value = "/DeleteJob", method = RequestMethod.GET)
-	public String deleteJob(ModelMap model,HttpServletRequest request) {
+	public String deleteJob(ModelMap model, HttpServletRequest request) {
 		Session session = factory.getCurrentSession();
 		JobPositionEntity job = new JobPositionEntity();
 		String jobId = request.getParameter("yes-job-warning");
 		job.setMACV(jobId);
-		if(canDeleteJob(jobId,session))
-		{
+		if (canDeleteJob(jobId, session)) {
 			session.delete(job);
 		}
 		updateAllTable(model);
 		return "/Admin/JobAndFaultManager";
 	}
+
 	@RequestMapping(value = "/DeleteFault", method = RequestMethod.GET)
-	public String deleteFault(ModelMap model,HttpServletRequest request) {
+	public String deleteFault(ModelMap model, HttpServletRequest request) {
 		Session session = factory.getCurrentSession();
 		MistakeEntity fault = new MistakeEntity();
 		String faultId = request.getParameter("yes-fault-warning");
 		fault.setIDLOI(faultId);
-		if(canDeleteJob(faultId,session))
-		{
+		if (canDeleteJob(faultId, session)) {
 			session.delete(fault);
 		}
 		updateAllTable(model);
 		return "/Admin/JobAndFaultManager";
 	}
+
 	// just show detail job to modify VITRICONGVIEC
-	@RequestMapping(value = "/ShowJob",method = RequestMethod.GET)
-	public String showDetailJob(ModelMap model,HttpServletRequest request) {
+	@RequestMapping(value = "/ShowJob", method = RequestMethod.GET)
+	public String showDetailJob(ModelMap model, HttpServletRequest request) {
 		Session session = factory.getCurrentSession();
 		String jobId = request.getParameter("InforJob");
-		
+
 		JobPositionEntity job = (JobPositionEntity) session.get(JobPositionEntity.class, jobId);
-		model.addAttribute("showJob",job);
+		model.addAttribute("showJob", job);
 		updateAllTable(model);
 		return "/Admin/JobAndFaultManager";
 	}
-	
-	@RequestMapping(value = "/ShowFault",method = RequestMethod.GET)
+
+	@RequestMapping(value = "/ShowFault", method = RequestMethod.GET)
 	public String showDetailFault(ModelMap model, HttpServletRequest request) {
 		Session session = factory.getCurrentSession();
 		String faultId = request.getParameter("InforFault");
 		MistakeEntity fault = (MistakeEntity) session.get(MistakeEntity.class, faultId);
-		model.addAttribute("showFault",fault);
+		model.addAttribute("showFault", fault);
 		updateAllTable(model);
 		return "/Admin/JobAndFaultManager";
 	}
-	
+
 	// modify VITRICONGVIEC(send data to database)
 	@RequestMapping(value = "/UpdateJob", method = RequestMethod.GET)
-	public String updateDetailJob(ModelMap model,HttpServletRequest request) {
+	public String updateDetailJob(ModelMap model, HttpServletRequest request) {
 		Session session = factory.getCurrentSession();
 		String jobId = request.getParameter("updateJobId");
 		String nameJob = request.getParameter("updateTENVITRI");
@@ -134,12 +141,13 @@ public class JobAndFaultController {
 		updateAllTable(model);
 		return "/Admin/JobAndFaultManager";
 	}
-	@RequestMapping(value = "/UpdateFault",method = RequestMethod.GET)
+
+	@RequestMapping(value = "/UpdateFault", method = RequestMethod.GET)
 	public String updateDetailFault(ModelMap model, HttpServletRequest request) {
 		Session session = factory.getCurrentSession();
 		String faultId = request.getParameter("updateFaultId");
 		String desFault = request.getParameter("updateMOTA");
-		MistakeEntity fault = (MistakeEntity)session.get(MistakeEntity.class,faultId);
+		MistakeEntity fault = (MistakeEntity) session.get(MistakeEntity.class, faultId);
 		fault.setMOTA(desFault);
 		session.saveOrUpdate(fault);
 		updateAllTable(model);
@@ -160,19 +168,21 @@ public class JobAndFaultController {
 	
 	private void toggleJobDeleteButton(List<JobPositionEntity> jobs) {
 		Session session = factory.getCurrentSession();
-		for(var job:jobs) {
-			if(job.getTENVITRI().strip().equals("Manager")) {
+		for (var job : jobs) {
+			if (job.getTENVITRI().strip().equals("Manager")) {
 				job.setCanUpdate(false);
 			}
-			job.setCanDelete(canDeleteJob(job.getMACV(),session));
+			job.setCanDelete(canDeleteJob(job.getMACV(), session));
 		}
 	}
+
 	private void toggleFaultDeleteButton(List<MistakeEntity> faults) {
 		Session session = factory.getCurrentSession();
-		for(var fault:faults) {
-			fault.setCanDelete(canDeleteFault(fault.getIDLOI(),session));
+		for (var fault : faults) {
+			fault.setCanDelete(canDeleteFault(fault.getIDLOI(), session));
 		}
 	}
+
 	private void updateAllTable(ModelMap model) {
 		List<JobPositionEntity> jobs = getJobs();
 		List<MistakeEntity> faults = getFaults();
@@ -183,54 +193,56 @@ public class JobAndFaultController {
 		model.addAttribute("faults",faults);
 		model.addAttribute("shifts",shifts);
 	}
-	
-	private void addJobToDB(JobPositionEntity job,String id) {
-		if(job==null) {return;}
+
+	private void addJobToDB(JobPositionEntity job, String id) {
+		if (job == null) {
+			return;
+		}
 		job.setMACV(id);
 		Session session = factory.getCurrentSession();
 		session.save(job);
 	}
-	
-	private void addFaultToDB(MistakeEntity fault,String id) {
-		if(fault==null) {return;}
+
+	private void addFaultToDB(MistakeEntity fault, String id) {
+		if (fault == null) {
+			return;
+		}
 		fault.setIDLOI(id);
 		Session session = factory.getCurrentSession();
 		session.save(fault);
 	}
-	
-	private boolean canDeleteJob(String id,Session session) {
-		
+
+	private boolean canDeleteJob(String id, Session session) {
+
 		String hql = "SELECT COUNT(*) FROM StaffEntity WHERE jobPosition.MACV = :id";
 		Query query = session.createQuery(hql);
 		query.setString("id", id);
-		return (long)query.uniqueResult()==0;
+		return (long) query.uniqueResult() == 0;
 	}
-	
+
 	@SuppressWarnings("unused")
-	private boolean canDeleteFault(String id,Session session) {
+	private boolean canDeleteFault(String id, Session session) {
 		String hql = "SELECT COUNT(*) FROM MistakeHistoryEntity WHERE mistakeEntity.IDLOI = :id";
 		Query query = session.createQuery(hql);
 		query.setString("id", id);
-		return (long)query.uniqueResult()==0;
+		return (long) query.uniqueResult() == 0;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private List<MistakeEntity> getFaults()
-	{
+	private List<MistakeEntity> getFaults() {
 		Session session = factory.getCurrentSession();
 		String hql = "FROM MistakeEntity";
 		Query query = session.createQuery(hql);
 		return query.list();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private List<JobPositionEntity> getJobs(){
+	private List<JobPositionEntity> getJobs() {
 		Session session = factory.getCurrentSession();
 		String hql = "FROM JobPositionEntity";
 		Query query = session.createQuery(hql);
 		return query.list();
 	}
-	
 	@SuppressWarnings("unchecked")
 	private List<ShiftEntity> getShifts(){
 		Session session = factory.getCurrentSession();
@@ -238,6 +250,5 @@ public class JobAndFaultController {
 		Query query = session.createQuery(hql);
 		return query.list();
 	}
-	
 	
 }
