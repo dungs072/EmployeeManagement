@@ -10,25 +10,22 @@ import ptithcm.bean.Primarykeyable;
 
 @Entity
 @Table(name = "VITRICV")
-public class JobPositionEntity implements Primarykeyable{
+public class JobPositionEntity implements Primarykeyable {
 
 	@Id
 	private String MACV;
-	
+
 	@Column(name = "TENVITRI")
 	private String TENVITRI;
-	
+
 	@Transient
 	private boolean canDelete;
 	@Transient
 	private boolean canUpdate = true;
-	
-	
 
-	public JobPositionEntity()
-	{
+	public JobPositionEntity() {
 	}
-	
+
 	public JobPositionEntity(String positionName) {
 		TENVITRI = positionName;
 	}
@@ -61,7 +58,7 @@ public class JobPositionEntity implements Primarykeyable{
 	public void setCanDelete(boolean canDelete) {
 		this.canDelete = canDelete;
 	}
-	
+
 	public boolean isCanUpdate() {
 		return canUpdate;
 	}
@@ -69,5 +66,5 @@ public class JobPositionEntity implements Primarykeyable{
 	public void setCanUpdate(boolean canUpdate) {
 		this.canUpdate = canUpdate;
 	}
-	
+
 }

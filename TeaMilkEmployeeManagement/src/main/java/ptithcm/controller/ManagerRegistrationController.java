@@ -45,30 +45,28 @@ public class ManagerRegistrationController {
 
 	@Autowired
 	SessionFactory factory;
-	
+
 	@Autowired
 	@Qualifier("managerPassDataHandler")
 	PassDataBetweenControllerHandler passDataBetweenControllerHandler;
-	
+
 	@Autowired
 	@Qualifier("primaryKeyHandler")
 	PrimaryKeyWithMoreDataHandler primaryKeyWithMoreDataHandler;
-	
+
 	private List<ShiftEntity> shifts;
 	private String weekDateFromTo;
 
-	
 	private boolean[][] canDisplayCancelButtons = new boolean[3][7];
 	private ListShiftDataUI[][] shiftUIHash = new ListShiftDataUI[3][7];
-	
-	
+
 	@RequestMapping
-	public String displayRegistrationTable(HttpServletRequest request,ModelMap map)
-	{	setCanDisplayCancelButtons(false);
+	public String displayRegistrationTable(HttpServletRequest request, ModelMap map) {
+		setCanDisplayCancelButtons(false);
 		weekDateFromTo = getFirstDateAndLastDayOfCurrentWeek();
-		return displayMainView(request,map,weekDateFromTo);
+		return displayMainView(request, map, weekDateFromTo);
 	}
-	
+
 //	@RequestMapping(value = "/Open",method = RequestMethod.GET)
 //	public String openSpecificShift(HttpServletRequest request, ModelMap map) {
 //		Session session = factory.getCurrentSession();
@@ -119,27 +117,27 @@ public class ManagerRegistrationController {
 //	}
 //	
 //	
-	@RequestMapping(value = "/Search",method = RequestMethod.GET)
-	public String searchRegistrationTable(HttpServletRequest request,ModelMap map) {
-		
+	@RequestMapping(value = "/Search", method = RequestMethod.GET)
+	public String searchRegistrationTable(HttpServletRequest request, ModelMap map) {
+
 		weekDateFromTo = request.getParameter("searchButton");
-		displayMainView(request,map,weekDateFromTo);
+		displayMainView(request, map, weekDateFromTo);
 		return "/Manager/shiftRegistration";
 	}
-	
-	@RequestMapping(value = "/AddStaff",method = RequestMethod.GET)
+
+	@RequestMapping(value = "/AddStaff", method = RequestMethod.GET)
 	public String addStaff(HttpServletRequest request, ModelMap map) {
-		
+
 		String shift_Date = request.getParameter("addStaffButton");
 		String[] shift_Dates = shift_Date.split(",");
 		String[] days = weekDateFromTo.split(" - ");
 		String firstDateStr = castToJavaSQLDateFormat(days[0]);
-		Date firstDate=Date.valueOf(firstDateStr);
-		
-		Date dateAfterPlus = sqlDatePlusDays(firstDate,Integer.parseInt(shift_Dates[1])-1);
+		Date firstDate = Date.valueOf(firstDateStr);
+
+		Date dateAfterPlus = sqlDatePlusDays(firstDate, Integer.parseInt(shift_Dates[1]) - 1);
 		List<StaffEntity> staffs = getCanDoWorkStaffS(dateAfterPlus.toString(), shift_Dates[0]);
-		map.addAttribute("staffs",staffs);
-		return displayMainView(request,map,weekDateFromTo);
+		map.addAttribute("staffs", staffs);
+		return displayMainView(request, map, weekDateFromTo);
 	}
 //	@RequestMapping(value = "/SaveAddStaff",method = RequestMethod.GET)
 //	public String saveAddStaff(HttpServletRequest request, ModelMap map) {
@@ -168,132 +166,139 @@ public class ManagerRegistrationController {
 //		shiftDetail.setCONGVIEC(toDoList);
 //		session.save(shiftDetail);
 //		return displayMainView(request,map,weekDateFromTo);
-	//}
-	
+	// }
+
 	private void setCanDisplayCancelButtons(boolean state) {
-		for(int i =0;i<3;i++) {
-			for(int j = 0;j<7;j++) {
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 7; j++) {
 				canDisplayCancelButtons[i][j] = state;
 			}
 		}
 	}
-	
-	
+
 	private Date sqlDatePlusDays(Date date, int days) {
-	    return Date.valueOf(date.toLocalDate().plusDays(days));
+		return Date.valueOf(date.toLocalDate().plusDays(days));
 	}
-	private int sqlDateMinsDays(Date date1,Date date2) {
-		long time_difference = date2.getTime() - date1.getTime();  
- 
-       return (int) ((time_difference / (1000*60*60*24)) % 365);  
+
+	private int sqlDateMinsDays(Date date1, Date date2) {
+		long time_difference = date2.getTime() - date1.getTime();
+
+		return (int) ((time_difference / (1000 * 60 * 60 * 24)) % 365);
 	}
+
 	private String castToSQLDateFormat(String dateStr) {
 		String[] date = dateStr.split("/");
-		return date[2]+"/"+date[1]+"/"+date[0];
+		return date[2] + "/" + date[1] + "/" + date[0];
 	}
+
 	private String castToCreatePrimaryKeyFormat(String dateStr) {
 		String[] date = dateStr.split("-");
-		return date[2]+date[1]+date[0];
+		return date[2] + date[1] + date[0];
 	}
+
 	private String castToJavaSQLDateFormat(String dateStr) {
 		String[] date = dateStr.split("/");
-		return date[2]+"-"+date[1]+"-"+date[0];
+		return date[2] + "-" + date[1] + "-" + date[0];
 	}
-	
+
 	private void deleteAllStaffRegistrationsAtThisShift(String idPattern) {
 		Session session = factory.getCurrentSession();
 		String sql = "DELETE CHITIETCA WHERE ID_CTCA LIKE CONCAT('%',:idPattern)";
 		Query query = session.createSQLQuery(sql);
 		query.setString("idPattern", idPattern);
 	}
+
 	@SuppressWarnings("unchecked")
-	private List<Object[]> getShiftDetailsData(String fromDate, String toDate){
+	private List<Object[]> getShiftDetailsData(String fromDate, String toDate) {
 		Session session = factory.getCurrentSession();
 		String sql = "SELECT IDCA, DATEDIFF(day,:fromDate,THOIGIANDANGKI) FROM CHITIETCA "
-					+ "WHERE THOIGIANDANGKI BETWEEN :fromDate AND :toDate";
+				+ "WHERE THOIGIANDANGKI BETWEEN :fromDate AND :toDate";
 		Query query = session.createSQLQuery(sql);
 		query.setString("fromDate", fromDate);
-		query.setString("toDate",toDate);
+		query.setString("toDate", toDate);
 		return query.list();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private List<ShiftEntity> getShifts(){
+	private List<ShiftEntity> getShifts() {
 		Session session = factory.getCurrentSession();
 		String hql = "FROM ShiftEntity";
 		Query query = session.createQuery(hql);
 		return query.list();
 	}
 
-	private String displayMainView(HttpServletRequest request, ModelMap map,String weekDateFromTo) {
-		if(shifts==null) {
+	private String displayMainView(HttpServletRequest request, ModelMap map, String weekDateFromTo) {
+		if (shifts == null) {
 			shifts = getShifts();
 		}
-		
+
 		setCanDisplayCancelButtons(false);
 		putDataToView(weekDateFromTo);
 		putStaffRegistrationDataToView();
 		map.addAttribute("weekSelection", weekDateFromTo);
-		map.addAttribute("shifts",shifts);
-		map.addAttribute("canDisplayCancelButton",canDisplayCancelButtons);
-		map.addAttribute("shiftStaffs",shiftUIHash);
-		return "/Manager/shiftRegistration"; 
+		map.addAttribute("shifts", shifts);
+		map.addAttribute("canDisplayCancelButton", canDisplayCancelButtons);
+		map.addAttribute("shiftStaffs", shiftUIHash);
+		return "/Manager/shiftRegistration";
 	}
+
 	private String functionDisplayMainView(HttpServletRequest request, ModelMap map) {
-		
-		if(shifts==null) {
+
+		if (shifts == null) {
 			shifts = getShifts();
 		}
 		map.addAttribute("weekSelection", weekDateFromTo);
-		map.addAttribute("shifts",shifts);
-		map.addAttribute("canDisplayCancelButton",canDisplayCancelButtons);
-		return "/Manager/shiftRegistration"; 
+		map.addAttribute("shifts", shifts);
+		map.addAttribute("canDisplayCancelButton", canDisplayCancelButtons);
+		return "/Manager/shiftRegistration";
 	}
-	
+
 	private void putDataToView(String weekDateFromTo) {
-		//code here/ create object hold map for displaying
-		
+		// code here/ create object hold map for displaying
+
 		List<Object[]> shiftDetailDatas = getSpecificShiftDetails(weekDateFromTo);
-		for(var shiftDetailData:shiftDetailDatas) {
+		for (var shiftDetailData : shiftDetailDatas) {
 			Integer shiftId = Integer.parseInt(((String) shiftDetailData[0]).strip());
 			Integer dayIndex = (Integer) shiftDetailData[1];
-			canDisplayCancelButtons[shiftId-1][dayIndex] = true;
+			canDisplayCancelButtons[shiftId - 1][dayIndex] = true;
 		}
 	}
+
 	private void resetShiftDataView() {
-		for(int i =0;i<3;i++) {
-			for(int j =0;j<7;j++) {
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 7; j++) {
 				shiftUIHash[i][j] = null;
 			}
 		}
 	}
+
 	private void putStaffRegistrationDataToView() {
 		resetShiftDataView();
 		String[] dates = weekDateFromTo.split(" - ");
 		Date firstDate = Date.valueOf(castToJavaSQLDateFormat(dates[0]));
 		dates[0] = castToSQLDateFormat(dates[0]);
 		dates[1] = castToSQLDateFormat(dates[1]);
-		
-		List<Object[]> shiftStaffInfors = getShiftStaffsInfor(dates[0],dates[1]);
-		for(var shiftInfor: shiftStaffInfors) {
+
+		List<Object[]> shiftStaffInfors = getShiftStaffsInfor(dates[0], dates[1]);
+		for (var shiftInfor : shiftStaffInfors) {
 			Integer shiftIndex = Integer.parseInt(((String) shiftInfor[4]).strip());
-			//Integer dayIndex = (Integer)shiftInfor[5];
+			// Integer dayIndex = (Integer)shiftInfor[5];
 			System.out.println(shiftInfor[5].toString().strip());
-			Date date=Date.valueOf(shiftInfor[5].toString().strip());
-			Integer dayIndex = sqlDateMinsDays(firstDate,date);
-			String fullName = ((String)shiftInfor[1]).strip()+((String)shiftInfor[2]).strip();
-			String id = (String)shiftInfor[0];
-			String jobName = (String)shiftInfor[3];
-			if(shiftUIHash[shiftIndex][dayIndex]==null) {
+			Date date = Date.valueOf(shiftInfor[5].toString().strip());
+			Integer dayIndex = sqlDateMinsDays(firstDate, date);
+			String fullName = ((String) shiftInfor[1]).strip() + ((String) shiftInfor[2]).strip();
+			String id = (String) shiftInfor[0];
+			String jobName = (String) shiftInfor[3];
+			if (shiftUIHash[shiftIndex][dayIndex] == null) {
 				shiftUIHash[shiftIndex][dayIndex] = new ListShiftDataUI();
-				
+
 			}
-			shiftUIHash[shiftIndex][dayIndex].addShiftDataUI(new ShiftDataUI(id.strip(),fullName,jobName));
+			shiftUIHash[shiftIndex][dayIndex].addShiftDataUI(new ShiftDataUI(id.strip(), fullName, jobName));
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private List<Object[]> getShiftStaffsInfor(String firstDate, String lastDate){
+	private List<Object[]> getShiftStaffsInfor(String firstDate, String lastDate) {
 		Session session = factory.getCurrentSession();
 //		String sql = "NV.MANV,HO,TEN,COUNTDAY,IDCA,TENVITRI FROM VITRICV, "
 //				+ "(SELECT N.MANV,HO,TEN,MACV,COUNTDAY,IDCA FROM "
@@ -303,46 +308,47 @@ public class ManagerRegistrationController {
 //				+ " WHERE VITRICV.MACV = NV.MACV ";
 		String hql = "SELECT staff.MANV,staff.HO,staff.TEN,staff.jobPosition.TENVITRI,shift.IDCA,THOIGIANDANGKI"
 				+ " FROM ShiftDetailEntity WHERE THOIGIANDANGKI BETWEEN :firstDate AND :lastDate "
-				+ " AND staff.MANV IN (SELECT TENTK FROM AccountEntity WHERE MAQUYEN = 'NV')"; 
+				+ " AND staff.MANV IN (SELECT TENTK FROM AccountEntity WHERE MAQUYEN = 'NV')";
 		Query query = session.createQuery(hql);
 		query.setString("firstDate", firstDate);
-		query.setString("lastDate",lastDate);
+		query.setString("lastDate", lastDate);
 		return query.list();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private List<JobPositionEntity> getJobs(){
+	private List<JobPositionEntity> getJobs() {
 		Session session = factory.getCurrentSession();
 		String hql = "FROM JobPositionEntity WHERE TENVITRI!='Manager'";
 		Query query = session.createQuery(hql);
 		return query.list();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private List<StaffEntity> getCanDoWorkStaffS(String date,String idCa){
+	private List<StaffEntity> getCanDoWorkStaffS(String date, String idCa) {
 		Session session = factory.getCurrentSession();
 		String hql = "FROM StaffEntity"
 				+ " WHERE MANV NOT IN (SELECT staff.MANV FROM ShiftDetailEntity WHERE THOIGIANDANGKI = :date AND shift.IDCA = :idCa) "
-				+" AND MANV IN(SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = true AND priorityEntity.MAQUYEN = 'NV')";
+				+ " AND MANV IN(SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = true AND priorityEntity.MAQUYEN = 'NV')";
 		Query query = session.createQuery(hql);
 		query.setString("date", date);
 		query.setString("idCa", idCa);
 		return query.list();
 	}
-	
-	private List<Object[]> getSpecificShiftDetails(String week){
+
+	private List<Object[]> getSpecificShiftDetails(String week) {
 		String[] dates = week.split(" - ");
 		dates[0] = castToSQLDateFormat(dates[0]);
 		dates[1] = castToSQLDateFormat(dates[1]);
-		return getShiftDetailsData(dates[0],dates[1]);
-		
+		return getShiftDetailsData(dates[0], dates[1]);
+
 	}
+
 	private String getFirstDateAndLastDayOfCurrentWeek() {
-		 LocalDate now = LocalDate.now();
-	     LocalDate first = now.with(previousOrSame(DayOfWeek.MONDAY));
-	     LocalDate last = now.with(nextOrSame(DayOfWeek.SUNDAY));
-	     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	     
-	     return first.format(dateTimeFormatter)+" - "+ last.format(dateTimeFormatter);
+		LocalDate now = LocalDate.now();
+		LocalDate first = now.with(previousOrSame(DayOfWeek.MONDAY));
+		LocalDate last = now.with(nextOrSame(DayOfWeek.SUNDAY));
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+		return first.format(dateTimeFormatter) + " - " + last.format(dateTimeFormatter);
 	}
 }

@@ -22,49 +22,51 @@ import ptithcm.bean.Primarykeyable;
 @Entity
 @Table(name = "NHANVIEN")
 public class StaffEntity implements Primarykeyable {
-	
+
 	@Id
 	private String MANV;
-	
-	@Column(name ="HO")
+
+	@Column(name = "HO")
 	private String HO;
-	
+
 	@Column(name = "TEN")
 	private String TEN;
-	
+
 	@Column(name = "GIOITINH")
 	private String GIOITINH;
-	
+
 	@Column(name = "NGAYSINH")
 //	@Temporal(TemporalType.DATE)
 //	@DateTimeFormat(pattern = "DD/MM/YYYY")
 	private Date NGAYSINH;
-	
+
 	@Column(name = "CCCD")
 	private String CCCD;
-	
+
 	@Column(name = "SDT")
 	private String SDT;
-	
+
 	@Column(name = "EMAIL")
 	private String EMAIL;
-	
+
 	@Column(name = "DIACHI")
 	private String DIACHI;
-	
+
 	@Column(name = "LUONGTICHLUY")
 	private float LUONGTICHLUY;
-	
+
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "MACV")
 	private JobPositionEntity jobPosition;
-	
+
 	@OneToMany(mappedBy = "staff")
 	private Set<ShiftDetailEntity> detailEntities = new HashSet<ShiftDetailEntity>();
-	
-	public StaffEntity() {}
-	
-	public StaffEntity(String firstName, String lastName, String gender, String idCardNumber, String phoneNumber, String address){
+
+	public StaffEntity() {
+	}
+
+	public StaffEntity(String firstName, String lastName, String gender, String idCardNumber, String phoneNumber,
+			String address) {
 		HO = firstName;
 		TEN = lastName;
 		GIOITINH = gender;
@@ -72,6 +74,7 @@ public class StaffEntity implements Primarykeyable {
 		SDT = phoneNumber;
 		DIACHI = address;
 	}
+
 	public String getMANV() {
 		return MANV;
 	}
@@ -155,10 +158,11 @@ public class StaffEntity implements Primarykeyable {
 	public JobPositionEntity getJobPosition() {
 		return jobPosition;
 	}
+
 	public void setJobPosition(JobPositionEntity jobPosition) {
 		this.jobPosition = jobPosition;
 	}
-	
+
 	public Set<ShiftDetailEntity> getDetailEntities() {
 		return detailEntities;
 	}
@@ -166,10 +170,11 @@ public class StaffEntity implements Primarykeyable {
 	public void setDetailEntities(Set<ShiftDetailEntity> detailEntities) {
 		this.detailEntities = detailEntities;
 	}
+
 	public void addShiftDetailEntity(ShiftDetailEntity shiftDetailEntity) {
-        this.detailEntities.add(shiftDetailEntity);
-    }
-	
+		this.detailEntities.add(shiftDetailEntity);
+	}
+
 	public void updateInfor(StaffEntity staff) {
 		this.HO = staff.getHO();
 		this.TEN = staff.getTEN();
@@ -185,9 +190,13 @@ public class StaffEntity implements Primarykeyable {
 	@Override
 	public String getPrimaryKey() {
 		return MANV;
-	}  
-	
+	}
+
 	public void updateSalary(float salaryOfShift) {
 		LUONGTICHLUY = LUONGTICHLUY + salaryOfShift;
+	}
+	
+	public void paySalary(float salary) {
+		LUONGTICHLUY = LUONGTICHLUY - salary;
 	}
 }

@@ -18,22 +18,24 @@ import ptithcm.bean.Primarykeyable;
 public class MistakeEntity implements Primarykeyable {
 	@Id
 	private String IDLOI;
-	
+
 	@Column(name = "MOTA")
 	private String MOTA;
-	
-	@OneToMany(mappedBy = "mistakeEntity",fetch = FetchType.EAGER)
+
+	@OneToMany(mappedBy = "mistakeEntity", fetch = FetchType.EAGER)
 	private Set<MistakeHistoryEntity> mistakeHistoryEntities = new HashSet<MistakeHistoryEntity>();
-	
+
 	@Transient
 	private boolean canDelete;
 
-	public MistakeEntity() {}
-	
+	public MistakeEntity() {
+	}
+
 	public MistakeEntity(String description) {
 		this.MOTA = description;
 		canDelete = true;
 	}
+
 	public String getIDLOI() {
 		return IDLOI;
 	}
@@ -50,7 +52,6 @@ public class MistakeEntity implements Primarykeyable {
 		MOTA = mOTA;
 	}
 
-
 	public Set<MistakeHistoryEntity> getMistakeHistoryEntities() {
 		return mistakeHistoryEntities;
 	}
@@ -58,7 +59,7 @@ public class MistakeEntity implements Primarykeyable {
 	public void setMistakeHistoryEntities(Set<MistakeHistoryEntity> mistakeHistoryEntities) {
 		this.mistakeHistoryEntities = mistakeHistoryEntities;
 	}
-	
+
 	public void addMistakeHistoryEntity(MistakeHistoryEntity mistakeHistoryEntity) {
 		this.mistakeHistoryEntities.add(mistakeHistoryEntity);
 	}
@@ -75,6 +76,5 @@ public class MistakeEntity implements Primarykeyable {
 	public void setCanDelete(boolean canDelete) {
 		this.canDelete = canDelete;
 	}
-	
-	
+
 }

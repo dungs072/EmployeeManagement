@@ -18,28 +18,28 @@ import javax.persistence.Table;
 @Table(name = "CA_MO")
 public class OpenShiftEntity {
 
-	
 	@Id
 	private String ID_CA_MO;
-	
+
 	@Column(name = "NGAYLAMVIEC")
 	private Date NGAYLAMVIEC;
-	
+
 	@Column(name = "SOLUONGDANGKI")
 	private int SOLUONGDANGKI;
-	
+
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "IDCA")  
+	@JoinColumn(name = "IDCA")
 	private ShiftEntity shift;
-	
+
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "MANV")  
+	@JoinColumn(name = "MANV")
 	private StaffEntity staff;
-	
-	@OneToMany(mappedBy = "openshift",fetch = FetchType.EAGER)
+
+	@OneToMany(mappedBy = "openshift", fetch = FetchType.EAGER)
 	private Set<ShiftDetailEntity> detailEntities = new HashSet<ShiftDetailEntity>();
-	
-	public OpenShiftEntity() {}
+
+	public OpenShiftEntity() {
+	}
 
 	public String getID_CA_MO() {
 		return ID_CA_MO;
@@ -80,7 +80,7 @@ public class OpenShiftEntity {
 	public void setStaff(StaffEntity staff) {
 		this.staff = staff;
 	}
-	
+
 	public Set<ShiftDetailEntity> getDetailEntities() {
 		return detailEntities;
 	}
@@ -92,5 +92,5 @@ public class OpenShiftEntity {
 	public void addShiftDetailEntities(ShiftDetailEntity detailEntity) {
 		this.detailEntities.add(detailEntity);
 	}
-	
+
 }

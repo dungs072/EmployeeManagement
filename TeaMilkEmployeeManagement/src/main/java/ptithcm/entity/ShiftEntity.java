@@ -14,15 +14,15 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "CA")
 public class ShiftEntity {
-	
+
 	@Id
 	private String IDCA;
 	@Column(name = "TENCA")
 	private String TENCA;
-	
 
-	public ShiftEntity() {}
-	
+	public ShiftEntity() {
+	}
+
 	public ShiftEntity(String tenca) {
 		this.TENCA = tenca;
 	}
@@ -34,7 +34,7 @@ public class ShiftEntity {
 	public void setIDCA(String iDCA) {
 		IDCA = iDCA;
 	}
-		
+
 	public String getTENCA() {
 		return TENCA;
 	}

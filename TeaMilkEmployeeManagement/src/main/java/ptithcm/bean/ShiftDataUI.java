@@ -3,15 +3,16 @@ package ptithcm.bean;
 public class ShiftDataUI {
 
 	private String fullName;
-	
+
 	private String jobPositionName;
 	private String staffId;
 
-	public ShiftDataUI(String staffId,String fullName, String jobPositionName) {
+	public ShiftDataUI(String staffId, String fullName, String jobPositionName) {
 		this.fullName = fullName;
 		this.setStaffId(staffId);
 		this.jobPositionName = jobPositionName;
 	}
+
 	public String getFullName() {
 		return fullName;
 	}
@@ -27,13 +28,13 @@ public class ShiftDataUI {
 	public void setJobPositionName(String jobPositionName) {
 		this.jobPositionName = jobPositionName;
 	}
+
 	public String getStaffId() {
 		return staffId;
 	}
+
 	public void setStaffId(String staffId) {
 		this.staffId = staffId;
 	}
-	
-	
-	
+
 }
