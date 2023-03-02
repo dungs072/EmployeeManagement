@@ -25,7 +25,7 @@ import ptithcm.entity.StaffEntity;
 
 @Transactional
 @Controller
-public class LoginController {
+public class ManagerController {
 	
 	@Autowired
 	SessionFactory factory;
