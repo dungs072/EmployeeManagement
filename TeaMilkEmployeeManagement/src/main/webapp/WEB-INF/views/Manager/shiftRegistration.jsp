@@ -48,7 +48,7 @@ span {
 	cursor: pointer;
 }
 
-.minus, .plus {
+.minus, .plus, .minus-setting {
 	width: 20px;
 	height: 20px;
 	background: #f2f2f2;
@@ -69,6 +69,12 @@ input {
 	border-radius: 4px;
 	display: inline-block;
 	vertical-align: middle;
+}
+.confirmCheckBox{
+	width:20px;
+	height:20px;
+	text-align: left;
+	vertical-align: top;
 }
 </style>
 
@@ -113,7 +119,21 @@ input {
 		yesButton.val($(this).val())
 	})
 
-	$(document).on('click',".setStaffShiftButton",function(e) {
+	$(document).on('click', ".settingMaxStaffButton", function(e) {
+		var datas = $(this).val().split('+');
+		var inputRange = $(document).find('.inputMaxStaff');
+		var minusSetting = $(document).find('.minus-setting');
+		var yesSettingMaxStaffButton = $(document).find('.yesSettingMaxStaff');
+		minusSetting.val(datas[3]);
+		inputRange.val(datas[2]);
+		yesSettingMaxStaffButton.val(datas[0] + "," + datas[1])
+	})
+
+	$(document)
+			.on(
+					'click',
+					".setStaffShiftButton",
+					function(e) {
 						var value = $(this).val();
 						var values = value.split('+');
 						document.getElementById('settingNameModal').innerHTML = values[0];
@@ -122,10 +142,10 @@ input {
 						$('#settingToDoListModal').val(values[2]);
 						$('.saveChangeSettingShift').val(values[3]);
 
-	})
-	
-	$(document).on('click',".deleteStaffButton",function(e){
-		
+					})
+
+	$(document).on('click', ".deleteStaffButton", function(e) {
+
 		$('#yesWarningStaffButton').val($(this).val());
 	})
 
@@ -145,6 +165,16 @@ input {
 			$input.change();
 			return false;
 		});
+
+		$('.minus-setting').click(function() {
+			var $input = $(this).parent().find('input');
+			var count = parseInt($input.val()) - 1;
+			count = count < $(this).val() ? $(this.val()) : count;
+			$input.val(count);
+			$input.change();
+			return false;
+		});
+
 	});
 
 	$(document).ready(
@@ -169,12 +199,16 @@ input {
 						function(e) {
 							var value = $("#weeklyDatePicker").val();
 							var firstDate = moment(value, "MM-DD-YYYY").day(1)
-									.format("DD/MM/YYYY");
+									.format("MM/DD/YYYY");
 							var lastDate = moment(value, "MM-DD-YYYY").day(7)
-									.format("DD/MM/YYYY");
+									.format("MM/DD/YYYY");
 							$("#weeklyDatePicker").val(
 									firstDate + " - " + lastDate);
-							var v = firstDate + " - " + lastDate;
+							var firstDates = firstDate.split("/")
+							var lastDates = lastDate.split("/")
+							var v = firstDates[1] + "/" + firstDates[0] + "/"
+									+ firstDates[2] + " - " + lastDates[1]
+									+ "/" + lastDates[0] + "/" + lastDates[2];
 							localStorage.setItem("weekDates", v);
 							$('.searchButton').val(v);
 						});
@@ -190,7 +224,7 @@ input {
 			<div class="col-sm-3">
 				<input autocomplete="off" class="week-picker form-control"
 					type='text' name="week" id="weeklyDatePicker"
-					style="text-align: center;" placeholder="Select Week"
+					style="text-align: center;" placeholder="Select Week" readonly
 					value="${weekSelection}" />
 			</div>
 			<div class="col-sm-1">
@@ -203,19 +237,20 @@ input {
 				</form>
 			</div>
 			<div class="col-sm-1">
+				<div class="col-auto">
+						<button type="button" class="btn btn-success"
+							data-bs-toggle="modal" data-bs-target="#confirmWarning">Confirm</button>
+					</div>
+			</div>
+			<div class="col-sm-1">
 				<form action=ManagerRegistration/Search.htm method="get"
 					class="headerForm">
 					<div class="col-auto">
-						<button type="button" class="btn btn-primary"
-							data-bs-toggle="modal" data-bs-target="#confirmWarning">Confirm</button>
+						<button type="button" class="btn btn-danger"
+							data-bs-toggle="modal" data-bs-target="#cancelConfirmWarning">Cancel</button>
 					</div>
 				</form>
 			</div>
-
-
-
-
-
 
 			<div class="mt-2 row align-items-center scrollit">
 				<table class="table table-bordered" id="shiftTable">
@@ -261,8 +296,8 @@ input {
 											<div class="text-center d-flex justify-content-center mb-1">
 												<div class="card bg-secondary" style="width: 10rem;">
 													<div class="card-body">
-														<h5 class="card-title" style="font-size: 10px;">Staff
-															left: ${shiftStaffs[indexShift.index][i-1].maxStaff}</h5>
+														<h5 class="card-title" style="font-size: 10px;">Registrations
+															left:  ${shiftStaffs[indexShift.index][i-1].leftStaff}</h5>
 													</div>
 												</div>
 											</div>
@@ -282,13 +317,39 @@ input {
 																			<h3>${indexStaff.count}</h3>
 																		</div>
 																		<h5 class="card-title" style="font-size: 10px;">${shiftStaff.fullName}</h5>
-																		<button type="button"
-																			class="btn btn-outline-secondary mb-1 setStaffShiftButton"
-																			data-bs-toggle="modal" data-bs-target="#setShift"
-																			value="${shiftStaff.fullName}+${shiftStaff.jobPositionName}+${shiftStaff.additionalJobs}+${shiftStaff.shiftDetailId}">Setting</button>
-																		<button type="button"
-																			class="btn btn-outline-danger deleteStaffButton"
-																			data-bs-toggle="modal" data-bs-target="#warning" value = "${shiftStaff.shiftDetailId}">Delete</button>
+																		<c:choose>
+																			<c:when test = "${shiftStaff.isConfirmed == true}">
+																				<input type="checkbox" class = "confirmCheckBox" onclick="return false;" checked>
+																			</c:when>
+																			<c:otherwise>
+																				<input type="checkbox" class = "confirmCheckBox" onclick="return false;">
+																			</c:otherwise>
+																		</c:choose>
+																			
+																		<c:choose>
+																			<c:when
+																				test="${shiftStaffs[indexShift.index][i-1].canInteract==true}">
+																				<button type="button"
+																					class="btn btn-outline-secondary mb-1 setStaffShiftButton"
+																					data-bs-toggle="modal" data-bs-target="#setShift"
+																					value="${shiftStaff.fullName}+${shiftStaff.jobPositionName}+${shiftStaff.additionalJobs}+${shiftStaff.shiftDetailId}">Setting</button>
+																				<button type="button"
+																					class="btn btn-outline-danger deleteStaffButton"
+																					data-bs-toggle="modal" data-bs-target="#warning"
+																					value="${shiftStaff.shiftDetailId}">Delete</button>
+																			</c:when>
+																			<c:otherwise>
+																				<button type="button"
+																					class="btn btn-outline-secondary mb-1 setStaffShiftButton"
+																					data-bs-toggle="modal" data-bs-target="#setShift"
+																					disabled
+																					value="${shiftStaff.fullName}+${shiftStaff.jobPositionName}+${shiftStaff.additionalJobs}+${shiftStaff.shiftDetailId}">Setting</button>
+																				<button type="button"
+																					class="btn btn-outline-danger deleteStaffButton"
+																					data-bs-toggle="modal" data-bs-target="#warning"
+																					disabled value="${shiftStaff.shiftDetailId}">Delete</button>
+																			</c:otherwise>
+																		</c:choose>
 
 																	</div>
 																</div>
@@ -298,9 +359,6 @@ input {
 
 												</c:if>
 
-
-
-
 											</ul>
 										</div> <c:choose>
 
@@ -309,10 +367,22 @@ input {
 												<div class="text-center d-flex justify-content-center">
 													<div class="card bg-secondary" style="width: 10rem;">
 														<div class="card-body">
-															<button type=button name="openShift"
-																class="btn btn-success openButton"
-																data-bs-toggle="modal" data-bs-target="#openSetting"
-																value="${indexShift.count},${i}">Open</button>
+															<c:choose>
+																<c:when 
+																	test="${canDisplayOpenButton[indexShift.index][i-1]==true}">
+																	<button type=button name="openShift"
+																		class="btn btn-success openButton"
+																		data-bs-toggle="modal" data-bs-target="#openSetting"
+																		value="${indexShift.count},${i}">Open</button>
+																</c:when>
+																<c:otherwise>
+																	<button type=button name="openShift"
+																		class="btn btn-success openButton"
+																		data-bs-toggle="modal" data-bs-target="#openSetting"
+																		disabled value="${indexShift.count},${i}">Open</button>
+																</c:otherwise>
+															</c:choose>
+
 														</div>
 													</div>
 												</div>
@@ -326,10 +396,51 @@ input {
 
 															<form action="ManagerRegistration/AddStaff.htm"
 																method="get">
-																<button type="submit" class="btn btn-success addButton"
-																	data-bs-toggle="modal" data-bs-target="#addStaff"
-																	name="addStaffButton" value="${indexShift.count},${i}">Add</button>
+																<c:choose>
+																	<c:when
+																		test="${shiftStaffs[indexShift.index][i-1].canInteract==true&&shiftStaffs[indexShift.index][i-1].leftStaff>0}">
+																		<button type="submit"
+																			class="btn btn-success addButton"
+																			data-bs-toggle="modal" data-bs-target="#addStaff"
+																			name="addStaffButton"
+																			value="${indexShift.count},${i}">Add</button>
+																	</c:when>
+																	<c:otherwise>
+																		<button type="submit"
+																			class="btn btn-success addButton"
+																			data-bs-toggle="modal" data-bs-target="#addStaff"
+																			disabled name="addStaffButton"
+																			value="${indexShift.count},${i}">Add</button>
+																	</c:otherwise>
+																</c:choose>
+
 															</form>
+														</div>
+													</div>
+												</div>
+												<div class="text-center d-flex justify-content-center mb-1">
+													<div class="card bg-secondary" style="width: 10rem;">
+														<div class="card-body">
+															<c:choose>
+																<c:when
+																	test="${shiftStaffs[indexShift.index][i-1].canInteract==true}">
+																	<button type="submit"
+																		class="btn btn-outline-dark settingMaxStaffButton"
+																		data-bs-toggle="modal"
+																		data-bs-target="#openSettingMaxStaff"
+																		name="addStaffButton"
+																		value="${indexShift.count}+${i}+${shiftStaffs[indexShift.index][i-1].maxStaff}+${shiftStaffs[indexShift.index][i-1].getNumberStaffInShift()}">Setting</button>
+																</c:when>
+																<c:otherwise>
+																	<button type="submit"
+																		class="btn btn-outline-dark settingMaxStaffButton"
+																		data-bs-toggle="modal"
+																		data-bs-target="#openSettingMaxStaff"
+																		name="addStaffButton" disabled
+																		value="${indexShift.count}+${i}+${shiftStaffs[indexShift.index][i-1].maxStaff}+${shiftStaffs[indexShift.index][i-1].getNumberStaffInShift()}">Setting</button>
+																</c:otherwise>
+															</c:choose>
+
 														</div>
 													</div>
 												</div>
@@ -337,10 +448,22 @@ input {
 												<div class="text-center d-flex justify-content-center">
 													<div class="card bg-secondary" style="width: 10rem;">
 														<div class="card-body">
-															<button type="button"
-																class="btn btn-danger functionButton cancelButton"
-																data-bs-toggle="modal" data-bs-target="#cancelWarning"
-																value="${indexShift.count},${i}">Cancel</button>
+															<c:choose>
+																<c:when
+																	test="${shiftStaffs[indexShift.index][i-1].canInteract==true}">
+																	<button type="button"
+																		class="btn btn-danger functionButton cancelButton"
+																		data-bs-toggle="modal" data-bs-target="#cancelWarning"
+																		value="${indexShift.count},${i}">Cancel</button>
+																</c:when>
+																<c:otherwise>
+																	<button type="button"
+																		class="btn btn-danger functionButton cancelButton"
+																		data-bs-toggle="modal" data-bs-target="#cancelWarning" disabled
+																		value="${indexShift.count},${i}">Cancel</button>
+																</c:otherwise>
+															</c:choose>
+
 
 														</div>
 													</div>
@@ -375,7 +498,8 @@ input {
 						</button>
 					</div>
 					<div class="modal-body">
-						<form>
+						<form action="ManagerRegistration/SettingStaffInShift.htm"
+							method="get">
 							<div class="mb-3">
 								<label for="settingName">Name: </label>
 								<h6 id="settingNameModal">ABC</h6>
@@ -385,15 +509,16 @@ input {
 							<div class="mb-3">
 								<label for="exampleInputPassword1" class="form-label">To
 									do list</label> <input type="text" class="form-control"
-									id="settingToDoListModal">
+									id="settingToDoListModal" name="toDoListInput">
 							</div>
 
 							<div class="modal-footer">
 								<button type="button" id="close" class="btn btn-secondary"
 									data-bs-dismiss="modal">Close</button>
-								<button type="button"
+								<button type="submit"
 									class="btn btn-primary saveChangeSettingShift"
-									data-bs-dismiss="modal">Save changes</button>
+									name="saveChangeSettingShift" data-bs-dismiss="modal">Save
+									changes</button>
 							</div>
 						</form>
 					</div>
@@ -451,6 +576,37 @@ input {
 			</div>
 		</div>
 
+		<!-- open setting max staff -->
+
+		<div class="modal" id="openSettingMaxStaff" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title text-warning">Setting</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<form action="ManagerRegistration/updateMaxStaff.htm" method="get">
+						<div class="modal-body">
+							<label for="exampleInputEmail1" class="form-label">Max
+								staff: </label>
+							<div class="number">
+								<span class="minus-setting">-</span> <input type="text"
+									value="1" class="inputMaxStaff" name=maxStaffSetting /> <span
+									class="plus">+</span>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">No</button>
+							<button type="submit" class="btn btn-primary yesSettingMaxStaff"
+								name="yesSettingMaxStaff" data-bs-dismiss="modal">Yes</button>
+						</div>
+					</form>
+
+				</div>
+			</div>
+		</div>
 
 		<!--open setting-->
 		<div class="modal" id="openSetting" tabindex="-1">
@@ -467,7 +623,7 @@ input {
 								staff: </label>
 							<div class="number">
 								<span class="minus">-</span> <input type="text" value="1"
-									name="maxStaff" /> <span class="plus">+</span>
+									class="inputMaxStaff" name="maxStaff" /> <span class="plus">+</span>
 							</div>
 						</div>
 						<div class="modal-footer">
@@ -494,12 +650,14 @@ input {
 					<div class="modal-body">
 						<p>Are you sure you want to delete this staff from the shift?</p>
 					</div>
-					<form action = "ManagerRegistration/DeleteStaffFromShift.htm" method = "get">
+					<form action="ManagerRegistration/DeleteStaffFromShift.htm"
+						method="get">
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">No</button>
-							<button type="submit" class="btn btn-primary" id = "yesWarningStaffButton"
-								data-bs-dismiss="modal" name = "yesWarningStaffButton">Yes</button>
+							<button type="submit" class="btn btn-primary"
+								id="yesWarningStaffButton" data-bs-dismiss="modal"
+								name="yesWarningStaffButton">Yes</button>
 						</div>
 					</form>
 
@@ -540,14 +698,42 @@ input {
 							aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-						<p>All changes will be save in database !!!</p>
+						<p>All shift registrations will be confirmed !!!</p>
 					</div>
-					<div class="modal-footer">
+					<form action = "ManagerRegistration/confirmShifts.htm" method = "get">
+						<div class="modal-footer">
 						<button type="button" class="btn btn-secondary"
 							data-bs-dismiss="modal">Cancel</button>
-						<button type="button" class="btn btn-primary"
-							data-bs-dismiss="modal">Save</button>
+						<button type="submit" class="btn btn-primary"
+							data-bs-dismiss="modal">Confirm</button>
 					</div>
+					</form>
+					
+				</div>
+			</div>
+		</div>
+		
+		<!--cancel-confirm-warning-->
+		<div class="modal" id="cancelConfirmWarning" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>All shift registrations will be cancel confirmations !!!</p>
+					</div>
+					<form action = "ManagerRegistration/cancelConfirmShifts.htm" method = "get">
+						<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">No</button>
+						<button type="submit" class="btn btn-primary"
+							data-bs-dismiss="modal">Yes</button>
+					</div>
+					</form>
+					
 				</div>
 			</div>
 		</div>
