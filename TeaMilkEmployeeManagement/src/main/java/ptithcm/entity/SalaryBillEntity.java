@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,7 +19,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class SalaryBillEntity {
 
 	@Id
-	private String MAPHIEU;
+	@GeneratedValue
+	private int MAPHIEU;
 	
 	
 	@Column(name = "THOIGIANNHAN")
@@ -30,20 +32,28 @@ public class SalaryBillEntity {
 	@JoinColumn(name = "MANV")
 	private StaffEntity staffEntity;
 	
+	@Column(name = "LUONGNHAN")
+	private float LUONGNHAN;
+	
 	public SalaryBillEntity() {}
 	public SalaryBillEntity(Date pickupDay, StaffEntity staffEntity) {
 		this.THOIGIANNHAN = pickupDay;
 		this.staffEntity = staffEntity;
 	}
 
-	public String getMAPHIEU() {
+
+	public int getMAPHIEU() {
 		return MAPHIEU;
 	}
-
-	public void setMAPHIEU(String mAPHIEU) {
+	public void setMAPHIEU(int mAPHIEU) {
 		MAPHIEU = mAPHIEU;
 	}
-
+	public StaffEntity getStaffEntity() {
+		return staffEntity;
+	}
+	public void setStaffEntity(StaffEntity staffEntity) {
+		this.staffEntity = staffEntity;
+	}
 	public Date getTHOIGIANNHAN() {
 		return THOIGIANNHAN;
 	}
@@ -52,12 +62,11 @@ public class SalaryBillEntity {
 		THOIGIANNHAN = tHOIGIANNHAN;
 	}
 
-	public StaffEntity getStaff() {
-		return staffEntity;
+	public float getLUONGNHAN() {
+		return LUONGNHAN;
 	}
-
-	public void setStaff(StaffEntity staff) {
-		this.staffEntity = staff;
+	public void setLUONGNHAN(float lUONGNHAN) {
+		LUONGNHAN = lUONGNHAN;
 	}
 	
 	

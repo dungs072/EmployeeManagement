@@ -15,4 +15,8 @@ public class ChangePasswordController {
 	public String changePassword(HttpServletRequest request, ModelMap map) {
 		return "ChangePassword";
 	}
+	
+//	public String saveChangePassword(HttpServletRequest request, ModelMap map) {
+//		
+//	}
 }

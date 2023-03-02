@@ -30,12 +30,14 @@
 								<label for="inputPasswordOld">Current Password</label> <input
 									type="password" class="form-control" id="inputPasswordOld"
 									required="">
+								<div>${oldPasswordMessage}</div>
 							</div>
 							<div class="form-group">
 								<label for="inputPasswordNew">New Password</label>
 								<div class="col">
 									<div class="input-group" id="show_hide_password">
 										<input class="form-control" type="password" maxlength="20">
+										<div>${newPasswordMessage}</div>
 										<div class="input-group-addon eye-Icon">
 											<a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
 										</div>
@@ -52,6 +54,7 @@
 										id="inputPasswordNewVerify" required=""> <span
 										class="form-text small text-muted"> To confirm, type
 										the new password again. </span>
+										<div>${confirmPasswordMessage}</div>
 								</div>
 								<div class="form-group">
 									<button type="submit"
