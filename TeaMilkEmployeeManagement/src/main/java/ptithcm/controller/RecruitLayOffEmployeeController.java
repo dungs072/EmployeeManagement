@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ptithcm.bean.IncrementNumberAndTextKeyHandler;
+import ptithcm.bean.Primarykeyable;
 import ptithcm.entity.AccountEntity;
 import ptithcm.entity.JobPositionEntity;
+import ptithcm.entity.MistakeEntity;
 import ptithcm.entity.PriorityEntity;
 import ptithcm.entity.StaffEntity;
 
@@ -30,9 +32,18 @@ public class RecruitLayOffEmployeeController {
 	@Autowired
 	SessionFactory factory;
 
+	
 	@Autowired
 	@Qualifier("staffKeyHandler")
 	IncrementNumberAndTextKeyHandler staffKeyHandler;
+	
+	@Autowired
+	@Qualifier("jobKeyHandler")
+	IncrementNumberAndTextKeyHandler jobKeyHandler;
+	
+	@Autowired
+	@Qualifier("faultKeyHandler")
+	IncrementNumberAndTextKeyHandler faultKeyHandler;
 
 	private List<StaffEntity> staffList;
 	private String currentStaffId;
@@ -40,7 +51,13 @@ public class RecruitLayOffEmployeeController {
 	@RequestMapping
 	public String recruitLayOffDisplay(ModelMap model) {
 		staffList = getStaffs();
-		model.addAttribute("staffs", staffList);
+		List<StaffEntity> internalStaffs = getInteralStaffs();
+		List<JobPositionEntity> jobs = getJobs();
+		List<MistakeEntity> faults = getMistakes();
+		castStaffs(internalStaffs);
+		castJobs(jobs);
+		castFaults(faults);
+		model.addAttribute("staffs",staffList);
 		return "/Admin/RecruitEmployee";
 	}
 
@@ -63,8 +80,9 @@ public class RecruitLayOffEmployeeController {
 		addEmloyeeToDB(staff, staffId);
 		staffList = getStaffs();
 		List<JobPositionEntity> jobs = getJobs();
-		model.addAttribute("staffs", staffList);
-		model.addAttribute("jobs", jobs);
+		model.addAttribute("staffs",staffList);
+		model.addAttribute("jobs",jobs);
+		model.addAttribute("staffIdValue",staffId);
 		return "/Admin/RecruitEmployee";
 	}
 
@@ -124,11 +142,20 @@ public class RecruitLayOffEmployeeController {
 		model.addAttribute("staffs", staffList);
 		return "/Admin/RecruitEmployee";
 	}
-
-	private void addEmloyeeToDB(StaffEntity staff, String id) {
-		if (staff == null) {
-			return;
-		}
+	
+	@RequestMapping(value = "/ResetPassword",method = RequestMethod.GET)
+	public String resetPassword(HttpServletRequest request, ModelMap model) {
+		Session session = factory.getCurrentSession();
+		String staffId = request.getParameter("yes-reset-warning");
+		AccountEntity account = (AccountEntity) session.get(AccountEntity.class, staffId);
+		account.setMK("123");
+		session.saveOrUpdate(account);
+		model.addAttribute("staffs",staffList);
+		return "/Admin/RecruitEmployee";
+	}
+	
+	private void addEmloyeeToDB(StaffEntity staff,String id) {
+		if(staff==null) {return;}
 		staff.setMANV(id);
 		Session session = factory.getCurrentSession();
 		PriorityEntity priority = (PriorityEntity) session.get(PriorityEntity.class, "NV");
@@ -176,12 +203,12 @@ public class RecruitLayOffEmployeeController {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<StaffEntity> searchStaffList(Session session, String searchText) {
-		if (searchText.isEmpty()) {
-			return getStaffs();
-		}
-
-		String hql = "FROM StaffEntity WHERE HO+TEN LIKE CONCAT('%',:search,'%') ORDER BY TEN";
+	private List<StaffEntity> searchStaffList(Session session,String searchText) {
+		if(searchText.isEmpty()) {return getStaffs();}
+		
+		String hql = "FROM StaffEntity WHERE MANV !='ADMIN' AND"
+				+ " MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = true) AND"
+				+ " HO+TEN LIKE CONCAT('%',:search,'%') ORDER BY TEN";
 		Query query = session.createQuery(hql);
 		query.setParameter("search", searchText);
 		return query.list();
@@ -232,6 +259,37 @@ public class RecruitLayOffEmployeeController {
 		Query query = session.createQuery(hql);
 		query.setString("id", id);
 		return (JobPositionEntity) query.uniqueResult();
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void castStaffs(List<? extends Primarykeyable> keys) {
+		staffKeyHandler.initialKeyHandler((List<Primarykeyable>) keys);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void castFaults(List<? extends Primarykeyable> keys) {
+		faultKeyHandler.initialKeyHandler((List<Primarykeyable>) keys);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void castJobs(List<? extends Primarykeyable> keys) {
+		jobKeyHandler.initialKeyHandler((List<Primarykeyable>) keys);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<StaffEntity> getInteralStaffs(){
+		Session session = factory.getCurrentSession();
+		String hql = "FROM StaffEntity WHERE MANV != 'ADMIN'";
+		Query query = session.createQuery(hql);
+		return query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MistakeEntity> getMistakes(){
+		Session session = factory.getCurrentSession();
+		String hql = "FROM MistakeEntity";
+		Query query = session.createQuery(hql);
+		return query.list();
 	}
 
 }

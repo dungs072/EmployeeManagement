@@ -19,6 +19,7 @@ import ptithcm.bean.IncrementNumberAndTextKeyHandler;
 import ptithcm.entity.AccountEntity;
 import ptithcm.entity.JobPositionEntity;
 import ptithcm.entity.MistakeEntity;
+import ptithcm.entity.ShiftEntity;
 import ptithcm.entity.StaffEntity;
 
 @Transactional
@@ -36,12 +37,15 @@ public class JobAndFaultController {
 	@Autowired
 	@Qualifier("faultKeyHandler")
 	IncrementNumberAndTextKeyHandler faultKeyHandler;
-
+	
+	List<ShiftEntity> shifts;
+	
 	@RequestMapping
 	public String jobFaultDisplay(ModelMap model) {
 
 		List<MistakeEntity> mistakes = getFaults();
 		List<JobPositionEntity> jobs = getJobs();
+
 
 		toggleJobDeleteButton(jobs);
 		toggleFaultDeleteButton(mistakes);
@@ -49,6 +53,14 @@ public class JobAndFaultController {
 		model.addAttribute("faults", mistakes);
 		model.addAttribute("jobs", jobs);
 
+		shifts = getShifts();
+		toggleJobDeleteButton(jobs);
+		toggleFaultDeleteButton(mistakes);
+		
+		model.addAttribute("faults",mistakes);
+		model.addAttribute("jobs",jobs);
+		model.addAttribute("shifts",shifts);
+		
 		return "/Admin/JobAndFaultManager";
 	}
 
@@ -141,7 +153,19 @@ public class JobAndFaultController {
 		updateAllTable(model);
 		return "/Admin/JobAndFaultManager";
 	}
-
+	
+	@RequestMapping(value = "/ShiftSetting",method = RequestMethod.GET)
+	public String setShiftDescription(ModelMap model, HttpServletRequest request) {
+		Session session = factory.getCurrentSession();
+		String shiftId = request.getParameter("ShiftId");
+		String description = request.getParameter("Description");
+		ShiftEntity shiftEntity = (ShiftEntity) session.get(ShiftEntity.class, shiftId);
+		shiftEntity.setTENCA(description);
+		session.saveOrUpdate(shiftEntity);
+		updateAllTable(model);
+		return "Admin/JobAndFaultManager";
+	}
+	
 	private void toggleJobDeleteButton(List<JobPositionEntity> jobs) {
 		Session session = factory.getCurrentSession();
 		for (var job : jobs) {
@@ -162,10 +186,12 @@ public class JobAndFaultController {
 	private void updateAllTable(ModelMap model) {
 		List<JobPositionEntity> jobs = getJobs();
 		List<MistakeEntity> faults = getFaults();
+		shifts = getShifts();
 		toggleJobDeleteButton(jobs);
 		toggleFaultDeleteButton(faults);
-		model.addAttribute("jobs", jobs);
-		model.addAttribute("faults", faults);
+		model.addAttribute("jobs",jobs);
+		model.addAttribute("faults",faults);
+		model.addAttribute("shifts",shifts);
 	}
 
 	private void addJobToDB(JobPositionEntity job, String id) {
@@ -217,5 +243,12 @@ public class JobAndFaultController {
 		Query query = session.createQuery(hql);
 		return query.list();
 	}
-
+	@SuppressWarnings("unchecked")
+	private List<ShiftEntity> getShifts(){
+		Session session = factory.getCurrentSession();
+		String hql = "FROM ShiftEntity";
+		Query query = session.createQuery(hql);
+		return query.list();
+	}
+	
 }

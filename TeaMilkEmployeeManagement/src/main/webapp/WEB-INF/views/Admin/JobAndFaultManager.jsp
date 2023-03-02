@@ -17,6 +17,12 @@
 	border: 2px solid black;
 	overflow: auto;
 }
+.tableShift{
+	margin-top: 40px;
+	height: 280px;
+	border: 2px solid black;
+	overflow: auto;
+}
 
 /* Set header to stick to the top of the container. */
 thead tr th {
@@ -106,7 +112,14 @@ tbody tr:hover {
 			var saveButton = $(document).find('.saveFaultUpdate');
 			saveButton.val($(this).val());
 		});
-
+		
+		$('.settingShift').click(function(){
+			var val = $(this).val().split(",");
+			var shiftInput = $(document).find('.shift');
+			var desInput= $(document).find('.description');
+			shiftInput.val(val[0]);
+			desInput.val(val[1]);
+		});
 		$(window).on('load', function() {
 			var jobValue = localStorage.getItem("isClickedJobInfor");
 			if (jobValue == "true") {
@@ -253,7 +266,36 @@ tbody tr:hover {
 				</div>
 			</div>
 		</div>
+		<div class="row mt-2 justify-content-md-center">
+			<div class="col-6">
+				<div class="tableShift">
+					<table class="shiftTable">
+						<thead>
+							<tr>
+								<th><span>Shift</span></th>
+								<th><span>Description</span></th>
+								<th><span>Action</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:forEach var="shift" varStatus="i" items="${shifts}">
+								<tr>
+									<td>${shift.IDCA}</td>
+									<td>${shift.TENCA}</td>
+									<td>
+										<button type="button" name="settingShift"
+											class="btn btn-secondary settingShift" value="${shift.IDCA},${shift.TENCA}"
+											data-bs-toggle="modal" data-bs-target="#settingShift">Setting
+										</button>
+									</td>
+								</tr>
+							</c:forEach>
 
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
 	</div>
 	<!-- Modal -->
 	<!-- addModal -->
@@ -307,6 +349,41 @@ tbody tr:hover {
 							<label for="firstname">Fault type:</label> <input type="text"
 								class="form-control username" placeholder="fault name"
 								name="MOTA" value="Đi làm trễ" maxlength="50" />
+						</div>
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">Close</button>
+							<button type="submit" class="btn btn-primary"
+								data-bs-dismiss="modal">Save changes</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!--shift-->
+	<div class="modal fade" id="settingShift" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Setting shift</h5>
+					<button type="button" class="close" data-bs-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form action="JobAndFault/ShiftSetting.htm" method="get">
+						<div class="form-group">
+							<label for="firstname">Shift:</label> <input type="text"
+								class="form-control shift"
+								name="ShiftId" value="" maxlength="50" readonly />
+							<label for="firstname">Description:</label> <input type="text"
+								class="form-control description" placeholder="typing your description"
+								name="Description" value="" maxlength="50" />
 						</div>
 
 						<div class="modal-footer">

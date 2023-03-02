@@ -28,25 +28,17 @@ import ptithcm.entity.StaffEntity;
 public class ManagerController {
 
 	@Autowired
-	SessionFactory factory;
+	SessionFactory factory; 
+	
 	@Autowired
-	@Qualifier("staffKeyHandler")
-	IncrementNumberAndTextKeyHandler staffKeyHandler;
-
-	@Autowired
-	@Qualifier("jobKeyHandler")
-	IncrementNumberAndTextKeyHandler jobKeyHandler;
-
-	@Autowired
-	@Qualifier("faultKeyHandler")
-	IncrementNumberAndTextKeyHandler faultKeyHandler;
-
-	@Autowired
-	@Qualifier("managerPassDataHandler")
-	PassDataBetweenControllerHandler passDataBetweenControllerHandler;
-
-	@RequestMapping(value = "Login-Form", method = RequestMethod.GET)
-	public String login() {
+	@Qualifier("staffPassDataHandler")
+	PassDataBetweenControllerHandler staffPassDataBetweenControllerHandler;
+	
+	
+	
+	@RequestMapping(value = "Login-Form",method = RequestMethod.GET)
+	public String login()
+	{	
 		return "Login";
 	}
 
@@ -54,72 +46,49 @@ public class ManagerController {
 	public String tryLogin(HttpServletRequest request, ModelMap model) {
 		String userName = request.getParameter("username");
 		String password = request.getParameter("password");
-		String priority = hasExistedAccount(userName, password);
-		if (priority.strip().equals("AD")) {
-			List<StaffEntity> staffs = getStaffs();
-			List<StaffEntity> internalStaffs = getInteralStaffs();
-			List<JobPositionEntity> jobs = getJobs();
-			List<MistakeEntity> faults = getMistakes();
-			castStaffs(internalStaffs);
-			castJobs(jobs);
-			castFaults(faults);
-			model.addAttribute("staffs", staffs);
-			return "/Admin/RecruitEmployee";
-		} else if (priority.strip().equals("QL")) {
-			passDataBetweenControllerHandler.setData(userName);
-			return "redirect:/ManagerRegistration.htm";
-		} else if (priority.strip().equals("NV")) {
-			return "Login";
-		} else {
+		if(userName.isEmpty()&&password.isEmpty()) {
+			model.addAttribute("UserNameMessage","username must not be blank!!!");
+			model.addAttribute("PasswordMessage","password must not be blank!!!");
 			return "Login";
 		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private void castStaffs(List<? extends Primarykeyable> keys) {
-		staffKeyHandler.initialKeyHandler((List<Primarykeyable>) keys);
-	}
-
-	@SuppressWarnings("unchecked")
-	private void castFaults(List<? extends Primarykeyable> keys) {
-		faultKeyHandler.initialKeyHandler((List<Primarykeyable>) keys);
-	}
-
-	@SuppressWarnings("unchecked")
-	private void castJobs(List<? extends Primarykeyable> keys) {
-		jobKeyHandler.initialKeyHandler((List<Primarykeyable>) keys);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<StaffEntity> getStaffs() {
-		Session session = factory.getCurrentSession();
-		String hql = "FROM StaffEntity WHERE MANV != 'ADMIN' AND MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = True) ORDER BY TEN";
-		Query query = session.createQuery(hql);
-		return query.list();
-	}
-
-	@SuppressWarnings("unchecked")
-	private List<StaffEntity> getInteralStaffs() {
-		Session session = factory.getCurrentSession();
-		String hql = "FROM StaffEntity WHERE MANV != 'ADMIN'";
-		Query query = session.createQuery(hql);
-		return query.list();
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<MistakeEntity> getMistakes() {
-		Session session = factory.getCurrentSession();
-		String hql = "FROM MistakeEntity";
-		Query query = session.createQuery(hql);
-		return query.list();
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<JobPositionEntity> getJobs() {
-		Session session = factory.getCurrentSession();
-		String hql = "FROM JobPositionEntity";
-		Query query = session.createQuery(hql);
-		return query.list();
+		if(userName.isEmpty())
+		{
+			model.addAttribute("UserNameMessage","username must not be blank!!!");
+			return "Login";
+		}
+		
+		
+		if(password.isEmpty()) {
+			model.addAttribute("PasswordMessage","password must not be blank!!!");
+			return "Login";
+		}
+		String priority = hasExistedAccount(userName,password);
+		
+		if(priority==null) {
+			model.addAttribute("UserNameMessage","wrong username or password!!!");
+			model.addAttribute("PasswordMessage","wrong username or password!!!");
+			return "Login";
+		}
+		
+		if(priority.strip().equals("AD"))
+		{
+			staffPassDataBetweenControllerHandler.setData(userName);
+			return "redirect:/Recruit.htm";
+		}
+		else if(priority.strip().equals("QL"))
+		{
+			staffPassDataBetweenControllerHandler.setData(userName);
+			return "redirect:/ManagerRegistration.htm";
+		}
+		else if(priority.strip().equals("NV"))
+		{
+			staffPassDataBetweenControllerHandler.setData(userName);
+			return "redirect:/StaffTimetable.htm";
+		}
+		else
+		{
+			return "Login";
+		}
 	}
 
 	public String hasExistedAccount(String userName, String password) {

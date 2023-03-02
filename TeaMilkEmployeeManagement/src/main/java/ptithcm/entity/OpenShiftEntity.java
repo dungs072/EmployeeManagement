@@ -34,11 +34,15 @@ public class OpenShiftEntity {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "MANV")
 	private StaffEntity staff;
-
-	@OneToMany(mappedBy = "openshift", fetch = FetchType.EAGER)
-	private Set<ShiftDetailEntity> detailEntities = new HashSet<ShiftDetailEntity>();
-
-	public OpenShiftEntity() {
+	
+	@OneToMany(mappedBy = "openshift",fetch = FetchType.EAGER)
+	private Set<ShiftDetailEntity> shiftDetailEntites = new HashSet<ShiftDetailEntity>();
+	
+	public OpenShiftEntity() {}
+	
+	public OpenShiftEntity(Date workDate,int numberCanRegister) {
+		NGAYLAMVIEC = workDate;
+		SOLUONGDANGKI = numberCanRegister;
 	}
 
 	public String getID_CA_MO() {
@@ -82,15 +86,21 @@ public class OpenShiftEntity {
 	}
 
 	public Set<ShiftDetailEntity> getDetailEntities() {
-		return detailEntities;
+		return shiftDetailEntites;
 	}
 
 	public void setDetailEntities(Set<ShiftDetailEntity> detailEntities) {
-		this.detailEntities = detailEntities;
+		this.shiftDetailEntites = detailEntities;
 	}
 
 	public void addShiftDetailEntities(ShiftDetailEntity detailEntity) {
-		this.detailEntities.add(detailEntity);
+		this.shiftDetailEntites.add(detailEntity);
+	}
+	
+	public void deleteAllLinks()
+	{
+		setShift(null);
+		setStaff(null);
 	}
 
 }

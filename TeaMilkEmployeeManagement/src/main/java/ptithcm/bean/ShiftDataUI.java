@@ -5,12 +5,18 @@ public class ShiftDataUI {
 	private String fullName;
 
 	private String jobPositionName;
-	private String staffId;
+	private String shiftDetailId;
+	
+	private String additionalJobs;
+	
+	private boolean isConfirmed = false;
+	
 
-	public ShiftDataUI(String staffId, String fullName, String jobPositionName) {
+	public ShiftDataUI(String shiftDetailId,String fullName, String jobPositionName,String additionalJobs) {
 		this.fullName = fullName;
-		this.setStaffId(staffId);
+		this.shiftDetailId = shiftDetailId;
 		this.jobPositionName = jobPositionName;
+		this.additionalJobs = additionalJobs;
 	}
 
 	public String getFullName() {
@@ -29,12 +35,25 @@ public class ShiftDataUI {
 		this.jobPositionName = jobPositionName;
 	}
 
-	public String getStaffId() {
-		return staffId;
-	}
 
-	public void setStaffId(String staffId) {
-		this.staffId = staffId;
+	public String getShiftDetailId() {
+		return shiftDetailId;
 	}
-
+	public void setShiftDetailId(String id) {
+		this.shiftDetailId = id;
+	}
+	public String getAdditionalJobs() {
+		return additionalJobs;
+	}
+	public void setAdditionalJobs(String additionalJobs) {
+		this.additionalJobs = additionalJobs;
+	}
+	
+	public boolean getIsConfirmed() {
+		return isConfirmed;
+	}
+	public void setConfirmed(boolean isConfirmed) {
+		this.isConfirmed = isConfirmed;
+	}
+	
 }

@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -51,10 +50,8 @@ public class SalaryBillEntity {
 		LUONGNHAN = lUONGNHAN;
 	}
 
-	public SalaryBillEntity() {
-
-	}
-
+	
+	public SalaryBillEntity() {}
 	public SalaryBillEntity(Date pickupDay, StaffEntity staffEntity) {
 		this.THOIGIANNHAN = pickupDay;
 		this.staffEntity = staffEntity;
@@ -67,13 +64,25 @@ public class SalaryBillEntity {
 	public void setMAPHIEU(int mAPHIEU) {
 		MAPHIEU = mAPHIEU;
 	}
-
+	public StaffEntity getStaffEntity() {
+		return staffEntity;
+	}
+	public void setStaffEntity(StaffEntity staffEntity) {
+		this.staffEntity = staffEntity;
+	}
 	public Date getTHOIGIANNHAN() {
 		return THOIGIANNHAN;
 	}
 
 	public void setTHOIGIANNHAN(Date tHOIGIANNHAN) {
 		THOIGIANNHAN = tHOIGIANNHAN;
+	}
+
+	public float getLUONGNHAN() {
+		return LUONGNHAN;
+	}
+	public void setLUONGNHAN(float lUONGNHAN) {
+		LUONGNHAN = lUONGNHAN;
 	}
 
 
