@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<%@include file="/WEB-INF/views/include/headerAfterLogin.jsp"%>
+<%@include file="/WEB-INF/views/include/StaffHeader.jsp"%>
 <base href="${pageContext.servletContext.contextPath }/">
 <title>History of your mistakes</title>
 <style>

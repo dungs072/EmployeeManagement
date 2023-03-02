@@ -45,9 +45,22 @@ img {
 	border: 1px solid;
 	color: black;
 }
+.InputInvalid{
+color:red;
+font-style: italic;
+margin-left:5px;
+margin-top:5px;
+}
 </style>
 <base href="${pageContext.servletContext.contextPath }/">
 <title>Login</title>
+
+<script>
+
+$(document).on('click', "#Forgot", function(e) {
+	alert("You should contact to employer to request to reset your password");
+});
+</script>
 </head>
 <body>
 	<section class="Form my-4 mx-5">
@@ -62,17 +75,22 @@ img {
 				<div class="col-lg-7 px-5 pt-5">
 					<h1 class="font-weight-boild py-3">TéaMilk Employee Management</h1>
 					<h4>Sign into your account</h4>
-					<form action="CheckLogin.htm" method="post">
+					<form action="CheckLogin.htm" method="post"
+						class="needs-validation" novalidate>
 						<div class="form-row">
 							<div class="col-lg-7">
 								<input name="username" type="text" placeholder="Username"
-									class="form-control my-3 p-2">
+									class="form-control my-3 p-2" maxLength = "10"
+									required>
+								<div class = "InputInvalid">${UserNameMessage}</div>
+								
 							</div>
 						</div>
 						<div class="form-row">
 							<div class="col-lg-7">
 								<input name="password" type="password" placeholder="Password"
-									class="form-control my-3 p-2">
+									class="form-control my-3 p-2" required maxLength = "25">
+								<div class = "InputInvalid">${PasswordMessage}</div>
 							</div>
 						</div>
 						<div class="form-row">
@@ -80,7 +98,7 @@ img {
 								<button type="submit" class="btn1 mt-3 mb-2">Login</button>
 							</div>
 						</div>
-						<a href="#">Forgot Password</a>
+						<a href="#" id = "Forgot">Forgot Password</a>
 					</form>
 				</div>
 			</div>

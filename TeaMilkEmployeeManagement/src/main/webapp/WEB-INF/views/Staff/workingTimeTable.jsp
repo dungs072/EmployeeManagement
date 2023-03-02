@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
 <title>Timetable</title>
-<%@include file="/WEB-INF/views/include/headerAfterLogin.jsp"%>
+<%@include file="/WEB-INF/views/include/StaffHeader.jsp"%>
 <base href="${pageContext.servletContext.contextPath }/">
 
 <style>

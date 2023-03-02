@@ -45,21 +45,6 @@
 	
 </head>
 <body>
-
-	<div class="topnav">
-		<a class="active" href="#home">Home</a> <a href="Recruit.htm">Employees</a>
-		<a href="JobAndFault.htm">Job&Fault</a> 
-		<a href="ManagerRegistration.htm">Registration-shift</a>
-		<a href="StaffRegisterShift.htm">Register shift</a>
-		<a href="StaffTimetable.htm">Time table</a>
-		<a href="ChangePassword.htm">Change password</a>
-		<a href = "MistakeHistory.htm">Mistake history</a>
-		<a href = "SelfInfor.htm">Self Infor</a>
-		<a href = "EnabledStaff.htm">Enable accounts</a>
-		<div class="topnav-right text-light">
-			<p>ADMIN</p>
-		</div>
-	</div>
 </body>
 <footer> </footer>
 </html>

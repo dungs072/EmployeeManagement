@@ -45,7 +45,30 @@ public class LoginController {
 	public String tryLogin(HttpServletRequest request,ModelMap model) {
 		String userName = request.getParameter("username");
 		String password = request.getParameter("password");
+		if(userName.isEmpty()&&password.isEmpty()) {
+			model.addAttribute("UserNameMessage","username must not be blank!!!");
+			model.addAttribute("PasswordMessage","password must not be blank!!!");
+			return "Login";
+		}
+		if(userName.isEmpty())
+		{
+			model.addAttribute("UserNameMessage","username must not be blank!!!");
+			return "Login";
+		}
+		
+		
+		if(password.isEmpty()) {
+			model.addAttribute("PasswordMessage","password must not be blank!!!");
+			return "Login";
+		}
 		String priority = hasExistedAccount(userName,password);
+		
+		if(priority==null) {
+			model.addAttribute("UserNameMessage","wrong username or password!!!");
+			model.addAttribute("PasswordMessage","wrong username or password!!!");
+			return "Login";
+		}
+		
 		if(priority.strip().equals("AD"))
 		{
 			staffPassDataBetweenControllerHandler.setData(userName);
@@ -59,7 +82,7 @@ public class LoginController {
 		else if(priority.strip().equals("NV"))
 		{
 			staffPassDataBetweenControllerHandler.setData(userName);
-			return "redirect:/StaffRegisterShift.htm";
+			return "redirect:/StaffTimetable.htm";
 		}
 		else
 		{
