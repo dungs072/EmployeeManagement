@@ -121,7 +121,6 @@ tbody tr:hover {
 									<button type="button" class="btn btn-primary BillSalaryButton"
 										data-toggle="modal" data-target="#BillSalaryModal"
 										value="${staff.MANV}+${staff.HO}+${staff.TEN}">PrintBill</button>
-
 								</td>
 							</tr>
 						</c:forEach>
@@ -153,7 +152,7 @@ tbody tr:hover {
 						</div>
 						<div class="form-group">
 							<label for="salary"> Lương nhận</label> <input class ="salary" name="salary"
-								type="text" class="form-check-input" id="salary" required>
+								type="text" class="form-check-input" id="salary" value ="${staff.LUONGTICHLUY}" required>
 						</div>
 					</div>
 					<div class = "modal-footer">
