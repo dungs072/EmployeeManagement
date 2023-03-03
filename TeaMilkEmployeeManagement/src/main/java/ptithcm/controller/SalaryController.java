@@ -31,12 +31,12 @@ import ptithcm.bean.PrimaryKeyWithMoreDataHandler;
 
 @Transactional
 @Controller
-@RequestMapping("/salary/")
+@RequestMapping("/salary")
 public class SalaryController {
 	@Autowired
 	SessionFactory factory;
 	
-	@RequestMapping(value="/showSalary", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public String showSalary(ModelMap model) {
 		Session session = factory.getCurrentSession();
 		String hql="From StaffEntity Where MANV != :admin";

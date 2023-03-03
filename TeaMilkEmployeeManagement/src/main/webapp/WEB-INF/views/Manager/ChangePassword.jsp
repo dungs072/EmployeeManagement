@@ -4,92 +4,28 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<title>Change Password</title>
 <%@include file="/WEB-INF/views/include/ManagerHeader.jsp"%>
 <base href="${pageContext.servletContext.contextPath }/">
-<title>Show Mistake of Staff</title>
+
 <style>
-/* Set a fixed scrollable wrapper */
-.tableWrap {
-	margin-top: 50px;
-	height: 400px;
-	overflow: auto;
-	border-radius: 10px;
+.eye-Icon {
+	position: absolute;
+	right: 5px;
+	top: 8px;
 }
 
-/* Set header to stick to the top of the container. */
-thead tr th {
-	color: aliceblue;
-	position: sticky;
-	top: 0;
+.InputInvalid {
+	color: red;
+	font-style: italic;
+	margin-left: 5px;
+	margin-top: 5px;
 }
 
-td {
-	text-align: center;
-}
-
-/* If we use border,
-  we must use table-collapse to avoid
-  a slight movement of the header row */
-table {
-	border-collapse: collapse;
-}
-
-/* Because we must set sticky on th,
-   we have to apply background styles here
-   rather than on thead */
-th {
-	padding: 16px;
-	padding-left: 15px;
-	border-left: 1px dotted rgba(200, 209, 224, 0.6);
-	border-bottom: 1px solid #e8e8e8;
-	background: #4e73df;
-	text-align: center;
-	/* With border-collapse, we must use box-shadow or psuedo elements
-    for the header borders */
-	box-shadow: 0px 0px 0 2px #e8e8e8;
-}
-
-/* Basic Demo styling */
-table {
-	width: 100%;
-	font-family: sans-serif;
-}
-
-table td {
-	padding: 16px;
-}
-
-tbody tr {
-	border-bottom: 2px solid #e8e8e8;
-}
-
-thead {
-	font-weight: 500;
-	color: rgba(0, 0, 0, 0.85);
-}
-
-tbody tr:hover {
-	background: #e6f7ff;
+.resultText {
+	color: #008000;
 }
 </style>
-
-<script type="text/javascript">
-$(window).on('load', function() {
-
-	var value = localStorage.getItem("isClickedView");
-	if (value == "true") {
-		$('.saveChangesAddStaff').val(localStorage.getItem("viewValue"));
-		$('#showStaffMistake').modal('show');
-		localStorage.setItem("isClickedView", "false");
-	}
-
-
-});
-$(document).on('click', ".viewButton", function(e) {
-	localStorage.setItem("viewValue", $(this).val());
-	localStorage.setItem("isClickedView", "true");
-})
-</script>
 </head>
 <body>
 	<div class="main-container">
@@ -169,88 +105,63 @@ $(document).on('click', ".viewButton", function(e) {
 				</div>
 			</nav>
 		</div>
-<div class="main">
+		<div class="main">
 	<div class="container">
 		<div class="row justify-content-md-center">
-			<div class="col-10">
-				<div class="tableWrap">
-					<table class="employeeTable">
-						<thead>
-							<tr>
-								<th><span>STT</span></th>
-								<th><span>Name</span></th>
-								<th><span>Phone Number</span></th>
-								<th><span>Mistake</span></th>
-							</tr>
-						</thead>
-						<tbody>
-							<c:forEach var="staff" varStatus="i" items="${staffs}">
-								<tr>
-									<td>${i.count}</td>
-									<td>${staff.HO} ${staff.TEN}</td>
-									<td>${staff.SDT}</td>
-									<td>
-										<form action = "DisplayStaffMistake/ShowMistake.htm" method = "get">
-											<button type="submit" class="btn btn-success viewButton" name = "staffId" value = "${staff.MANV}">View</button>
-										</form>
-										
-									</td>
+			<div class="col-5 mt-5">
+				<div class="card card-outline-secondary">
+					<div class="card-header">
+						<h3 class="mb-0">Change Password</h3>
+					</div>
+					<div class="card-body">
+						<form class="form" role="form" autocomplete="off"
+							action="ChangePassword/saveChange.htm" method="get">
+							<div class="form-group">
+								<label for="inputPasswordOld">Current Password</label> <input
+									type="password" class="form-control" id="inputPasswordOld"
+									required="" name="oldPassword">
+								<div class = "InputInvalid">${oldPasswordMessage}</div>
+							</div>
+							<div class="form-group">
+								<label for="inputPasswordNew">New Password</label>
+								<div class="col">
+									<div class="input-group" id="show_hide_password">
+										<input class="form-control" type="password" maxlength="20"
+											name="newPassword" required="">
+										<div class = "InputInvalid">${newPasswordMessage}</div>
+										<div class="input-group-addon eye-Icon">
+											<a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+										</div>
+										<span class="form-text small text-muted"> The password
+											must be less than 20 characters, and must not contain spaces.
+										</span>
 
-								</tr>
-							</c:forEach>
-						</tbody>
-					</table>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputPasswordNewVerify">Verify</label> <input
+									type="password" class="form-control" maxlength="20"
+									id="inputPasswordNewVerify" required="" name="confirmPassword">
+								<span class="form-text small text-muted"> To confirm,
+									type the new password again. </span>
+								<div class = "InputInvalid">${confirmPasswordMessage}</div>
+							</div>
+							<div class="form-group">
+								<button type="submit" class="btn btn-success btn-lg float-right">Save</button>
+							</div>
+							<div class="resultMessage">
+								<p class ="resultText">${successMessage}</p>
+								<p class="InputInvalid">${failureMessage}</p>
+							</div>
+						</form>
+					</div>
 				</div>
+
 			</div>
 		</div>
 	</div>
-</div>
-</div>
-	
-	<!-- Modal -->
-	<!--ShowM-->
-	<div class="modal fade" id="showStaffMistake" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLongTitle">Mistake</h5>
-					<button type="button" class="close" data-bs-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<label for="exampleInputPassword1" class="form-label">Name</label> 
-					<input type="text" class="form-control"
-					id="settingToDoListModal" name="toDoListInput" readonly
-					value = "${specificStaff.HO} ${specificStaff.TEN}">
-					<form>
-						<div class="tableWrap">
-					<table class="employeeTable">
-						<thead>
-							<tr>
-								<th><span>Violation Date</span></th>
-								<th><span>Shift</span></th>
-								<th><span>Times</span></th>
-							</tr>
-						</thead>
-						<tbody>
-							<c:forEach var="mistakeHistory" varStatus="i" items="${mistakeHistoryList}">
-								<tr>
-									
-									<td>${mistakeHistory.shiftDetailEntity.openshift.NGAYLAMVIEC}</td>
-									<td>${mistakeHistory.shiftDetailEntity.openShift.shift.IDCA}</td>
-									<td>${mistakeHistory.SOLANVIPHAM}</td>
-								</tr>
-							</c:forEach>
-						</tbody>
-					</table>
-				</div>
-					</form>
-				</div>
-			</div>
-		</div>
+	</div>
 	</div>
 </body>
 </html>

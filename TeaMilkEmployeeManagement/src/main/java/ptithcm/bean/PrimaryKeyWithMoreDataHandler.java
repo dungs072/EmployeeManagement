@@ -9,10 +9,6 @@ public class PrimaryKeyWithMoreDataHandler {
 		return data1.strip() + "-" + data2.strip() + "-" + data3.strip();
 	}
 	
-	public String getPatternBaseOnDatas(String data1, String data2) {
-		return data1.strip() + "-" + data2.strip();
-		return data1.strip()+"-"+data2.strip()+"-"+data3.strip();
-	}
 	
 	public String getPrimaryKeyBaseOnDatas(String data1, String data2) {
 		return data1.strip()+"-"+data2.strip();

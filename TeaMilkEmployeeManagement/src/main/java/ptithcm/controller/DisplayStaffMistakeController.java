@@ -9,10 +9,12 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import ptithcm.bean.PassDataBetweenControllerHandler;
 import ptithcm.entity.MistakeHistoryEntity;
 import ptithcm.entity.StaffEntity;
 
@@ -24,6 +26,10 @@ public class DisplayStaffMistakeController {
 	SessionFactory factory;
 	
 	List<StaffEntity> staffs;
+	
+	@Autowired
+	@Qualifier("staffPassDataHandler")
+	PassDataBetweenControllerHandler staffPassDataBetweenControllerHandler;
 	
 	@RequestMapping
 	public String showEmployee(ModelMap map) {
@@ -54,7 +60,7 @@ public class DisplayStaffMistakeController {
 	private String displayMainView(ModelMap map) {
 		staffs = getStaffsMistake();
 		map.addAttribute("staffs",staffs);
-		return "Manager/DisplayStaffInforMistake";
+		return returnToSpecificAccount();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -65,5 +71,14 @@ public class DisplayStaffMistakeController {
 		Query query = session.createQuery(hql);
 		return query.list();
 		
+	}
+	private String returnToSpecificAccount() {
+		String priority = staffPassDataBetweenControllerHandler.getAuthorityId().strip();
+		if(priority.equals("AD")) {
+			return "Admin/DisplayStaffInforMistake";
+		}
+		else{
+			return "Manager/DisplayStaffInforMistake";
+		}
 	}
 }

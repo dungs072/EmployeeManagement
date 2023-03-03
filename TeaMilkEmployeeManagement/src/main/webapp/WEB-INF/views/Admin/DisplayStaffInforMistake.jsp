@@ -1,27 +1,29 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
 <%@include file="/WEB-INF/views/include/AdminHeader.jsp"%>
 <base href="${pageContext.servletContext.contextPath }/">
-<title>ADMIN</title>
+<title>Show Mistake of Staff</title>
 <style>
-/* Set a fixed scrollable wrapper */
 .tableWrap {
-	height: 390px;
-	border: 2px solid black;
+	margin-top: 50px;
+	height: 400px;
 	overflow: auto;
+	border-radius: 10px;
 }
 
 /* Set header to stick to the top of the container. */
 thead tr th {
+	color: aliceblue;
 	position: sticky;
 	top: 0;
-	color: aliceblue;
+}
+
+td {
+	text-align: center;
 }
 
 /* If we use border,
@@ -54,7 +56,6 @@ table {
 
 table td {
 	padding: 16px;
-	text-align: center;
 }
 
 tbody tr {
@@ -70,39 +71,28 @@ tbody tr:hover {
 	background: #e6f7ff;
 }
 </style>
-<script>
-	var isClickedInfor = "";
-	$(document).ready(function() {
 
-						
-						$('.enableButton').click(function(){
-							$(document).find('.yes-warning').val($(this).val())
-							localStorage.setItem("staffId",$(this).val());
-						});
-						
-						$('.yes-warning').click(function(){
-							
-							localStorage.setItem("isClickedEnable","true");
-							
-						});
+<script type="text/javascript">
+$(window).on('load', function() {
 
-						$(window).on('load',function() {
-								var enabledValue = localStorage.getItem("isClickedEnable");
-								if (enabledValue == "true") {	
-									$("#createdModal").modal("show");
-									
-									$(document).find('#username').val(localStorage.getItem("staffId"));
-									localStorage.setItem("isClickedEnable","false");
-								}
+	var value = localStorage.getItem("isClickedView");
+	if (value == "true") {
+		$('.saveChangesAddStaff').val(localStorage.getItem("viewValue"));
+		$('#showStaffMistake').modal('show');
+		localStorage.setItem("isClickedView", "false");
+	}
 
-						});
 
-	});
+});
+$(document).on('click', ".viewButton", function(e) {
+	localStorage.setItem("viewValue", $(this).val());
+	localStorage.setItem("isClickedView", "true");
+})
 </script>
 </head>
 <body>
 
-	<div class="main-container">
+<div class="main-container">
 		<div class="navcontainer">
 			<nav class="nav">
 				<div class="nav-upper-options">
@@ -209,51 +199,33 @@ tbody tr:hover {
 		</div>
 		<div class="main">
 			<div class="container">
-		<div class="row mt-3">
-			<div class="col">
-				<div class="search mb-3">
-
-					<form action="EnabledStaff/SearchStaff.htm" method="get">
-						<input type="text" name="searchInput"
-							placeholder="Search employee..">
-						<button type="submit" class="btn btn-outline-dark">Search</button>
-					</form>
-
-				</div>
-
-			</div>
-			<div class="col"></div>
-
-		</div>
-		<div class="row mt-3">
-			<div class="col">
+		<div class="row justify-content-md-center">
+			<div class="col-10">
 				<div class="tableWrap">
 					<table class="employeeTable">
 						<thead>
 							<tr>
 								<th><span>STT</span></th>
-								<th><span>Employee Id</span></th>
-								<th><span>Full Name</span></th>
-								<th><span>Phone number</span></th>
-								<th><span>Action</span></th>
+								<th><span>Name</span></th>
+								<th><span>Phone Number</span></th>
+								<th><span>Mistake</span></th>
 							</tr>
 						</thead>
 						<tbody>
 							<c:forEach var="staff" varStatus="i" items="${staffs}">
 								<tr>
 									<td>${i.count}</td>
-									<td>${staff.MANV}</td>
 									<td>${staff.HO} ${staff.TEN}</td>
-									<td><span>${staff.SDT}</span></td>
+									<td>${staff.SDT}</td>
 									<td>
-										<button type="button" name="InforStaff"
-												class="btn btn-success enableButton"
-												data-bs-toggle="modal" data-bs-target="#warning"
-												value="${staff.MANV}">Enable</button>
+										<form action = "DisplayStaffMistake/ShowMistake.htm" method = "get">
+											<button type="submit" class="btn btn-success viewButton" name = "staffId" value = "${staff.MANV}">View</button>
+										</form>
+										
 									</td>
+
 								</tr>
 							</c:forEach>
-
 						</tbody>
 					</table>
 				</div>
@@ -262,67 +234,49 @@ tbody tr:hover {
 	</div>
 		</div>
 	</div>
-		
+	
 	
 	<!-- Modal -->
-
-
-	<!-- successfully created account -->
-	<div class="modal" tabindex="-1" id="createdModal">
-		<div class="modal-dialog">
+	<!--ShowM-->
+	<div class="modal fade" id="showStaffMistake" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">New account</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
+					<h5 class="modal-title" id="exampleModalLongTitle">Mistake</h5>
+					<button type="button" class="close" data-bs-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
 				</div>
 				<div class="modal-body">
-					<div class="mb-3 row">
-						<label for="staticEmail" class="col-sm-2 col-form-label">Username</label>
-						<div class="col-sm-10">
-							<input type="text" readonly class="form-control-plaintext"
-								id="username">
-						</div>
-					</div>
-					<div class="mb-3 row">
-						<label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" value = "123" readonly>
-						</div>
-					</div>
+					<label for="exampleInputPassword1" class="form-label">Name</label> 
+					<input type="text" class="form-control"
+					id="settingToDoListModal" name="toDoListInput" readonly
+					value = "${specificStaff.HO} ${specificStaff.TEN}">
+					<form>
+						<div class="tableWrap">
+					<table class="employeeTable">
+						<thead>
+							<tr>
+								<th><span>Violation Date</span></th>
+								<th><span>Shift</span></th>
+								<th><span>Times</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:forEach var="mistakeHistory" varStatus="i" items="${mistakeHistoryList}">
+								<tr>
+									
+									<td>${mistakeHistory.shiftDetailEntity.openshift.NGAYLAMVIEC}</td>
+									<td>${mistakeHistory.shiftDetailEntity.openShift.shift.IDCA}</td>
+									<td>${mistakeHistory.SOLANVIPHAM}</td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
 				</div>
-				<div class="modal-footer">
-					<form action="Recruit/DeleteStaff.htm" method="get">
-						<button type="button" class="btn btn-success"
-							data-bs-dismiss="modal">Ok</button>
 					</form>
-
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!--warning Modal-->
-	<!-- enable -->
-	<div class="modal" tabindex="-1" id="warning">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">!!!</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<p>Are you sure about enabling this account ?</p>
-				</div>
-				<div class="modal-footer">
-					<form action="EnabledStaff/Enable.htm" method="get">
-						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">No</button>
-						<button type="submit" class="btn btn-primary yes-warning"
-							data-bs-dismiss="modal" name="yes-warning">Yes</button>
-					</form>
-
 				</div>
 			</div>
 		</div>

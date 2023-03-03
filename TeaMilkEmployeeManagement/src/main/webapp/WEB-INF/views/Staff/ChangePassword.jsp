@@ -4,72 +4,31 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<title>Change Password</title>
 <%@include file="/WEB-INF/views/include/StaffHeader.jsp"%>
 <base href="${pageContext.servletContext.contextPath }/">
-<title>History of your mistakes</title>
+
 <style>
-.tableWrap {
-	height: 390px;
-	border: 2px solid black;
-	overflow: auto;
+.eye-Icon {
+	position: absolute;
+	right: 5px;
+	top: 8px;
 }
 
-/* Set header to stick to the top of the container. */
-thead tr th {
-	position: sticky;
-	top: 0;
-	color: aliceblue;
+.InputInvalid {
+	color: red;
+	font-style: italic;
+	margin-left: 5px;
+	margin-top: 5px;
 }
 
-/* If we use border,
-  we must use table-collapse to avoid
-  a slight movement of the header row */
-table {
-	border-collapse: collapse;
-}
-
-/* Because we must set sticky on th,
-   we have to apply background styles here
-   rather than on thead */
-th {
-	padding: 16px;
-	padding-left: 15px;
-	border-left: 1px dotted rgba(200, 209, 224, 0.6);
-	border-bottom: 1px solid #e8e8e8;
-	background: #4e73df;
-	text-align: center;
-	/* With border-collapse, we must use box-shadow or psuedo elements
-    for the header borders */
-	box-shadow: 0px 0px 0 2px #e8e8e8;
-}
-
-/* Basic Demo styling */
-table {
-	width: 100%;
-	font-family: sans-serif;
-}
-
-table td {
-	padding: 16px;
-	text-align: center;
-}
-
-tbody tr {
-	border-bottom: 2px solid #e8e8e8;
-}
-
-thead {
-	font-weight: 500;
-	color: rgba(0, 0, 0, 0.85);
-}
-
-tbody tr:hover {
-	background: #e6f7ff;
+.resultText {
+	color: #008000;
 }
 </style>
 </head>
 <body>
-<div class="main-container">
+	<div class="main-container">
 		<div class="navcontainer">
 			<nav class="nav">
 				<div class="nav-upper-options">
@@ -149,37 +108,57 @@ tbody tr:hover {
 		</div>
 		<div class="main">
 	<div class="container">
-		<div class="row">
-			<div class="col">
-				<div class="row mt-5">
-					<div class="col">
-						<div class="tableWrap">
-							<table class="employeeTable">
-								<thead>
-									<tr>
-										<th><span>STT</span></th>
-										<th><span>Mistake Name</span></th>
-										<th><span>Violation Date</span></th>
-										<th><span>Shift</span></th>
-										<th><span>Times</span></th>
-									</tr>
-								</thead>
-								<tbody>
-									<c:forEach var="history" varStatus="i" items="${histories}">
-										<tr>
-											<td>${i.count}</td>
-											<td>${history.mistakeEntity.MOTA}</td>
-											<td>${history.shiftDetailEntity.openshift.NGAYLAMVIEC}</td>
-											<td><span>${history.shiftDetailEntity.openshift.shift.IDCA}</span></td>
-											<td>${history.SOLANVIPHAM}</td>
-										</tr>
-									</c:forEach>
+		<div class="row justify-content-md-center">
+			<div class="col-5 mt-5">
+				<div class="card card-outline-secondary">
+					<div class="card-header">
+						<h3 class="mb-0">Change Password</h3>
+					</div>
+					<div class="card-body">
+						<form class="form" role="form" autocomplete="off"
+							action="ChangePassword/saveChange.htm" method="get">
+							<div class="form-group">
+								<label for="inputPasswordOld">Current Password</label> <input
+									type="password" class="form-control" id="inputPasswordOld"
+									required="" name="oldPassword">
+								<div class = "InputInvalid">${oldPasswordMessage}</div>
+							</div>
+							<div class="form-group">
+								<label for="inputPasswordNew">New Password</label>
+								<div class="col">
+									<div class="input-group" id="show_hide_password">
+										<input class="form-control" type="password" maxlength="20"
+											name="newPassword" required="">
+										<div class = "InputInvalid">${newPasswordMessage}</div>
+										<div class="input-group-addon eye-Icon">
+											<a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+										</div>
+										<span class="form-text small text-muted"> The password
+											must be less than 20 characters, and must not contain spaces.
+										</span>
 
-								</tbody>
-							</table>
-						</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="inputPasswordNewVerify">Verify</label> <input
+									type="password" class="form-control" maxlength="20"
+									id="inputPasswordNewVerify" required="" name="confirmPassword">
+								<span class="form-text small text-muted"> To confirm,
+									type the new password again. </span>
+								<div class = "InputInvalid">${confirmPasswordMessage}</div>
+							</div>
+							<div class="form-group">
+								<button type="submit" class="btn btn-success btn-lg float-right">Save</button>
+							</div>
+							<div class="resultMessage">
+								<p class ="resultText">${successMessage}</p>
+								<p class="InputInvalid">${failureMessage}</p>
+							</div>
+						</form>
 					</div>
 				</div>
+
 			</div>
 		</div>
 	</div>

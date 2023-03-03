@@ -35,7 +35,7 @@ public class SelfInforController {
 		String staffId = passDataBetweenControllerHandler.getData();
 		StaffEntity staff = (StaffEntity) session.get(StaffEntity.class, staffId);
 		map.addAttribute("staff",staff);
-		return "SelfInfor";
+		return returnToSpecificAccount();
 	}
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
 	public String updateSelfInfor(HttpServletRequest request,ModelMap map,StaffEntity updatedStaff) {
@@ -48,13 +48,25 @@ public class SelfInforController {
 		}
 		map.addAttribute("staff",updatedStaff);
 		updateStaff(session,updatedStaff);
-		return "SelfInfor";
+		return returnToSpecificAccount();
 	}
 	private void updateStaff(Session session,StaffEntity newStaff) {
 		String staffId = passDataBetweenControllerHandler.getData();
 		StaffEntity oldStaff = (StaffEntity) session.get(StaffEntity.class,staffId);
 		oldStaff.updateInfor(newStaff);
 		session.saveOrUpdate(oldStaff);
+	}
+	private String returnToSpecificAccount() {
+		String priority = passDataBetweenControllerHandler.getAuthorityId().strip();
+		if(priority.equals("AD")) {
+			return "Admin/SelfInfor";
+		}
+		else if(priority.equals("QL")) {
+			return "Manager/SelfInfor";
+		}
+		else {
+			return "Staff/SelfInfor";
+		}
 	}
 
 }

@@ -26,14 +26,19 @@ import ptithcm.entity.OpenShiftEntity;
 import ptithcm.entity.ShiftDetailEntity;
 import ptithcm.entity.StaffEntity;
 import ptithcm.entity.MistakeHistoryEntity;
+import ptithcm.bean.PassDataBetweenControllerHandler;
 import ptithcm.bean.PrimaryKeyWithMoreDataHandler;
 
 @Transactional
 @Controller
-@RequestMapping("/home/")
+@RequestMapping("/home")
 public class HomeController{
 	@Autowired
 	SessionFactory factory;
+	
+	@Autowired
+	@Qualifier("staffPassDataHandler")
+	PassDataBetweenControllerHandler staffPassDataBetweenControllerHandler;
 
 	@Autowired
 	@Qualifier("primaryKeyHandler")
@@ -43,7 +48,7 @@ public class HomeController{
 	long millis = System.currentTimeMillis();
 	Date date_sql = new Date(millis);
 	
-	@RequestMapping("/index")
+	@RequestMapping
 	public String showShift(ModelMap model) {
 		LocalTime time = LocalTime.now();
 		int hour = time.getHour();
@@ -56,7 +61,7 @@ public class HomeController{
 		}
 		List<OpenShiftEntity> listOpenId = getIdAOpenShift(idShiftShow, date_sql);
 		if(listOpenId.isEmpty()) {
-			return"/Admin/Home";
+			return returnToSpecificAccount();
 		}
 		else {
 		String idcamo = listOpenId.get(0).getID_CA_MO();
@@ -66,7 +71,7 @@ public class HomeController{
 		model.addAttribute("idca", idShiftShow);
 		model.addAttribute("getDate", date_sql);
 		model.addAttribute("faults", listMistake);
-		return "/Admin/Home";
+		return returnToSpecificAccount();
 		}
 	}
 
@@ -173,7 +178,7 @@ public class HomeController{
 		idShiftShow = request.getParameter("idCa");
 		List<OpenShiftEntity> listOpenId = getIdAOpenShift(idShiftShow, date_sql);
 		if(listOpenId.isEmpty()) {
-			return "/Admin/Home";
+			return returnToSpecificAccount();
 		}
 		else{
 			String idcamo = listOpenId.get(0).getID_CA_MO();
@@ -183,7 +188,7 @@ public class HomeController{
 			model.addAttribute("idca", idShiftShow);
 			model.addAttribute("getDate", date_sql);
 			model.addAttribute("faults", listMistake);
-			return "/Admin/Home";
+			return returnToSpecificAccount();
 		}
 	}
 	
@@ -200,7 +205,7 @@ public class HomeController{
 			model.addAttribute("idca", idShiftShow);
 			model.addAttribute("getDate", date_sql);
 			model.addAttribute("faults", listMistake);
-			return "/Admin/Home";
+			return returnToSpecificAccount();
 		}
 	}
 
@@ -227,6 +232,15 @@ public class HomeController{
 		ShiftDetailEntity checkin = (ShiftDetailEntity) session.get(ShiftDetailEntity.class, idCtCa);
 		checkin.setTHOIGIANDILAM(time);
 		session.update(checkin);
+	}
+	private String returnToSpecificAccount() {
+		String priority = staffPassDataBetweenControllerHandler.getAuthorityId().strip();
+		if(priority.equals("AD")) {
+			return "Admin/Home";
+		}
+		else{
+			return "Manager/Home";
+		}
 	}
 	
 	

@@ -34,21 +34,6 @@ public class SalaryBillEntity {
 	@Column(name = "LUONGNHAN")
 	private float LUONGNHAN;
 
-	public StaffEntity getStaffEntity() {
-		return staffEntity;
-	}
-
-	public void setStaffEntity(StaffEntity staffEntity) {
-		this.staffEntity = staffEntity;
-	}
-
-	public float getLUONGNHAN() {
-		return LUONGNHAN;
-	}
-
-	public void setLUONGNHAN(float lUONGNHAN) {
-		LUONGNHAN = lUONGNHAN;
-	}
 
 	
 	public SalaryBillEntity() {}
