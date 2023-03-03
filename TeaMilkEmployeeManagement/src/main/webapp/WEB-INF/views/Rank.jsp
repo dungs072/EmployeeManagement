@@ -22,6 +22,7 @@
             color: aliceblue;
             position: sticky;
             top: 0;
+            color: aliceblue;
            
         }
 

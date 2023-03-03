@@ -25,6 +25,7 @@ public class MistakeHistoryController {
 	@Autowired
 	SessionFactory factory;
 	
+	
 	@Autowired
 	@Qualifier("staffPassDataHandler")
 	PassDataBetweenControllerHandler employerPassdataBetweenControllerHandler;
@@ -45,4 +46,5 @@ public class MistakeHistoryController {
 		query.setString("ownerId", ownerId);
 		return query.list();
 	}
+
 }
