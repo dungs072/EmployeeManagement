@@ -251,6 +251,7 @@ public class ManagerRegistrationController {
 	@RequestMapping(value = "/confirmShifts",method = RequestMethod.GET)
 	public String confirmShifts(HttpServletRequest request,ModelMap map) {
 		updateConfirmState(true);
+		
 		return displayMainViewDontDeleteOldUI(request, map);
 	}
 	@RequestMapping(value = "/cancelConfirmShifts",method = RequestMethod.GET)
@@ -284,7 +285,19 @@ public class ManagerRegistrationController {
 			int col = sqlDateMinsDays(firstDate, shiftDetail.getOpenshift().getNGAYLAMVIEC());
 			shiftUIHash[row][col].getShiftDataUI(shiftDetail.getID_CTCA().strip()).setConfirmed(state);
 		}
+		if(state) {
+			deleteUnconfirmationShifts(firstDate,firstDateCanChoose);
+		}
 
+	}
+	private void deleteUnconfirmationShifts(Date firstDay,Date currentDay) {
+		Session session = factory.getCurrentSession();
+		String hql = "DELETE FROM ShiftDetailEntity s WHERE s.openshift.NGAYLAMVIEC BETWEEN :firstDay AND :currentDay "
+				+ " AND s.XACNHAN = false";
+		Query query=  session.createQuery(hql);
+		query.setString("firstDay", firstDay.toString());
+		query.setString("currentDay", currentDay.toString());
+		query.executeUpdate();
 	}
 	private void getConfirmState() {
 		Session session = factory.getCurrentSession();

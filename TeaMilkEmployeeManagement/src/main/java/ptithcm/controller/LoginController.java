@@ -25,7 +25,7 @@ import ptithcm.entity.StaffEntity;
 
 @Transactional
 @Controller
-public class ManagerController {
+public class LoginController {
 
 	@Autowired
 	SessionFactory factory; 
@@ -63,7 +63,7 @@ public class ManagerController {
 			return "Login";
 		}
 		String priority = hasExistedAccount(userName,password);
-		
+		staffPassDataBetweenControllerHandler.setAuthorityId(priority);
 		if(priority==null) {
 			model.addAttribute("UserNameMessage","wrong username or password!!!");
 			model.addAttribute("PasswordMessage","wrong username or password!!!");
@@ -73,12 +73,12 @@ public class ManagerController {
 		if(priority.strip().equals("AD"))
 		{
 			staffPassDataBetweenControllerHandler.setData(userName);
-			return "redirect:/Recruit.htm";
+			return "redirect:/home.htm";
 		}
 		else if(priority.strip().equals("QL"))
 		{
 			staffPassDataBetweenControllerHandler.setData(userName);
-			return "redirect:/ManagerRegistration.htm";
+			return "redirect:/home.htm";
 		}
 		else if(priority.strip().equals("NV"))
 		{
@@ -89,6 +89,7 @@ public class ManagerController {
 		{
 			return "Login";
 		}
+		
 	}
 
 	public String hasExistedAccount(String userName, String password) {
