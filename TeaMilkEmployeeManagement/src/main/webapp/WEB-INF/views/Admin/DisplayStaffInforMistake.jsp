@@ -82,7 +82,6 @@ $(window).on('load', function() {
 		localStorage.setItem("isClickedView", "false");
 	}
 
-
 });
 $(document).on('click', ".viewButton", function(e) {
 	localStorage.setItem("viewValue", $(this).val());

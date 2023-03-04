@@ -31,12 +31,11 @@ import ptithcm.bean.PrimaryKeyWithMoreDataHandler;
 
 @Transactional
 @Controller
-@RequestMapping("/salary")
 public class SalaryController {
 	@Autowired
 	SessionFactory factory;
 	
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value="salary", method = RequestMethod.GET)
 	public String showSalary(ModelMap model) {
 		Session session = factory.getCurrentSession();
 		String hql="From StaffEntity Where MANV != :admin";
@@ -47,7 +46,17 @@ public class SalaryController {
 		return "/Admin/StaffSalary";
 	}
 	
-	@RequestMapping(value="/paySalary", method= RequestMethod.GET)
+	@RequestMapping(value="historySalary", method=RequestMethod.GET)
+	public String historySalary(HttpServletRequest request, ModelMap model) {
+		String maNV = request.getParameter("history");
+		List<SalaryBillEntity> list = getHistorySalary(maNV);
+		model.addAttribute("historySalary", list);
+		model.addAttribute("idStaffHS", maNV);
+		return showSalary(model);
+	}
+	
+	
+	@RequestMapping(value="paySalary", method= RequestMethod.GET)
 	public String pay(HttpServletRequest request, ModelMap model) {
 		String maNV = request.getParameter("idStaff");
 		Float salary = Float.parseFloat(request.getParameter("salary"));
@@ -66,5 +75,14 @@ public class SalaryController {
 		 bill.setStaffEntity(staff);
 		 bill.setLUONGNHAN(salary);
 		 session.save(bill);
+	 }
+	 
+	 public List<SalaryBillEntity> getHistorySalary(String idNV){
+		 Session session = factory.getCurrentSession();
+		 String hql = "From SalaryBillEntity Where MANV = :id";
+		 Query query = session.createQuery(hql);
+		 query.setString("id", idNV);
+		 List<SalaryBillEntity> list = query.list();
+		 return list;
 	 }
 }

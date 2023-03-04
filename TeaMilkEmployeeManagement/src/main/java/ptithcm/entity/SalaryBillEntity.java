@@ -69,6 +69,4 @@ public class SalaryBillEntity {
 	public void setLUONGNHAN(float lUONGNHAN) {
 		LUONGNHAN = lUONGNHAN;
 	}
-
-
 }

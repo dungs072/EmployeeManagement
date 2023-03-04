@@ -31,7 +31,6 @@ import ptithcm.bean.PrimaryKeyWithMoreDataHandler;
 
 @Transactional
 @Controller
-@RequestMapping("/home")
 public class HomeController{
 	@Autowired
 	SessionFactory factory;
@@ -48,7 +47,7 @@ public class HomeController{
 	long millis = System.currentTimeMillis();
 	Date date_sql = new Date(millis);
 	
-	@RequestMapping
+	@RequestMapping("/home")
 	public String showShift(ModelMap model) {
 		LocalTime time = LocalTime.now();
 		int hour = time.getHour();
