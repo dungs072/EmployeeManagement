@@ -244,14 +244,14 @@ public class ManagerRegistrationController {
 		Integer row = Integer.parseInt(shift_dates[0])-1;
 		Integer col = Integer.parseInt(shift_dates[1])-1;
 		shiftUIHash[row][col].setMaxStaff(Integer.parseInt(maxStaffStr));
-		System.out.println(maxStaffStr);
 		return functionDisplayMainView(request,map);
 	}
 	
 	@RequestMapping(value = "/confirmShifts",method = RequestMethod.GET)
 	public String confirmShifts(HttpServletRequest request,ModelMap map) {
 		updateConfirmState(true);
-		
+		resetUI();
+		putDataToView(weekDateFromTo);
 		return displayMainViewDontDeleteOldUI(request, map);
 	}
 	@RequestMapping(value = "/cancelConfirmShifts",method = RequestMethod.GET)
@@ -290,14 +290,19 @@ public class ManagerRegistrationController {
 		}
 
 	}
+	@SuppressWarnings("unchecked")
 	private void deleteUnconfirmationShifts(Date firstDay,Date currentDay) {
 		Session session = factory.getCurrentSession();
-		String hql = "DELETE FROM ShiftDetailEntity s WHERE s.openshift.NGAYLAMVIEC BETWEEN :firstDay AND :currentDay "
-				+ " AND s.XACNHAN = false";
+		String hql = "FROM ShiftDetailEntity WHERE openshift.NGAYLAMVIEC BETWEEN :firstDay AND :currentDay AND"
+				+ " XACNHAN = false";
 		Query query=  session.createQuery(hql);
 		query.setString("firstDay", firstDay.toString());
 		query.setString("currentDay", currentDay.toString());
-		query.executeUpdate();
+		List<ShiftDetailEntity> list = query.list();
+		for(var shift:list) {
+			shift.deleteLink();
+			session.delete(shift);
+		}
 	}
 	private void getConfirmState() {
 		Session session = factory.getCurrentSession();
@@ -465,6 +470,7 @@ public class ManagerRegistrationController {
 		}
 		setCanInteractWithUI();
 		//putStaffRegistrationDataToView();
+
 		map.addAttribute("weekSelection", weekDateFromTo);
 		map.addAttribute("shifts",shifts);
 		map.addAttribute("canDisplayCancelButton",canDisplayCancelButtons);
@@ -525,8 +531,8 @@ public class ManagerRegistrationController {
 				String fullName = staff.getHO().strip()+" "+staff.getTEN().strip();
 				String jobName = staff.getJobPosition().getTENVITRI().strip();
 				ShiftDataUI dataUI = new ShiftDataUI(shiftDetailEntity.getID_CTCA().strip(),fullName,jobName,shiftDetailEntity.getCONGVIEC());
+				dataUI.setConfirmed(shiftDetailEntity.isXACNHAN());
 				shiftUIHash[shiftIndex-1][dateIndex].addShiftDataUI(dataUI);
-				
 				shiftUIHash[shiftIndex-1][dateIndex].calculateLeftStaff();
 			}
 			

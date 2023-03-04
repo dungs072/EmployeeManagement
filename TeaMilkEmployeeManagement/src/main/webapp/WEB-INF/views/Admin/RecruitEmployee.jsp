@@ -68,13 +68,15 @@ thead {
 tbody tr:hover {
 	background: #e6f7ff;
 }
+.InputInvalid{
+color:red;
+font-style: italic;
+margin-left:5px;
+margin-top:5px;
+}
 </style>
-<script>
-	var isClickedInfor = "";
-	$(document)
-			.ready(
-					function() {
-
+<script th:inline="javascript">
+	$(document).ready(function() {
 						//call function
 						$(document).on('click', ".deleteEmployee", function(e) {
 
@@ -88,89 +90,78 @@ tbody tr:hover {
 							saveButton.val($(this).val());
 						});
 
-						$(".addModalButton").click(
-								function() {
+						$(".addModalButton").click(function() {
+							localStorage.setItem("isClickedAddStaffButton", "true");
+						});
 
-									localStorage.setItem(
-											"isClickedAddStaffButton", "true");
-								});
+						$(".add-save-created").click(function() {
+							localStorage.setItem("isClickedSaveStaffButton","true");
+							var firstName = $(document).find('.firstName').val();
+							var lastName = $(document).find('.lastName').val();
+							var idCard = $(document).find('.idCard').val();
+							var phoneNumber = $(document).find('.phoneNumber').val();
+							var address = $(document).find('.address').val();
+							var staffInfor = firstName +","+lastName+","+idCard+","+phoneNumber+","+address;
+							localStorage.setItem("staffInfo",staffInfor);
 
-						$(".add-save-created")
-								.click(
-										function() {
-
-											localStorage.setItem(
-													"isClickedSaveStaffButton",
-													"true");
-
-										});
-						$(".resetPassword").click(
-								function() {
-									var yesResetButton = $(document).find(
-											'.yes-reset-warning');
-									yesResetButton.val($(this).val());
-								});
+						});
+						$(".resetPassword").click(function() {
+							var yesResetButton = $(document).find('.yes-reset-warning');
+							yesResetButton.val($(this).val());
+						});
 						$('.yes-reset-warning').click(function() {
 							localStorage.setItem("isClickedReset", "true");
 							localStorage.setItem("resetId", $(this).val());
 						});
-						$(window)
-								.on(
-										'load',
-										function() {
-											var value = localStorage
-													.getItem("isClickedInfor");
-											if (value == "true") {
-												$("#detailModal").modal("show");
-												localStorage.setItem(
-														"isClickedInfor",
-														"false");
-											}
-											var addValue = localStorage
-													.getItem("isClickedAddStaffButton");
-											if (addValue == "true") {
-												$("#addModal").modal("show");
-												localStorage
-														.setItem(
-																"isClickedAddStaffButton",
-																"false");
-											}
-											var saveAddValue = localStorage
-													.getItem("isClickedSaveStaffButton");
-											if (saveAddValue == "true") {
-												$('#createdModal')
-														.modal("show");
-												$(document)
-														.find('#username')
-														.val(
-																$(
-																		'.add-save-created')
-																		.val());
-												localStorage
-														.setItem(
-																"isClickedSaveStaffButton",
-																"false");
-											}
-											var resetValue = localStorage
-													.getItem("isClickedReset");
-											if (resetValue == "true") {
-												$('#ResetSuccessfullyModal')
-														.modal('show');
-												$(document)
-														.find('#ResetUsername')
-														.val(
-																localStorage
-																		.getItem('resetId'));
-												localStorage.setItem(
-														"isClickedReset",
-														"false");
+						$(window).on('load',function() {
 
-											}
+							var value = localStorage.getItem("isClickedInfor");
+							if (value == "true") {
+								$("#detailModal").modal("show");
+								localStorage.setItem("isClickedInfor","false");
+							}
+							
+							var addValue = localStorage.getItem("isClickedAddStaffButton");
+							if (addValue == "true") {
+								$("#addModal").modal("show");
+								localStorage.setItem("isClickedAddStaffButton","false");
+							}
+							var isWrongIdCard = [[${isWrongIDCard}]];
+							var isWrongPhoneNumber = [[${isWrongPhoneNumber}]];
 
-										});
+							if(isWrongIdCard=='true'||isWrongPhoneNumber=='true'){
+								var staffInfo = localStorage.getItem("staffInfo").split(',');
+								$(document).find('.firstName').val(staffInfo[0]);
+								$(document).find('.lastName').val(staffInfo[1]);
+								$(document).find('.idCard').val(staffInfo[2]);
+								$(document).find('.phoneNumber').val(staffInfo[3]);
+								$(document).find('.address').val(staffInfo[4]);
+								$("#addModal").modal("show");
+								localStorage.setItem("isClickedSaveStaffButton","false");
+							}
+							else{
+								var saveAddValue = localStorage.getItem("isClickedSaveStaffButton");
+								if (saveAddValue == "true") {
+									$('#createdModal').modal("show");
+									$(document).find('#username').val($('.add-save-created').val());
+									localStorage.setItem("isClickedSaveStaffButton","false");
+								}
+							}
+							
+							
+							var resetValue = localStorage.getItem("isClickedReset");
+							if (resetValue == "true") {
+								$('#ResetSuccessfullyModal').modal('show');
+								$(document).find('#ResetUsername').val(localStorage.getItem('resetId'));
+								localStorage.setItem("isClickedReset","false");
 
-					});
+							}
+
+			});
+
+	});
 </script>
+
 </head>
 <body>
 	<div class="main-container">
@@ -297,7 +288,7 @@ tbody tr:hover {
 
 					<form action="Recruit/SearchStaff.htm" method="get">
 						<input type="text" name="searchInput"
-							placeholder="Search employee..">
+							placeholder="Name, Job position..">
 						<button type="submit" class="btn btn-outline-dark">Search</button>
 					</form>
 					
@@ -323,6 +314,7 @@ tbody tr:hover {
 								<th><span>Employee Id</span></th>
 								<th><span>Full Name</span></th>
 								<th><span>Phone number</span></th>
+								<th><span>Position</span></th>
 								<th><span>Action</span></th>
 							</tr>
 						</thead>
@@ -333,6 +325,7 @@ tbody tr:hover {
 									<td>${staff.MANV}</td>
 									<td>${staff.HO} ${staff.TEN}</td>
 									<td><span>${staff.SDT}</span></td>
+									<td><span>${staff.jobPosition.TENVITRI}</span></td>
 									<td>
 										<form action="Recruit/InforStaff.htm" method="get">
 											<button type="submit" name="InforStaff"
@@ -380,13 +373,14 @@ tbody tr:hover {
 					<form action="Recruit.htm" method="post">
 						<div class="form-group">
 							<label for="firstname">First name:</label> <input type="text"
-								class="form-control username" id="firstname"
-								placeholder="First name..." name="HO" maxlength="30" />
+								class="form-control firstName" id="firstname" oninput="this.value = this.value.replace(/[a-zA-Z]/g, '').replace(/(\..*?)\..*/g, '$1');"
+								placeholder="First name..." name="HO" maxlength="30" required />
 						</div>
+						<!-- fix pattern there -->
 						<div class="form-group">
 							<label for="lastname">Last name:</label> <input type="text"
-								class="form-control username" id="lastname"
-								placeholder="Last name..." name="TEN" maxlength="30" />
+								class="form-control lastName" id="lastname" pattern="[a-zA-Z]+"
+								placeholder="Last name..." name="TEN" maxlength="30" required/>
 						</div>
 						<div class="form-check">
 							<input class="form-check-input" type="radio" name="GIOITINH"
@@ -401,22 +395,25 @@ tbody tr:hover {
 						</div>
 						<div class="form-group">
 							<label for="idcard">Identification card number:</label> <input
-								type="text" class="form-control username" id="idcard"
+								type="text" class="form-control idCard" id="idcard"
 								name="CCCD"
 								oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
-								maxlength="12" />
+								maxlength="12" 
+								required/>
+							<p class = "InputInvalid">${idCardMessage}</p>
 						</div>
 
 						<div class="form-group">
 							<label for="phoneNumber">Phone number:</label> <input type="text"
-								class="form-control username" id="phoneNumber" name="SDT"
+								class="form-control phoneNumber" id="phoneNumber" name="SDT"
 								oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
-								maxlength="10" />
+								maxlength="10" required />
+							<p class = "InputInvalid">${phoneMessage}</p>
 						</div>
 						<div class="form-group">
 							<label for="address">Address:</label> <input type="text"
-								class="form-control username" id="adderess" name="DIACHI"
-								value="97 Man Thiện" maxlength="50" />
+								class="form-control address" id="adderess" name="DIACHI"
+								value="97 Man Thiện" maxlength="50" required/>
 						</div>
 						<div class="form-group">
 							<label for="add-jobId">Job position:</label> <select
@@ -432,7 +429,7 @@ tbody tr:hover {
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Close</button>
 							<button type="submit" name="saveAddEmployee"
-								class="btn btn-primary add-save-created" data-bs-dismiss="modal"
+								class="btn btn-primary add-save-created"
 								value="${staffIdValue}">Save changes</button>
 						</div>
 					</form>
@@ -580,14 +577,14 @@ tbody tr:hover {
 				</div>
 				<div class="modal-body">
 					<div class="mb-3 row">
-						<label for="staticEmail" class="col-sm-2 col-form-label">Username</label>
+						<label for="staticEmail" class="col-sm-2 col-form-label">Username: </label>
 						<div class="col-sm-10">
 							<input type="text" readonly class="form-control-plaintext"
 								id="username">
 						</div>
 					</div>
 					<div class="mb-3 row">
-						<label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+						<label for="inputPassword" class="col-sm-2 col-form-label">Password: </label>
 						<div class="col-sm-10">
 							<input type="text" class="form-control" value="123" readonly>
 						</div>

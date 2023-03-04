@@ -58,6 +58,7 @@ public class RecruitLayOffEmployeeController {
 		castJobs(jobs);
 		castFaults(faults);
 		model.addAttribute("staffs",staffList);
+		handleCheckInput(model);
 		return "/Admin/RecruitEmployee";
 	}
 
@@ -67,22 +68,39 @@ public class RecruitLayOffEmployeeController {
 		staffList = getStaffs();
 		model.addAttribute("jobs", jobs);
 		model.addAttribute("staffs", staffList);
+		handleCheckInput(model);
 		return "/Admin/RecruitEmployee";
 	}
 
 	@RequestMapping(params = "saveAddEmployee")
 	public String addEmloyee(HttpServletRequest request, ModelMap model, StaffEntity staff) {
-		Session session = factory.getCurrentSession();
-		String jobId = request.getParameter("add-jobId");
-		String staffId = staffKeyHandler.getNewKey("NV");
-		JobPositionEntity job = (JobPositionEntity) session.get(JobPositionEntity.class, jobId);
-		staff.setJobPosition(job);
-		addEmloyeeToDB(staff, staffId);
+		handleCheckInput(model);
+		if(hasIdentificationCardNumberInDB(staff.getCCCD())) {
+			model.addAttribute("isWrongIDCard","true");
+			model.addAttribute("idCardMessage","This id number existed");
+		}
+		else if(hasPhoneNumberInDB(staff.getSDT())) {
+			model.addAttribute("isWrongPhoneNumber","true");
+			model.addAttribute("phoneMessage","This phone number existed");
+		}
+		else {
+			Session session = factory.getCurrentSession();
+			String jobId = request.getParameter("add-jobId");
+			String staffId = staffKeyHandler.getNewKey("NV");
+			JobPositionEntity job = (JobPositionEntity) session.get(JobPositionEntity.class, jobId);
+			staff.setHO(staff.getHO().strip());
+			staff.setTEN(staff.getTEN().strip());
+			staff.setDIACHI(staff.getDIACHI().strip());
+			staff.setJobPosition(job);
+			addEmloyeeToDB(staff, staffId);
+			model.addAttribute("staffIdValue",staffId);
+		}
+		
+
 		staffList = getStaffs();
 		List<JobPositionEntity> jobs = getJobs();
 		model.addAttribute("staffs",staffList);
 		model.addAttribute("jobs",jobs);
-		model.addAttribute("staffIdValue",staffId);
 		return "/Admin/RecruitEmployee";
 	}
 
@@ -94,6 +112,7 @@ public class RecruitLayOffEmployeeController {
 		List<JobPositionEntity> jobs = getJobs();
 		model.addAttribute("staffs", staffList);
 		model.addAttribute("jobs", jobs);
+		handleCheckInput(model);
 		return "/Admin/RecruitEmployee";
 	}
 
@@ -110,6 +129,7 @@ public class RecruitLayOffEmployeeController {
 		model.addAttribute("staffs", staffList);
 		model.addAttribute("staff", staff);
 		model.addAttribute("jobs", jobs);
+		handleCheckInput(model);
 		return "/Admin/RecruitEmployee";
 	}
 
@@ -131,6 +151,7 @@ public class RecruitLayOffEmployeeController {
 		updateStaff(session, staff);
 		staffList = getStaffs();
 		model.addAttribute("staffs", staffList);
+		handleCheckInput(model);
 		return "/Admin/RecruitEmployee";
 	}
 
@@ -140,6 +161,7 @@ public class RecruitLayOffEmployeeController {
 		String searchText = request.getParameter("searchInput");
 		staffList = searchStaffList(session, searchText);
 		model.addAttribute("staffs", staffList);
+		handleCheckInput(model);
 		return "/Admin/RecruitEmployee";
 	}
 	
@@ -151,7 +173,28 @@ public class RecruitLayOffEmployeeController {
 		account.setMK("123");
 		session.saveOrUpdate(account);
 		model.addAttribute("staffs",staffList);
+		handleCheckInput(model);
 		return "/Admin/RecruitEmployee";
+	}
+	
+	private void handleCheckInput(ModelMap model) {
+		model.addAttribute("isWrongIDCard","false");
+		model.addAttribute("isWrongPhoneNumber","false");
+	}
+	
+	private boolean hasIdentificationCardNumberInDB(String idCard) {
+		Session session = factory.getCurrentSession();
+		String hql = "SELECT COUNT(*) FROM StaffEntity WHERE CCCD = :idCard";
+		Query query = session.createQuery(hql);
+		query.setString("idCard", idCard);
+		return (long)query.uniqueResult()>0;
+	}
+	private boolean hasPhoneNumberInDB(String phoneNumber) {
+		Session session = factory.getCurrentSession();
+		String hql = "SELECT COUNT(*) FROM StaffEntity WHERE SDT = :phoneNumber";
+		Query query = session.createQuery(hql);
+		query.setString("phoneNumber", phoneNumber);
+		return (long)query.uniqueResult()>0;
 	}
 	
 	private void addEmloyeeToDB(StaffEntity staff,String id) {
@@ -208,7 +251,9 @@ public class RecruitLayOffEmployeeController {
 		
 		String hql = "FROM StaffEntity WHERE MANV !='ADMIN' AND"
 				+ " MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = true) AND"
-				+ " HO+TEN LIKE CONCAT('%',:search,'%') ORDER BY TEN";
+				+ " (HO+TEN LIKE CONCAT('%',:search,'%')) OR "
+				+ " (jobPosition.TENVITRI LIKE CONCAT ('%',:search,'%'))"
+				+ " ORDER BY TEN";
 		Query query = session.createQuery(hql);
 		query.setParameter("search", searchText);
 		return query.list();
