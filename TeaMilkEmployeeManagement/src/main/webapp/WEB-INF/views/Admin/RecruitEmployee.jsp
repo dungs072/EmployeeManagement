@@ -103,7 +103,6 @@ margin-top:5px;
 							var address = $(document).find('.address').val();
 							var staffInfor = firstName +","+lastName+","+idCard+","+phoneNumber+","+address;
 							localStorage.setItem("staffInfo",staffInfor);
-
 						});
 						$(".resetPassword").click(function() {
 							var yesResetButton = $(document).find('.yes-reset-warning');

@@ -42,12 +42,6 @@ public class ShiftDetailEntity {
 	@Column(name = "XACNHAN")
 	private boolean XACNHAN;
 
-	
-	@Column(name = "TRANGTHAILUONG")
-	private boolean TRANGTHAILUONG;
-	
-
-	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "MANV")
 	private StaffEntity staff;
@@ -116,15 +110,6 @@ public class ShiftDetailEntity {
 
 	public void setXACNHAN(boolean xACNHAN) {
 		XACNHAN = xACNHAN;
-	}
-
-	
-	public boolean isTRANGTHAILUONG() {
-		return TRANGTHAILUONG;
-	}
-
-	public void setTRANGTHAILUONG(boolean tRANGTHAILUONG) {
-		TRANGTHAILUONG = tRANGTHAILUONG;
 	}
 
 	public OpenShiftEntity getOpenshift() {
