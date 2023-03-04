@@ -76,14 +76,16 @@ public class HomeController{
 
 	@RequestMapping(value = "/updateSalary", method = RequestMethod.GET)
 	public String updateSalary(HttpServletRequest request, ModelMap model) {
+		long now = System.currentTimeMillis();
+		Time time = new Time(now);
 		float salary;
 		String currentStaff = request.getParameter("updateSalary");
 		salary = Float.parseFloat(request.getParameter("salaryOfShift"));
-		updateSalaryToDB(currentStaff, salary);
+		updateSalaryToDB(currentStaff, salary, time);
 		return showDetailShift(model);
 	}
 
-	public void updateSalaryToDB(String maNV, Float salary) {
+	public void updateSalaryToDB(String maNV, Float salary, Time time) {
 		Session session = factory.getCurrentSession();
 		StaffEntity staff = (StaffEntity) (session.get(StaffEntity.class, maNV));
 		staff.updateSalary(salary);
@@ -92,6 +94,7 @@ public class HomeController{
 		String IdAStaffInShiftDetail = list.get(0).getID_CTCA();
 		ShiftDetailEntity shift = (ShiftDetailEntity) session.get(ShiftDetailEntity.class, IdAStaffInShiftDetail);
 		shift.setLUONGCA(salary);
+		shift.setTHOIGIANCHAMCONG(time);
 		session.update(shift);
 	}
 	
@@ -140,9 +143,10 @@ public class HomeController{
 	
 	public List<ShiftDetailEntity> getAShiftDetail(String id) {
 		Session session = factory.getCurrentSession();
-		String hql = "FROM ShiftDetailEntity where ID_CA_MO = :id";
+		String hql = "FROM ShiftDetailEntity where ID_CA_MO = :id and XACNHAN = :true";
 		Query query = session.createQuery(hql);
 		query.setString("id", id);
+		query.setBoolean("true", true);
 		List<ShiftDetailEntity> list = query.list();
 		return list;
 	}
@@ -198,6 +202,7 @@ public class HomeController{
 		else {
 			String idcamo = listOpenId.get(0).getID_CA_MO();
 			List<ShiftDetailEntity> list = getAShiftDetail(idcamo);
+			System.out.println(list.get(0).getTHOIGIANCHAMCONG());
 			List<MistakeEntity> listMistake = getMistake();
 			model.addAttribute("shiftNow", list);
 			model.addAttribute("idca", idShiftShow);

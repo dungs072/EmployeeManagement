@@ -182,7 +182,7 @@
 												<td>${s.staff.HO} ${s.staff.TEN}</td>
 												<td>${s.CONGVIEC }</td>
 												<c:choose>
-													<c:when test="${s.TRANGTHAILUONG == false}">
+													<c:when test="${empty s.THOIGIANCHAMCONG}">
 														<td><form action="updateSalary.htm" method="get"
 																class="form-inline">
 																<input name="salaryOfShift" type="text"
@@ -192,9 +192,10 @@
 																</button>
 															</form></td>
 													</c:when>
-													<c:when test="${s.TRANGTHAILUONG == true}">
+													<c:when test="${not empty s.THOIGIANCHAMCONG}">
 														<td><form class="form-inline">
 																<div>${s.LUONGCA}</div>
+																<div>${s.THOIGIANCHAMCONG}</div>
 															</form></td>
 													</c:when>
 												</c:choose>

@@ -41,9 +41,6 @@ public class ShiftDetailEntity {
 
 	@Column(name = "XACNHAN")
 	private boolean XACNHAN;
-	
-
-	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "MANV")
 	private StaffEntity staff;
