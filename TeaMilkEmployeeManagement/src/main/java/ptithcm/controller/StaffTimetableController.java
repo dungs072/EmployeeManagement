@@ -62,6 +62,14 @@ public class StaffTimetableController {
 		weekDateFromTo = request.getParameter("searchButton");
 		return displayMainView(request,map);
 	}
+	@RequestMapping(value = "/Detail",method = RequestMethod.GET)
+	public String showDetail(HttpServletRequest request, ModelMap map) {
+		Session session = factory.getCurrentSession();
+		String shiftDetailId = request.getParameter("detailButton");
+		ShiftDetailEntity shiftDetail = (ShiftDetailEntity) session.get(ShiftDetailEntity.class, shiftDetailId);
+		map.addAttribute("shiftDetailEntity",shiftDetail);
+		return displayMainView(request,map);
+	}
 
 
 	private String displayMainView(HttpServletRequest request, ModelMap map) {
@@ -108,6 +116,7 @@ public class StaffTimetableController {
 			int col = sqlDateMinsDays(baseDate,shiftDetail.getOpenshift().getNGAYLAMVIEC());
 			staffShiftDataUIs[row][col] = new StaffShiftDataUI(staff.getHO()+" "+staff.getTEN(),true);
 			staffShiftDataUIs[row][col].setAdditionalJob(shiftDetail.getCONGVIEC());
+			staffShiftDataUIs[row][col].setShiftDetailId(shiftDetail.getID_CTCA());
 		}
 		
 

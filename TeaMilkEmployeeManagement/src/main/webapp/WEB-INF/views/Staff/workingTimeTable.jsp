@@ -43,6 +43,70 @@ table {
 td {
 	text-align: center;
 }
+.tableWrap {
+	margin-top: 40px;
+	height: 450px;
+	border: 2px solid black;
+	overflow: auto;
+}
+th {
+	padding: 16px;
+	padding-left: 15px;
+	border-left: 1px dotted rgba(200, 209, 224, 0.6);
+	border-bottom: 1px solid #e8e8e8;
+	background: #4e73df;
+	text-align: center;
+	/* With border-collapse, we must use box-shadow or psuedo elements
+    for the header borders */
+	box-shadow: 0px 0px 0 2px #e8e8e8;
+}
+thead tr th {
+	position: sticky;
+	top: 0;
+	color: aliceblue;
+}
+table {
+	border-collapse: collapse;
+}
+
+/* Because we must set sticky on th,
+   we have to apply background styles here
+   rather than on thead */
+th {
+	padding: 16px;
+	padding-left: 15px;
+	border-left: 1px dotted rgba(200, 209, 224, 0.6);
+	border-bottom: 1px solid #e8e8e8;
+	background: #4e73df;
+	text-align: center;
+	/* With border-collapse, we must use box-shadow or psuedo elements
+    for the header borders */
+	box-shadow: 0px 0px 0 2px #e8e8e8;
+}
+
+/* Basic Demo styling */
+table {
+	width: 100%;
+	font-family: sans-serif;
+}
+
+table td {
+	padding: 16px;
+	text-align: center;
+}
+
+tbody tr {
+	border-bottom: 2px solid #e8e8e8;
+}
+
+thead {
+	font-weight: 500;
+	color: rgba(0, 0, 0, 0.85);
+}
+
+tbody tr:hover {
+	background: #e6f7ff;
+}
 
 .cardSize {
 	width: 100%;
@@ -55,7 +119,11 @@ td {
 		if (!$("#weeklyDatePicker").val()) {
 			$("#weeklyDatePicker").val(localStorage.getItem("weekDates"));
 		}
-
+		var value = localStorage.getItem("isClickedDetailButton");
+		if(value=="true"){
+			$("#detailShiftModal").modal("show");
+			localStorage.setItem("isClickedDetailButton","false");
+		}
 	});
 
 	$(function() {
@@ -69,7 +137,7 @@ td {
 
 	});
 	$(document).on('click', ".detailButton", function(e) {
-		$('.detailJob').val($(this).val());
+		localStorage.setItem("isClickedDetailButton","true");
 	});
 
 	$(document).ready(
@@ -261,10 +329,12 @@ td {
 																<h3>${indexStaff.count}</h3>
 															</div>
 															<h5 class="card-title" style="font-size: 10px;">${shiftStaffs[indexShift.index][i-1].fullName}</h5>
-															<button type="button" name="detailButton"
-																class="btn btn-outline-secondary detailButton"
-																data-bs-toggle="modal" data-bs-target="#detail"
-																value="${shiftStaffs[indexShift.index][i-1].additionalJob}">Detail</button>
+															<form action = "StaffTimetable/Detail.htm" method = "get">
+																<button type="submit" name="detailButton"
+																	class="btn btn-outline-secondary detailButton"
+																	value="${shiftStaffs[indexShift.index][i-1].shiftDetailId}">Detail</button>
+															</form>
+															
 														</div>
 													</div>
 												</div>
@@ -280,29 +350,66 @@ td {
 		</div>
 		</div>
 
-		<!-- Modal -->
-
-		<!-- detail -->
-		<div class="modal" id="detail" tabindex="-1">
-			<div class="modal-dialog">
+	</div>
+	<!-- Modal -->
+		<!--detail-->
+		<div class="modal fade" id=detailShiftModal tabindex="-1" role="dialog"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div
+				class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+				role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title text-warning">Detail </h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
+						<h5 class="modal-title" id="exampleModalLabel">Employee's
+							shift detail</h5>
+						<button type="button" class="close" data-bs-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
 					</div>
 					<div class="modal-body">
-						<label for="inputLabel" class="form-label">You should do: </label>
-						<input type = "text" class = "detailJob" readonly>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-success"
-							data-bs-dismiss="modal">Ok</button>
+						<form action="ManagerRegistration/SettingStaffInShift.htm"
+							method="get">
+							<div class="mb-3">
+								<label for="nameDetail">Name: </label>
+								<h6 id="nameDetail">${shiftDetailEntity.staff.HO} ${shiftDetailEntity.staff.TEN}</h6>
+								<label for="jobPositionDetail">Job Position: </label>
+								<h6 id="jobPositionDetail">${shiftDetailEntity.staff.jobPosition.TENVITRI}</h6>
+								<label for="salaryDetail">Salary: </label>
+								<h6 id="salaryDetail">${shiftDetailEntity.LUONGCA}</h6>
+								<label for="exampleInputPassword1" class="form-label">To
+									do list</label> <input type="text" class="form-control"
+									id="settingToDoListModal" name="toDoListInput" readonly>
+								<div class="tableWrap">
+									<table class="mistakeTable">
+										<thead>
+											<tr>
+												<th><span>STT</span></th>
+												<th><span>Name Mistake</span></th>
+											</tr>
+										</thead>
+										<tbody>
+											<c:forEach var="mistake" varStatus="i" items="${shiftDetailEntity.mistakeHistoryEntities}">
+												<tr>
+													<td>${i.count}</td>
+													<td>${mistake.mistakeEntity.MOTA}</td>
+												</tr>
+											</c:forEach>
+										</tbody>
+									</table>
+								</div>
+								
+							</div>
 
+							<div class="modal-footer">
+								<button type="button" id="close" class="btn btn-secondary"
+									data-bs-dismiss="modal">Close</button>
+							</div>
+						</form>
 					</div>
+
 				</div>
 			</div>
 		</div>
-	</div>
 </body>
 </html>

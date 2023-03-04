@@ -47,6 +47,70 @@ td {
 span {
 	cursor: pointer;
 }
+.tableWrap {
+	margin-top: 40px;
+	height: 450px;
+	border: 2px solid black;
+	overflow: auto;
+}
+th {
+	padding: 16px;
+	padding-left: 15px;
+	border-left: 1px dotted rgba(200, 209, 224, 0.6);
+	border-bottom: 1px solid #e8e8e8;
+	background: #4e73df;
+	text-align: center;
+	/* With border-collapse, we must use box-shadow or psuedo elements
+    for the header borders */
+	box-shadow: 0px 0px 0 2px #e8e8e8;
+}
+thead tr th {
+	position: sticky;
+	top: 0;
+	color: aliceblue;
+}
+table {
+	border-collapse: collapse;
+}
+
+/* Because we must set sticky on th,
+   we have to apply background styles here
+   rather than on thead */
+th {
+	padding: 16px;
+	padding-left: 15px;
+	border-left: 1px dotted rgba(200, 209, 224, 0.6);
+	border-bottom: 1px solid #e8e8e8;
+	background: #4e73df;
+	text-align: center;
+	/* With border-collapse, we must use box-shadow or psuedo elements
+    for the header borders */
+	box-shadow: 0px 0px 0 2px #e8e8e8;
+}
+
+/* Basic Demo styling */
+table {
+	width: 100%;
+	font-family: sans-serif;
+}
+
+table td {
+	padding: 16px;
+	text-align: center;
+}
+
+tbody tr {
+	border-bottom: 2px solid #e8e8e8;
+}
+
+thead {
+	font-weight: 500;
+	color: rgba(0, 0, 0, 0.85);
+}
+
+tbody tr:hover {
+	background: #e6f7ff;
+}
 
 .minus, .plus, .minus-setting {
 	width: 20px;
@@ -87,6 +151,12 @@ input {
 			$('#addStaff').modal('show');
 			localStorage.setItem("isClickedAdd", "false");
 		}
+		
+		var shiftDetailValue = localStorage.getItem("isClickedDetailShift");
+		if(shiftDetailValue=="true"){
+			$("#detailShiftModal").modal("show");
+			localStorage.setItem("isClickedDetailShift","false");
+		}
 
 		if (!$("#weeklyDatePicker").val()) {
 			$("#weeklyDatePicker").val(localStorage.getItem("weekDates"));
@@ -112,11 +182,15 @@ input {
 	$(document).on('click', ".addButton", function(e) {
 		localStorage.setItem("addValue", $(this).val());
 		localStorage.setItem("isClickedAdd", "true");
-	})
+	});
 
 	$(document).on('click', ".openButton", function(e) {
 		var yesButton = $(document).find('.yesOpenButton');
 		yesButton.val($(this).val())
+	});
+	$(document).on('click',".detailShiftButton",function(e){
+		
+		localStorage.setItem("isClickedDetailShift","true");
 	})
 
 	$(document).on('click', ".settingMaxStaffButton", function(e) {
@@ -417,15 +491,12 @@ input {
 																					value="${shiftStaff.shiftDetailId}">Delete</button>
 																			</c:when>
 																			<c:otherwise>
-																				<button type="button"
-																					class="btn btn-outline-secondary mb-1 setStaffShiftButton"
-																					data-bs-toggle="modal" data-bs-target="#setShift"
-																					disabled
-																					value="${shiftStaff.fullName}+${shiftStaff.jobPositionName}+${shiftStaff.additionalJobs}+${shiftStaff.shiftDetailId}">Setting</button>
-																				<button type="button"
-																					class="btn btn-outline-danger deleteStaffButton"
-																					data-bs-toggle="modal" data-bs-target="#warning"
-																					disabled value="${shiftStaff.shiftDetailId}">Delete</button>
+																				<form action = "ManagerRegistration/showShiftDetail.htm" method = "get">
+																					<button type="submit"
+																					class="btn btn-outline-secondary mb-1 detailShiftButton" name = "shiftDetailButton" value = "${shiftStaff.shiftDetailId}"
+																					>Detail</button>
+																				</form>
+																				
 																			</c:otherwise>
 																		</c:choose>
 
@@ -572,7 +643,7 @@ input {
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLabel">Employee's
-							shift detail</h5>
+							shift setting</h5>
 						<button type="button" class="close" data-bs-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
@@ -600,6 +671,66 @@ input {
 									class="btn btn-primary saveChangeSettingShift"
 									name="saveChangeSettingShift" data-bs-dismiss="modal">Save
 									changes</button>
+							</div>
+						</form>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		
+		<!--detail-->
+		<div class="modal fade" id="detailShiftModal" tabindex="-1" role="dialog"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div
+				class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+				role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Employee's
+							shift detail</h5>
+						<button type="button" class="close" data-bs-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form action="ManagerRegistration/SettingStaffInShift.htm"
+							method="get">
+							<div class="mb-3">
+								<label for="nameDetail">Name: </label>
+								<h6 id="nameDetail">${shiftDetailEntity.staff.HO} ${shiftDetailEntity.staff.TEN}</h6>
+								<label for="jobPositionDetail">Job Position: </label>
+								<h6 id="jobPositionDetail">${shiftDetailEntity.staff.jobPosition.TENVITRI}</h6>
+								<label for="salaryDetail">Salary: </label>
+								<h6 id="salaryDetail">${shiftDetailEntity.LUONGCA}</h6>
+								<label for="exampleInputPassword1" class="form-label">To
+									do list</label> <input type="text" class="form-control"
+									id="settingToDoListModal" name="toDoListInput" readonly>
+								<div class="tableWrap">
+									<table class="mistakeTable">
+										<thead>
+											<tr>
+												<th><span>STT</span></th>
+												<th><span>Name Mistake</span></th>
+											</tr>
+										</thead>
+										<tbody>
+											<c:forEach var="mistake" varStatus="i" items="${shiftDetailEntity.mistakeHistoryEntities}">
+												<tr>
+													<td>${i.count}</td>
+													<td>${mistake.mistakeEntity.MOTA}</td>
+												</tr>
+											</c:forEach>
+										</tbody>
+									</table>
+								</div>
+								
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" id="close" class="btn btn-secondary"
+									data-bs-dismiss="modal">Close</button>
 							</div>
 						</form>
 					</div>
