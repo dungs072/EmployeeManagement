@@ -479,14 +479,14 @@ input {
 																		test="${shiftStaffs[indexShift.index][i-1].canInteract==true&&shiftStaffs[indexShift.index][i-1].leftStaff>0}">
 																		<button type="submit"
 																			class="btn btn-success addButton"
-																			data-bs-toggle="modal" data-bs-target="#addStaff"
+																			
 																			name="addStaffButton"
 																			value="${indexShift.count},${i}">Add</button>
 																	</c:when>
 																	<c:otherwise>
 																		<button type="submit"
 																			class="btn btn-success addButton"
-																			data-bs-toggle="modal" data-bs-target="#addStaff"
+																			
 																			disabled name="addStaffButton"
 																			value="${indexShift.count},${i}">Add</button>
 																	</c:otherwise>
@@ -557,6 +557,7 @@ input {
 			</div>
 
 
+		</div>
 		</div>
 		</div>
 		</div>
@@ -816,7 +817,6 @@ input {
 					
 				</div>
 			</div>
-		</div>
-	</div>
+			</div>
 </body>
 </html>

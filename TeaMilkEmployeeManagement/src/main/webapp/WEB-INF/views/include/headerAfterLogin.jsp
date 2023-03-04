@@ -8,13 +8,17 @@
 				initial-scale=1.0">
 	<title>TeaMilk</title>
     <script>
-    window.addEventListener('load',function(){
-        let menuicn = document.querySelector(".menuicn");
-        let nav = document.querySelector(".navcontainer");
-        menuicn.addEventListener("click", () => {
-            nav.classList.toggle("navclose");
-        })
-    });
+	    window.addEventListener('load',function(){
+	        let menuicn = document.querySelector(".menuicn");
+	        let nav = document.querySelector(".navcontainer");
+	        menuicn.addEventListener("click", () => {
+	            nav.classList.toggle("navclose");
+	        })
+	    });
+	    $(document).ready( function() {
+	    	let nav = document.querySelector(".navcontainer");
+	    	nav.classList.toggle("navclose");
+	    })
     </script>
     <style>
         /* Responsive CSS Here */
