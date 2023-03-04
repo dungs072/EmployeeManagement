@@ -84,7 +84,7 @@ margin-top:5px;
 							yesButton.val($(this).val())
 						});
 
-						$(".detailEmployee").click(function() {
+						$(".detailButton").click(function() {
 							localStorage.setItem("isClickedInfor", "true");
 							var saveButton = $(document).find('.saveUpdate');
 							saveButton.val($(this).val());
@@ -119,6 +119,7 @@ margin-top:5px;
 							if (value == "true") {
 								$("#detailModal").modal("show");
 								localStorage.setItem("isClickedInfor","false");
+								
 							}
 							
 							var addValue = localStorage.getItem("isClickedAddStaffButton");
@@ -129,26 +130,25 @@ margin-top:5px;
 							var isWrongIdCard = [[${isWrongIDCard}]];
 							var isWrongPhoneNumber = [[${isWrongPhoneNumber}]];
 
-							if(isWrongIdCard=='true'||isWrongPhoneNumber=='true'){
-								var staffInfo = localStorage.getItem("staffInfo").split(',');
-								$(document).find('.firstName').val(staffInfo[0]);
-								$(document).find('.lastName').val(staffInfo[1]);
-								$(document).find('.idCard').val(staffInfo[2]);
-								$(document).find('.phoneNumber').val(staffInfo[3]);
-								$(document).find('.address').val(staffInfo[4]);
-								$("#addModal").modal("show");
-								localStorage.setItem("isClickedSaveStaffButton","false");
-							}
-							else{
-								var saveAddValue = localStorage.getItem("isClickedSaveStaffButton");
-								if (saveAddValue == "true") {
+							var saveAddValue = localStorage.getItem("isClickedSaveStaffButton");
+							if(saveAddValue == "true"){
+								if((isWrongIdCard=='true'||isWrongPhoneNumber=='true')){
+									var staffInfo = localStorage.getItem("staffInfo").split(',');
+									$(document).find('.firstName').val(staffInfo[0]);
+									$(document).find('.lastName').val(staffInfo[1]);
+									$(document).find('.idCard').val(staffInfo[2]);
+									$(document).find('.phoneNumber').val(staffInfo[3]);
+									$(document).find('.address').val(staffInfo[4]);
+									$("#addModal").modal("show");
+									localStorage.setItem("isClickedSaveStaffButton","false");
+								}
+								else{
 									$('#createdModal').modal("show");
 									$(document).find('#username').val($('.add-save-created').val());
 									localStorage.setItem("isClickedSaveStaffButton","false");
 								}
 							}
-							
-							
+					
 							var resetValue = localStorage.getItem("isClickedReset");
 							if (resetValue == "true") {
 								$('#ResetSuccessfullyModal').modal('show');
@@ -156,7 +156,6 @@ margin-top:5px;
 								localStorage.setItem("isClickedReset","false");
 
 							}
-
 			});
 
 	});
@@ -283,28 +282,28 @@ margin-top:5px;
 			<div class="box-container">
 				<div class="container">
 		<div class="row ">
-			<div class="col-6">
-				<div class="search mb-3">
+			<div class="col-9">
+				<div class="search mb-1">
 
 					<form action="Recruit/SearchStaff.htm" method="get">
 						<input type="text" name="searchInput"
 							placeholder="Name, Job position..">
 						<button type="submit" class="btn btn-outline-dark">Search</button>
 					</form>
-					
+				</div>
+			</div>
+			<div class = "col-3">
+				<div class = "add">
 					<form action="Recruit/ShowJobPosition.htm" method="get">
 					<button type="submit" class="btn btn-success addModalButton">Add
 						an employee</button>
-				</form>
-
+					</form>
 				</div>
-				
-				
-
 			</div>
+				
 
 		</div>
-		<div class="row mt-3">
+		<div class="row mt-1">
 			<div class="col">
 				<div class="tableWrap">
 					<table class="employeeTable">
@@ -329,7 +328,7 @@ margin-top:5px;
 									<td>
 										<form action="Recruit/InforStaff.htm" method="get">
 											<button type="submit" name="InforStaff"
-												class="btn btn-success detailEmployee"
+												class="btn btn-success detailButton"
 												value="${staff.MANV}">Detail</button>
 											<button type="button" name="resetPassword"
 												class="btn btn-secondary resetPassword"
@@ -338,7 +337,6 @@ margin-top:5px;
 											<button type="button" name="deleteEmployee"
 												class="btn btn-danger deleteEmployee" value="${staff.MANV}"
 												data-bs-toggle="modal" data-bs-target="#warning">Delete</button>
-
 										</form>
 
 									</td>
@@ -373,41 +371,42 @@ margin-top:5px;
 					<form action="Recruit.htm" method="post">
 						<div class="form-group">
 							<label for="firstname">First name:</label> <input type="text"
-								class="form-control firstName" id="firstname" oninput="this.value = this.value.replace(/[a-zA-Z]/g, '').replace(/(\..*?)\..*/g, '$1');"
+								class="form-control firstName" pattern="^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\W|_]+"
 								placeholder="First name..." name="HO" maxlength="30" required />
 						</div>
 						<!-- fix pattern there -->
 						<div class="form-group">
 							<label for="lastname">Last name:</label> <input type="text"
-								class="form-control lastName" id="lastname" pattern="[a-zA-Z]+"
+								class="form-control lastName" pattern="^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\W|_]+"
 								placeholder="Last name..." name="TEN" maxlength="30" required/>
 						</div>
 						<div class="form-check">
 							<input class="form-check-input" type="radio" name="GIOITINH"
-								id="gender1" value="Nam"> <label
+								value="Nam"> <label
 								class="form-check-label" for="flexRadioDefault1"> Male </label>
 						</div>
 						<div class="form-check">
 							<input class="form-check-input" type="radio" name="GIOITINH"
-								id="gender2" value="Nữ" checked> <label
+								value="Nữ" checked> <label
 								class="form-check-label" for="flexRadioDefault2"> Female
 							</label>
 						</div>
 						<div class="form-group">
 							<label for="idcard">Identification card number:</label> <input
-								type="text" class="form-control idCard" id="idcard"
+								type="text" class="form-control idCard"
 								name="CCCD"
 								oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
 								maxlength="12" 
+								pattern=".{11,12}"
 								required/>
 							<p class = "InputInvalid">${idCardMessage}</p>
 						</div>
 
 						<div class="form-group">
 							<label for="phoneNumber">Phone number:</label> <input type="text"
-								class="form-control phoneNumber" id="phoneNumber" name="SDT"
+								class="form-control phoneNumber" name="SDT"
 								oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
-								maxlength="10" required />
+								maxlength="10" pattern=".{9,10}" required />
 							<p class = "InputInvalid">${phoneMessage}</p>
 						</div>
 						<div class="form-group">
@@ -458,15 +457,15 @@ margin-top:5px;
 						modelAttribute="staff">
 						<div class="form-group">
 							<label for="firstname">First name:</label> <input type="text"
-								class="form-control username" id="firstname"
+								class="form-control" id="firstname" pattern="^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\W|_]+"
 								placeholder="First name..." name="HO" value="${staff.HO}"
-								maxlength="30" />
+								maxlength="30" required/>
 						</div>
 						<div class="form-group">
 							<label for="lastname">Last name:</label> <input type="text"
-								class="form-control username" id="lastname"
+								class="form-control" id="lastname" pattern="^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\W|_]+"
 								placeholder="Last name..." name="TEN" value="${staff.TEN}"
-								maxlength="30" />
+								maxlength="30" required/>
 						</div>
 
 
@@ -480,7 +479,7 @@ margin-top:5px;
 								</label>
 							</div>
 							<div class="form-check">
-								<input class="form-check-input" type="radio" name="GIOITINH"
+								<input class="form-check-input gender" type="radio" name="GIOITINH"
 									id="gender2" value="Nữ"> <label
 									class="form-check-label" for="flexRadioDefault2">
 									Female </label>
@@ -490,13 +489,13 @@ margin-top:5px;
 						<c:if test="${gender == 'Nữ'}">
 
 							<div class="form-check">
-								<input class="form-check-input" type="radio" name="GIOITINH"
+								<input class="form-check-input gender" type="radio" name="GIOITINH"
 									id="gender1" value="Nam"> <label
 									class="form-check-label" for="flexRadioDefault1"> Male
 								</label>
 							</div>
 							<div class="form-check">
-								<input class="form-check-input" type="radio" name="GIOITINH"
+								<input class="form-check-input gender" type="radio" name="GIOITINH"
 									id="gender2" value="Nữ" checked> <label
 									class="form-check-label" for="flexRadioDefault2">
 									Female </label>
@@ -507,38 +506,40 @@ margin-top:5px;
 
 						<div class="form-group">
 							<label for="birthday">Birthday:</label> <input type="date"
-								class="form-control username" id="birthday" name="birthday"
+								class="form-control" id="birthday" name="birthday"
 								value="${staff.NGAYSINH }" maxlength="12" />
 						</div>
 						<div class="form-group">
 							<label for="idcard">Identification card number:</label> <input
-								type="text" class="form-control username" id="idcard"
+								type="text" class="form-control" id="idcard"
 								name="CCCD" value="${staff.CCCD }"
 								oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
-								maxlength="12" />
+								maxlength="12" readonly />
+								<p class = "InputInvalid">${idCardMessage}</p>
 						</div>
 
 						<div class="form-group">
 							<label for="phoneNumber">Phone number:</label> <input type="text"
-								class="form-control username" id="phoneNumber" name="SDT"
+								class="form-control" id="phoneNumber" name="SDT"
 								value="${staff.SDT }"
 								oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
-								maxlength="10" />
+								maxlength="10" readonly/>
+								<p class = "InputInvalid">${phoneMessage}</p>
 						</div>
 						<div class="form-group">
 							<label for="email">Email:</label> <input type="email"
-								class="form-control username" id="email" name="EMAIL"
+								class="form-control" id="email" name="EMAIL"
 								value="${staff.EMAIL }" maxlength="50" />
 						</div>
 
 						<div class="form-group">
 							<label for="address">Address:</label> <input type="text"
-								class="form-control username" id="adderess" name="DIACHI"
+								class="form-control" id="address" name="DIACHI"
 								value="${staff.DIACHI }" maxlength="50" />
 						</div>
 						<div class="form-group">
 							<label for="jobPosition">Job position:</label> <select
-								name="jobId" class="form-select"
+								name="jobId" class="form-select" id = "jobPosition"
 								aria-label="Default select example">
 								<c:forEach var="job" varStatus="i" items="${jobs}">
 									<c:choose>

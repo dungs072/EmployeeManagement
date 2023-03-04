@@ -259,6 +259,14 @@ public class ManagerRegistrationController {
 		updateConfirmState(false);
 		return displayMainViewDontDeleteOldUI(request, map);
 	}
+	@RequestMapping(value = "/showShiftDetail",method = RequestMethod.GET)
+	public String showShiftDetail(HttpServletRequest request, ModelMap map) {
+		Session session = factory.getCurrentSession();
+		String shiftDetailId = request.getParameter("shiftDetailButton");
+		ShiftDetailEntity shiftDetailEntity = (ShiftDetailEntity) session.get(ShiftDetailEntity.class, shiftDetailId);
+		map.addAttribute("shiftDetailEntity",shiftDetailEntity);
+		return displayMainViewDontDeleteOldUI(request, map);
+	}
 	private void updateConfirmState(boolean state) {
 		Session session = factory.getCurrentSession();
 		long millis=System.currentTimeMillis();  

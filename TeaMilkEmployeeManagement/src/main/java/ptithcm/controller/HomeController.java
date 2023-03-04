@@ -92,7 +92,6 @@ public class HomeController{
 		List<ShiftDetailEntity> list = getIdAStaffInShiftDetail(maNV, idShiftShow, date_sql);
 		String IdAStaffInShiftDetail = list.get(0).getID_CTCA();
 		ShiftDetailEntity shift = (ShiftDetailEntity) session.get(ShiftDetailEntity.class, IdAStaffInShiftDetail);
-		shift.setTRANGTHAILUONG(true);
 		shift.setLUONGCA(salary);
 		session.update(shift);
 	}
