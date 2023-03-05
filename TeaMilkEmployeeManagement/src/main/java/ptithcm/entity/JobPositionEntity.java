@@ -1,8 +1,12 @@
 package ptithcm.entity;
 
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -22,6 +26,17 @@ public class JobPositionEntity implements Primarykeyable {
 	private boolean canDelete;
 	@Transient
 	private boolean canUpdate = true;
+	
+	@OneToMany(mappedBy = "jobPosition",fetch  =FetchType.EAGER)
+	private Collection<StaffEntity> staffs;
+
+	public Collection<StaffEntity> getStaffs() {
+		return staffs;
+	}
+
+	public void setStaffs(Collection<StaffEntity> staffs) {
+		this.staffs = staffs;
+	}
 
 	public JobPositionEntity() {
 	}

@@ -1,5 +1,6 @@
 package ptithcm.entity;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,6 +20,9 @@ public class ShiftEntity {
 	private String IDCA;
 	@Column(name = "TENCA")
 	private String TENCA;
+	
+	@OneToMany(mappedBy = "shift",fetch  =FetchType.EAGER)
+	private Collection<OpenShiftEntity> openShift;
 
 	public ShiftEntity() {
 	}
@@ -41,5 +45,13 @@ public class ShiftEntity {
 
 	public void setTENCA(String tENCA) {
 		TENCA = tENCA;
+	}
+
+	public Collection<OpenShiftEntity> getOpenShift() {
+		return openShift;
+	}
+
+	public void setOpenShift(Collection<OpenShiftEntity> openShift) {
+		this.openShift = openShift;
 	}
 }

@@ -1,7 +1,11 @@
 package ptithcm.controller;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import javax.xml.bind.DatatypeConverter;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -63,7 +67,18 @@ public class ChangePasswordController {
 		}
 		else {
 			if(newPassword.equals(confirmPassword)) {
-				ownedAccount.setMK(newPassword);
+				MessageDigest md;
+				String newHashPassword = "";
+				try {
+					md = MessageDigest.getInstance("MD5");
+					md.update(newPassword.getBytes());
+					byte[] digest = md.digest();
+					newHashPassword = DatatypeConverter.printHexBinary(digest).toUpperCase();
+				} catch (NoSuchAlgorithmException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				ownedAccount.setMK(newHashPassword);
 				session.saveOrUpdate(ownedAccount);
 				map.addAttribute("successMessage","Change password successfully!");
 			}
@@ -75,10 +90,21 @@ public class ChangePasswordController {
 	}
 	private AccountEntity getAccountIfPasswordIsRight(String staffId,String oldPassword) {
 		Session session = factory.getCurrentSession();
+		MessageDigest md;
+		String newHashPassword = "";
+		try {
+			md = MessageDigest.getInstance("MD5");
+			md.update(oldPassword.getBytes());
+			byte[] digest = md.digest();
+			newHashPassword = DatatypeConverter.printHexBinary(digest).toUpperCase();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		String hql = "FROM AccountEntity WHERE TENTK = :staffId AND MK = :password";
 		Query query = session.createQuery(hql);
 		query.setString("staffId", staffId);
-		query.setString("password", oldPassword);
+		query.setString("password", newHashPassword);
 		return (AccountEntity) query.uniqueResult();
 	}
 	

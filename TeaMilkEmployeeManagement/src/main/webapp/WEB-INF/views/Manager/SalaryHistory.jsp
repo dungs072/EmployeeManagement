@@ -4,9 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<%@include file="/WEB-INF/views/include/StaffHeader.jsp"%>
+<%@include file="/WEB-INF/views/include/ManagerHeader.jsp"%>
 <base href="${pageContext.servletContext.contextPath }/">
-<title>History of your mistakes</title>
+<title>Salary History</title>
 <style>
 .tableWrap {
 	height: 390px;
@@ -80,7 +80,7 @@ tbody tr:hover {
 					</div>
 
 					<div class="option2 nav-option">
-						<a style="text-decoration: none" href="StaffTimetable.htm">
+						<a style="text-decoration: none" href="home.htm">
 							<h5>
 							<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" class="bi bi-house-door-fill nav-img" viewBox="0 0 16 16">
   								<path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5Z"/>
@@ -92,13 +92,12 @@ tbody tr:hover {
 					</div>
 
 					<div class="nav-option option3">
-						<a style = "text-decoration: none" href = "StaffRegisterShift.htm">
+						<a style = "text-decoration: none" href = "ManagerRegistration.htm">
 							<h5>
-							<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" class="bi bi-calendar3 nav-img" viewBox="0 0 16 16">
-  							<path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
-  							<path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+							<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" class="bi bi-calendar2-plus-fill nav-img" viewBox="0 0 16 16">
+  							<path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 3.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5H2.545c-.3 0-.545.224-.545.5zm6.5 5a.5.5 0 0 0-1 0V10H6a.5.5 0 0 0 0 1h1.5v1.5a.5.5 0 0 0 1 0V11H10a.5.5 0 0 0 0-1H8.5V8.5z"/>
 							</svg>
-							Register
+							Registration
 							</h5>
 						</a>
 					</div>
@@ -114,12 +113,13 @@ tbody tr:hover {
 							</h5>
 						</a>
 					</div>
+
 					<div class="nav-option option4">
-						<a style = "text-decoration:none" href = "MistakeHistory.htm">
+						<a style = "text-decoration:none" href = "DisplayStaffMistake.htm">
 							<h5>
 							<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" class="bi bi-view-list nav-img" viewBox="0 0 16 16">
   							<path d="M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2zm0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14z"/>
-							</svg>Violated
+							</svg>Violations
 							</h5>
 						</a>
 					</div>
@@ -169,20 +169,16 @@ tbody tr:hover {
 								<thead>
 									<tr>
 										<th><span>STT</span></th>
-										<th><span>Mistake Name</span></th>
-										<th><span>Violation Date</span></th>
-										<th><span>Shift</span></th>
-										<th><span>Times</span></th>
+										<th><span>Received Date</span></th>
+										<th><span>Amount</span></th>
 									</tr>
 								</thead>
 								<tbody>
-									<c:forEach var="history" varStatus="i" items="${histories}">
+									<c:forEach var="bill" varStatus="i" items="${bills}">
 										<tr>
 											<td>${i.count}</td>
-											<td>${history.mistakeEntity.MOTA}</td>
-											<td>${history.shiftDetailEntity.openshift.NGAYLAMVIEC}</td>
-											<td><span>${history.shiftDetailEntity.openshift.shift.IDCA}</span></td>
-											<td>${history.SOLANVIPHAM}</td>
+											<td>${bill.THOIGIANNHAN}</td>
+											<td>${bill.LUONGNHAN}</td>
 										</tr>
 									</c:forEach>
 

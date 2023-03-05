@@ -247,7 +247,7 @@ tbody tr:hover {
 									<th><span>Employee Id</span></th>
 									<th><span>Full Name</span></th>
 									<th><span>Salary</span></th>
-									<th><span>PrintSalaryBill</span></th>
+									<th><span>Print Salary Bill</span></th>
 									<th><span>History</span></th>
 								</tr>
 							</thead>
@@ -261,14 +261,14 @@ tbody tr:hover {
 										<td>
 											<!-- Button trigger modal -->
 											<form action = "salary.htm">
-											<button type="submit" class="btn btn-primary valueButton"
-												value="${staff.MANV}+${staff.HO}+${staff.TEN}+${staff.LUONGTICHLUY}">PrintBill</button>
+											<button type="submit" class="btn btn-success valueButton"
+												value="${staff.MANV}+${staff.HO}+${staff.TEN}+${staff.LUONGTICHLUY}"><i class="fa fa-print" aria-hidden="true"></i></button>
 											</form>
 										</td>
 										<td>
 											<form action = "historySalary.htm">
-												<button type="submit" name="history" class="btn btn-primary viewHistory"
-												value="${staff.MANV}">History</button>
+												<button type="submit" name="history" class="btn btn-secondary viewHistory"
+												value="${staff.MANV}"><i class="fa fa-history" aria-hidden="true"></i></button>
 											</form>
 										</td>
 									</tr>

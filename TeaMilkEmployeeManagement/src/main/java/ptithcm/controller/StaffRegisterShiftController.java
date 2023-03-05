@@ -6,6 +6,7 @@ import static java.time.temporal.TemporalAdjusters.previousOrSame;
 import java.sql.Date;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -145,10 +146,12 @@ public class StaffRegisterShiftController {
 			shifts = getShifts();
 		}
 		resetDataUI();
+		
 		putDataToView(weekDateFromTo);
 		map.addAttribute("shifts", shifts);
 		map.addAttribute("shiftStaffs", shiftUIHash);
 		map.addAttribute("canRegisterShift", canRegisterList);
+		map.addAttribute("week",weekDateFromTo);
 		return "/Staff/registerShift";
 	}
 
@@ -186,7 +189,6 @@ public class StaffRegisterShiftController {
 		Date baseDate = Date.valueOf(castToJavaSQLDateFormat(dates[0]));
 		dates[0] = castToSQLDateFormat(dates[0]);
 		dates[1] = castToSQLDateFormat(dates[1]);
-
 		Session session = factory.getCurrentSession();
 
 		String hql = "FROM OpenShiftEntity AS OSE LEFT JOIN OSE.shiftDetailEntites AS SDE"

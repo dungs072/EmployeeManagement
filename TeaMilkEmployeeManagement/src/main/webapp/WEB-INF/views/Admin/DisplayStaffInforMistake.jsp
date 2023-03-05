@@ -218,7 +218,7 @@ $(document).on('click', ".viewButton", function(e) {
 									<td>${staff.jobPosition.TENVITRI}</td>
 									<td>
 										<form action = "DisplayStaffMistake/ShowMistake.htm" method = "get">
-											<button type="submit" class="btn btn-success viewButton" name = "staffId" value = "${staff.MANV}">View</button>
+											<button type="submit" class="btn btn-success viewButton" name = "staffId" value = "${staff.MANV}"><i class="fa fa-eye" aria-hidden="true"></i></button>
 										</form>
 										
 									</td>
