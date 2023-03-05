@@ -25,6 +25,23 @@
 
 </style>
 
+<script type = "text/javascript">
+
+	$(window).on('load',function() {
+		var click = localStorage.getItem("isClick");
+		if(click == "true"){
+			var maNV = $(document).find(".idStaff");
+			maNV.val(localStorage.getItem("valueOfButton"));
+			$('#SetFault').modal('show');
+			localStorage.setItem("isClick","false");
+		}
+	})
+
+	$(document).on('click', ".setFault", function(e) {
+		localStorage.setItem("isClick", "true");
+		localStorage.setItem("valueOfButton",$(this).val());
+	})
+</script>
 </head>
 <body>
 
@@ -229,53 +246,10 @@
 												</c:choose>
 												<td>
 													<!-- Button trigger modal -->
-													<button type="button" class="btn btn-danger"
-														data-toggle="modal" data-target="#exampleModal"
+													<form action = "home.htm">
+													<button type="submit" class="btn btn-danger setFault"
 														value="${s.staff.MANV}">Fault</button>
-
-													<form action="setFault.htm">
-														<div class="modal fade" id="exampleModal" tabindex="-1"
-															role="dialog" aria-labelledby="exampleModalLabel"
-															aria-hidden="true">
-															<div class="modal-dialog" role="document">
-																<div class="modal-content">
-																	<div class="modal-header">
-																		<h2 class="modal-title" id="exampleModalLabel">Ghi
-																			nhận lỗi</h2>
-																		<button type="button" class="close"
-																			data-dismiss="modal" aria-label="Close">
-																			<span aria-hidden="true">&times;</span>
-																		</button>
-																	</div>
-																	<div class="modal-body">
-																		<div class="form-group">
-																			<label for="idStaff">ID Staff</label> <input
-																				name="idStaff" id="idStaff" value="${s.staff.MANV}">
-																		</div>
-																		<div class="form-group">
-																			<label for="Fault">Fault</label> <select name="fault"
-																				id="Fault">
-																				<c:forEach var="f" items="${faults}">
-																					<option>${f.MOTA}</option>
-																				</c:forEach>
-																			</select>
-																		</div>
-																		<div class="form-group">
-																			<label for="times">Times</label> <input name="times"
-																				type="number" class="form-check-input" id="times"
-																				value="1">
-																		</div>
-																	</div>
-																	<div class="modal-footer">
-																		<button type="button" class="btn btn-secondary"
-																			data-dismiss="modal">Close</button>
-																		<button type="submit" class="btn-success">Save
-																			changes</button>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</form>
+														</form>
 												</td>
 												<c:choose>
 													<c:when test="${empty s.THOIGIANDILAM}">
@@ -304,6 +278,51 @@
 			</div>
 		</div>
 	</div>
-
+	
+	<form action="setFault.htm">
+	<div class="modal fade" id="SetFault" tabindex="-1"
+			role="dialog" aria-labelledby="exampleModalLabel"
+	aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+	<div class="modal-header">
+	<h2 class="modal-title" id="exampleModalLabel">Ghi nhận lỗi</h2>
+<button type="button" class="close"	data-bs-dismiss="modal" aria-label="Close">
+	<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+		<div class="form-group">
+	<label for="idStaff">ID Staff</label>
+	<br> <input
+	name="idStaff" class="idStaff" value="" readonly>
+</div>
+	<div class="form-group">
+		<label for="Fault">Fault</label> 
+		<br>
+		<select name="fault"
+		id="Fault">
+	<c:forEach var="f" items="${faults}">
+			<option>${f.MOTA}</option>
+				</c:forEach>
+	</select>
+	</div>
+<div class="form-group">
+	<label for="times">Times</label>
+	<br>
+	 <input name="times"
+	type="number"  id="times"
+	value="1">
+	</div>
+	</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-secondary"
+		data-bs-dismiss="modal">Close</button>
+	<button type="submit" class="btn btn-success">Save changes</button>
+</div>
+</div>
+</div>
+	</div>
+</form>
 </body>
 </html>

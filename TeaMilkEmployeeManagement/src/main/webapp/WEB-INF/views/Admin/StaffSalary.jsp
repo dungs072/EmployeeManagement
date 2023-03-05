@@ -67,6 +67,7 @@ thead {
 tbody tr:hover {
 	background: #e6f7ff;
 }
+
 </style>
 <title>Staff's Salary</title>
 
@@ -296,15 +297,21 @@ tbody tr:hover {
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label for="idStaff">ID Staff</label> <input class="maNV"
+						<label for="idStaff">ID Staff</label>
+						<br>
+						 <input class="maNV"
 							name="idStaff" id="idStaff" readonly>
 					</div>
 					<div class="form-group">
-						<label for="Name">Họ và tên</label> <input id="Name"
+						<label for="Name">Họ và tên</label> 
+						<br>
+						<input id="Name"
 							class="hovaten" readonly>
 					</div>
 					<div class="form-group">
-						<label for="salary"> Lương nhận</label> <input class="salary"
+						<label for="salary"> Lương nhận</label>
+						<br>
+						 <input class="salary"
 							name="salary" type="text" class="form-check-input" id="salary"
 							value="" required>
 					</div>
@@ -324,7 +331,7 @@ tbody tr:hover {
 	<form>
 	<div class="modal fade" id="HistorySalaryModal" tabindex="-1"
 		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h2 class="modal-title" id="exampleModalLabel">History</h2>
