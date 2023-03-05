@@ -354,7 +354,6 @@ public class ManagerRegistrationController {
 	    long millis=System.currentTimeMillis();  
 		Date currentDate = new Date(millis);
 		int dateIndex = sqlDateMinsDays(firstDate,currentDate);
-
 		for(int i =0;i<3;i++) {
 			for(int j =0;j<7;j++) {
 				if(j<=dateIndex) {
@@ -446,8 +445,7 @@ public class ManagerRegistrationController {
 
 	private int sqlDateMinsDays(Date date1, Date date2) {
 		long time_difference = date2.getTime() - date1.getTime();
-
-		return (int) ((time_difference / (1000 * 60 * 60 * 24)) % 365);
+		return (int) Math.round(((float)time_difference)/(1000.0*60.0*60.0*24.0)%365.0);
 	}
 
 	private String castToSQLDateFormat(String dateStr) {

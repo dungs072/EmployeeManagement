@@ -1,5 +1,10 @@
 package ptithcm.controller;
 
+import javax.xml.bind.DatatypeConverter;
+
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.util.List;
 
@@ -36,13 +41,7 @@ public class RecruitLayOffEmployeeController {
 	@Qualifier("staffKeyHandler")
 	IncrementNumberAndTextKeyHandler staffKeyHandler;
 	
-	@Autowired
-	@Qualifier("jobKeyHandler")
-	IncrementNumberAndTextKeyHandler jobKeyHandler;
-	
-	@Autowired
-	@Qualifier("faultKeyHandler")
-	IncrementNumberAndTextKeyHandler faultKeyHandler;
+
 
 	private List<StaffEntity> staffList;
 	private String currentStaffId;
@@ -54,8 +53,6 @@ public class RecruitLayOffEmployeeController {
 		List<JobPositionEntity> jobs = getJobs();
 		List<MistakeEntity> faults = getMistakes();
 		castStaffs(internalStaffs);
-		castJobs(jobs);
-		castFaults(faults);
 		model.addAttribute("staffs",staffList);
 		handleCheckInput(model);
 		return "/Admin/RecruitEmployee";
@@ -180,7 +177,20 @@ public class RecruitLayOffEmployeeController {
 		Session session = factory.getCurrentSession();
 		String staffId = request.getParameter("yes-reset-warning");
 		AccountEntity account = (AccountEntity) session.get(AccountEntity.class, staffId);
-		account.setMK("123");
+		
+		String defaultPassword = "123";
+		MessageDigest md;
+		String newHashPassword = "";
+		try {
+			md = MessageDigest.getInstance("MD5");
+			md.update(defaultPassword.getBytes());
+			byte[] digest = md.digest();
+			newHashPassword = DatatypeConverter.printHexBinary(digest).toUpperCase();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		account.setMK(newHashPassword);
 		session.saveOrUpdate(account);
 		model.addAttribute("staffs",staffList);
 		handleCheckInput(model);
@@ -233,7 +243,21 @@ public class RecruitLayOffEmployeeController {
 		if (staff.getJobPosition().getTENVITRI().equals("Manager")) {
 			priority = (PriorityEntity) session.get(PriorityEntity.class, "QL");
 		}
-		AccountEntity account = new AccountEntity(id, "123", true, priority);
+		
+		String defaultPassword = "123";
+		MessageDigest md;
+		String newHashPassword = "";
+		try {
+			md = MessageDigest.getInstance("MD5");
+			md.update(defaultPassword.getBytes());
+			byte[] digest = md.digest();
+			newHashPassword = DatatypeConverter.printHexBinary(digest).toUpperCase();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	   
+		AccountEntity account = new AccountEntity(id, newHashPassword, true, priority);
 
 		session.save(staff);
 		session.save(account);
@@ -339,15 +363,7 @@ public class RecruitLayOffEmployeeController {
 		staffKeyHandler.initialKeyHandler((List<Primarykeyable>) keys);
 	}
 	
-	@SuppressWarnings("unchecked")
-	private void castFaults(List<? extends Primarykeyable> keys) {
-		faultKeyHandler.initialKeyHandler((List<Primarykeyable>) keys);
-	}
-	
-	@SuppressWarnings("unchecked")
-	private void castJobs(List<? extends Primarykeyable> keys) {
-		jobKeyHandler.initialKeyHandler((List<Primarykeyable>) keys);
-	}
+
 	
 	@SuppressWarnings("unchecked")
 	private List<StaffEntity> getInteralStaffs(){

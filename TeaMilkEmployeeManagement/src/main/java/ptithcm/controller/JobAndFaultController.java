@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ptithcm.bean.IncrementNumberAndTextKeyHandler;
+import ptithcm.bean.Primarykeyable;
 import ptithcm.entity.AccountEntity;
 import ptithcm.entity.JobPositionEntity;
 import ptithcm.entity.MistakeEntity;
@@ -45,7 +46,8 @@ public class JobAndFaultController {
 
 		List<MistakeEntity> mistakes = getFaults();
 		List<JobPositionEntity> jobs = getJobs();
-
+		castJobs(jobs);
+		castFaults(mistakes);
 
 		toggleJobDeleteButton(jobs);
 		toggleFaultDeleteButton(mistakes);
@@ -249,6 +251,15 @@ public class JobAndFaultController {
 		String hql = "FROM ShiftEntity";
 		Query query = session.createQuery(hql);
 		return query.list();
+	}
+	@SuppressWarnings("unchecked")
+	private void castFaults(List<? extends Primarykeyable> keys) {
+		faultKeyHandler.initialKeyHandler((List<Primarykeyable>) keys);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void castJobs(List<? extends Primarykeyable> keys) {
+		jobKeyHandler.initialKeyHandler((List<Primarykeyable>) keys);
 	}
 	
 }

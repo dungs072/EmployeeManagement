@@ -157,7 +157,7 @@
 
 										<form action="showDetail.htm" method="get">
 											<button name="idCa" value="1" type="submit"
-												class="btn btn-primary">More Information</button>
+												class="btn btn-primary"><i class="fa fa-info" aria-hidden="true"></i>  More information</button>
 										</form>
 									</div>
 								</div>
@@ -167,7 +167,7 @@
 
 										<form action="showDetail.htm" method="get">
 											<button name="idCa" value="2" type="submit"
-												class="btn btn-primary">More Information</button>
+												class="btn btn-primary"><i class="fa fa-info" aria-hidden="true"></i>  More information</button>
 										</form>
 									</div>
 								</div>
@@ -177,7 +177,7 @@
 
 										<form action="showDetail.htm" method="get">
 											<button name="idCa" value="3" type="submit"
-												class="btn btn-primary">More Information</button>
+												class="btn btn-primary"><i class="fa fa-info" aria-hidden="true"></i>  More information</button>
 										</form>
 									</div>
 								</div>
@@ -216,7 +216,7 @@
 																<input name="salaryOfShift" type="text"
 																	placeholder="Add salary" value="" required>
 																<button name="updateSalary" type="submit"
-																	class="btn btn-success" value="${s.staff.MANV}">Update
+																	class="btn btn-success" value="${s.staff.MANV}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
 																</button>
 															</form></td>
 													</c:when>
@@ -231,7 +231,7 @@
 													<!-- Button trigger modal -->
 													<button type="button" class="btn btn-danger"
 														data-toggle="modal" data-target="#exampleModal"
-														value="${s.staff.MANV}">Fault</button>
+														value="${s.staff.MANV}"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></button>
 
 													<form action="setFault.htm">
 														<div class="modal fade" id="exampleModal" tabindex="-1"
@@ -282,7 +282,7 @@
 														<td>
 															<form action="checkin.htm">
 																<button name="maNV" type="submit"
-																	class="btn btn-secondary" value="${s.staff.MANV}">CheckIn</button>
+																	class="btn btn-secondary" value="${s.staff.MANV}"><i class="fa fa-check-square-o" aria-hidden="true"></i></button>
 															</form>
 														</td>
 													</c:when>

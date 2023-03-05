@@ -1,5 +1,6 @@
 package ptithcm.entity;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.sql.Date;
 import java.util.Set;
@@ -7,6 +8,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -61,6 +63,11 @@ public class StaffEntity implements Primarykeyable {
 
 	@OneToMany(mappedBy = "staff")
 	private Set<ShiftDetailEntity> detailEntities = new HashSet<ShiftDetailEntity>();
+	
+	@OneToMany(mappedBy = "staffEntity",fetch  =FetchType.EAGER)
+	private Collection<SalaryBillEntity> salaryBills;
+
+	
 
 	public StaffEntity() {
 	}
@@ -174,6 +181,14 @@ public class StaffEntity implements Primarykeyable {
 	public void addShiftDetailEntity(ShiftDetailEntity shiftDetailEntity) {
 		this.detailEntities.add(shiftDetailEntity);
 	}
+	
+	public Collection<SalaryBillEntity> getSalaryBills() {
+		return salaryBills;
+	}
+
+	public void setSalaryBills(Collection<SalaryBillEntity> salaryBills) {
+		this.salaryBills = salaryBills;
+	}
 
 	public void updateInfor(StaffEntity staff) {
 		this.HO = staff.getHO();
@@ -187,6 +202,8 @@ public class StaffEntity implements Primarykeyable {
 		if(staff.getJobPosition()==null) {return;}
 		this.jobPosition = staff.getJobPosition();
 	}
+	
+	
 
 	@Override
 	public String getPrimaryKey() {
@@ -200,4 +217,5 @@ public class StaffEntity implements Primarykeyable {
 	public void paySalary(float salary) {
 		LUONGTICHLUY = LUONGTICHLUY - salary;
 	}
+	
 }

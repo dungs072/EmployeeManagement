@@ -9,6 +9,7 @@
 <%@include file="/WEB-INF/views/include/AdminHeader.jsp"%>
 <base href="${pageContext.servletContext.contextPath }/">
 <title>ADMIN</title>
+
 <style>
 .tableWrap {
 	height: 390px;
@@ -287,14 +288,14 @@ margin-top:5px;
 					<form action="Recruit/SearchStaff.htm" method="get">
 						<input type="text" name="searchInput"
 							placeholder="Name, Job position..">
-						<button type="submit" class="btn btn-outline-dark">Search</button>
+						<button type="submit" class="btn btn-outline-dark"><i class="fa fa-search" aria-hidden="true"></i></button>
 					</form>
 				</div>
 			</div>
 			<div class = "col-3">
 				<div class = "add">
 					<form action="Recruit/ShowJobPosition.htm" method="get">
-					<button type="submit" class="btn btn-success addModalButton">Add
+					<button type="submit" class="btn btn-success addModalButton"><i class="fa fa-plus-square" aria-hidden="true"></i>     Add
 						an employee</button>
 					</form>
 				</div>
@@ -328,14 +329,14 @@ margin-top:5px;
 										<form action="Recruit/InforStaff.htm" method="get">
 											<button type="submit" name="InforStaff"
 												class="btn btn-success detailButton"
-												value="${staff.MANV}">Detail</button>
+												value="${staff.MANV}"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
 											<button type="button" name="resetPassword"
 												class="btn btn-secondary resetPassword"
 												value="${staff.MANV}" data-bs-toggle="modal"
-												data-bs-target="#ResetWarning">Reset</button>
+												data-bs-target="#ResetWarning"><i class="fa fa-refresh" aria-hidden="true"></i></button>
 											<button type="button" name="deleteEmployee"
 												class="btn btn-danger deleteEmployee" value="${staff.MANV}"
-												data-bs-toggle="modal" data-bs-target="#warning">Delete</button>
+												data-bs-toggle="modal" data-bs-target="#warning"><i class="fa fa-trash" aria-hidden="true"></i></button>
 										</form>
 
 									</td>

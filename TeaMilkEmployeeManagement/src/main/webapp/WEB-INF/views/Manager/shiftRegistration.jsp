@@ -158,10 +158,6 @@ input {
 			localStorage.setItem("isClickedDetailShift","false");
 		}
 
-		if (!$("#weeklyDatePicker").val()) {
-			$("#weeklyDatePicker").val(localStorage.getItem("weekDates"));
-		}
-
 	});
 
 	$(function() {
@@ -283,7 +279,6 @@ input {
 							var v = firstDates[1] + "/" + firstDates[0] + "/"
 									+ firstDates[2] + " - " + lastDates[1]
 									+ "/" + lastDates[0] + "/" + lastDates[2];
-							localStorage.setItem("weekDates", v);
 							$('.searchButton').val(v);
 						});
 			});
@@ -322,7 +317,18 @@ input {
 							</h5>
 						</a>
 					</div>
-
+					<div class="nav-option option4">
+						<a style = "text-decoration:none" href = "SalaryHistory.htm">
+							<h5>
+							<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" class="bi bi-cash-coin nav-img" viewBox="0 0 16 16">
+							  <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0z"/>
+							  <path d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1h-.003zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195l.054.012z"/>
+							  <path d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083c.058-.344.145-.678.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1H1z"/>
+							  <path d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 5.982 5.982 0 0 1 3.13-1.567z"/>
+							</svg>Salary
+							</h5>
+						</a>
+					</div>
 					<div class="nav-option option4">
 						<a style = "text-decoration:none" href = "DisplayStaffMistake.htm">
 							<h5>
@@ -370,39 +376,39 @@ input {
 		<div class="main">
 	<div class="container">
 		<div class="mt-2 row ">
-			<label class="col-sm-1 col-form-label"> <span
-				class="badge rounded-pill bg-primary " style="font-size: 1rem;">Week</span>
-			</label>
 			<div class="col-sm-3">
 				<input autocomplete="off" class="week-picker form-control"
 					type='text' name="week" id="weeklyDatePicker"
-					style="text-align: center;" placeholder="Select Week" readonly
-					value="${weekSelection}" />
+					style="text-align: center;" placeholder="Select Week" readonly/>
 			</div>
 			<div class="col-sm-1">
 				<form action=ManagerRegistration/Search.htm method="get"
 					class="headerForm">
 					<div class="col-auto">
 						<button type="submit" name="searchButton"
-							class="btn btn-primary searchButton">Search</button>
+							class="btn btn-outline-primary searchButton"><i class="fa fa-search" aria-hidden="true"></i></button>
 					</div>
 				</form>
 			</div>
-			<div class="col-sm-1">
+			<div class="col-sm-2">
 				<div class="col-auto">
 						<button type="button" class="btn btn-success"
-							data-bs-toggle="modal" data-bs-target="#confirmWarning">Confirm</button>
+							data-bs-toggle="modal" data-bs-target="#confirmWarning"><i class="fa fa-check-square" aria-hidden="true"></i> Confirm</button>
 					</div>
 			</div>
-			<div class="col-sm-1">
+			<div class="col-sm-2">
 				<form action=ManagerRegistration/Search.htm method="get"
 					class="headerForm">
 					<div class="col-auto">
 						<button type="button" class="btn btn-danger"
-							data-bs-toggle="modal" data-bs-target="#cancelConfirmWarning">Cancel</button>
+							data-bs-toggle="modal" data-bs-target="#cancelConfirmWarning"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
 					</div>
 				</form>
 			</div>
+			
+			<label class="col-sm-1 col-form-label"> <span
+				class="badge rounded-pill bg-primary " style="font-size: 1rem;">Week: ${weekSelection}</span>
+			</label>
 
 			<div class="mt-2 row align-items-center scrollit">
 				<table class="table table-bordered" id="shiftTable">
@@ -484,17 +490,17 @@ input {
 																				<button type="button"
 																					class="btn btn-outline-secondary mb-1 setStaffShiftButton"
 																					data-bs-toggle="modal" data-bs-target="#setShift"
-																					value="${shiftStaff.fullName}+${shiftStaff.jobPositionName}+${shiftStaff.additionalJobs}+${shiftStaff.shiftDetailId}">Setting</button>
+																					value="${shiftStaff.fullName}+${shiftStaff.jobPositionName}+${shiftStaff.additionalJobs}+${shiftStaff.shiftDetailId}"><i class="fa fa-cogs" aria-hidden="true" style = "width:50px;"></i></button>
 																				<button type="button"
 																					class="btn btn-outline-danger deleteStaffButton"
 																					data-bs-toggle="modal" data-bs-target="#warning"
-																					value="${shiftStaff.shiftDetailId}">Delete</button>
+																					value="${shiftStaff.shiftDetailId}"><i class="fa fa-trash-o" aria-hidden="true"  style = "width:50px;"></i></button>
 																			</c:when>
 																			<c:otherwise>
 																				<form action = "ManagerRegistration/showShiftDetail.htm" method = "get">
 																					<button type="submit"
 																					class="btn btn-outline-secondary mb-1 detailShiftButton" name = "shiftDetailButton" value = "${shiftStaff.shiftDetailId}"
-																					>Detail</button>
+																					><i class="fa fa-info-circle" aria-hidden="true" style = "width:50px;"></i></button>
 																				</form>
 																				
 																			</c:otherwise>
@@ -522,13 +528,13 @@ input {
 																	<button type=button name="openShift"
 																		class="btn btn-success openButton"
 																		data-bs-toggle="modal" data-bs-target="#openSetting"
-																		value="${indexShift.count},${i}">Open</button>
+																		value="${indexShift.count},${i}"><i class="fa fa-pencil-square" aria-hidden="true" style="font-size: 2em;"></i></button>
 																</c:when>
 																<c:otherwise>
 																	<button type=button name="openShift"
 																		class="btn btn-success openButton"
 																		data-bs-toggle="modal" data-bs-target="#openSetting"
-																		disabled value="${indexShift.count},${i}">Open</button>
+																		disabled value="${indexShift.count},${i}"><i class="fa fa-pencil-square" aria-hidden="true" style="font-size: 2em;"></i></button>
 																</c:otherwise>
 															</c:choose>
 
@@ -552,14 +558,14 @@ input {
 																			class="btn btn-success addButton"
 																			
 																			name="addStaffButton"
-																			value="${indexShift.count},${i}">Add</button>
+																			value="${indexShift.count},${i}"><i class="fa fa-plus" aria-hidden="true"></i></button>
 																	</c:when>
 																	<c:otherwise>
 																		<button type="submit"
 																			class="btn btn-success addButton"
 																			
 																			disabled name="addStaffButton"
-																			value="${indexShift.count},${i}">Add</button>
+																			value="${indexShift.count},${i}"><i class="fa fa-plus" aria-hidden="true"></i></button>
 																	</c:otherwise>
 																</c:choose>
 
@@ -578,7 +584,7 @@ input {
 																		data-bs-toggle="modal"
 																		data-bs-target="#openSettingMaxStaff"
 																		name="addStaffButton"
-																		value="${indexShift.count}+${i}+${shiftStaffs[indexShift.index][i-1].maxStaff}+${shiftStaffs[indexShift.index][i-1].getNumberStaffInShift()}">Setting</button>
+																		value="${indexShift.count}+${i}+${shiftStaffs[indexShift.index][i-1].maxStaff}+${shiftStaffs[indexShift.index][i-1].getNumberStaffInShift()}"><i class="fa fa-wrench" aria-hidden="true"></i></button>
 																</c:when>
 																<c:otherwise>
 																	<button type="submit"
@@ -586,7 +592,7 @@ input {
 																		data-bs-toggle="modal"
 																		data-bs-target="#openSettingMaxStaff"
 																		name="addStaffButton" disabled
-																		value="${indexShift.count}+${i}+${shiftStaffs[indexShift.index][i-1].maxStaff}+${shiftStaffs[indexShift.index][i-1].getNumberStaffInShift()}">Setting</button>
+																		value="${indexShift.count}+${i}+${shiftStaffs[indexShift.index][i-1].maxStaff}+${shiftStaffs[indexShift.index][i-1].getNumberStaffInShift()}"><i class="fa fa-wrench" aria-hidden="true"></i></button>
 																</c:otherwise>
 															</c:choose>
 
@@ -603,13 +609,13 @@ input {
 																	<button type="button"
 																		class="btn btn-danger functionButton cancelButton"
 																		data-bs-toggle="modal" data-bs-target="#cancelWarning"
-																		value="${indexShift.count},${i}">Cancel</button>
+																		value="${indexShift.count},${i}"><i class="fa fa-eraser" aria-hidden="true"></i></button>
 																</c:when>
 																<c:otherwise>
 																	<button type="button"
 																		class="btn btn-danger functionButton cancelButton"
 																		data-bs-toggle="modal" data-bs-target="#cancelWarning" disabled
-																		value="${indexShift.count},${i}">Cancel</button>
+																		value="${indexShift.count},${i}"><i class="fa fa-eraser" aria-hidden="true"></i></button>
 																</c:otherwise>
 															</c:choose>
 

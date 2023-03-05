@@ -60,6 +60,7 @@ public class StaffTimetableController {
 	@RequestMapping(value = "Search",method = RequestMethod.GET)
 	public String searchWeek(HttpServletRequest request, ModelMap map) {
 		weekDateFromTo = request.getParameter("searchButton");
+
 		return displayMainView(request,map);
 	}
 	@RequestMapping(value = "/Detail",method = RequestMethod.GET)
@@ -80,6 +81,7 @@ public class StaffTimetableController {
 		putDataToView(weekDateFromTo);
 		map.addAttribute("shifts", shifts);
 		map.addAttribute("shiftStaffs", staffShiftDataUIs);
+		map.addAttribute("week",weekDateFromTo);
 		return "/Staff/workingTimeTable";
 	}
 

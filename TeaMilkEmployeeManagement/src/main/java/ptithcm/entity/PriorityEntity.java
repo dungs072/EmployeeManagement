@@ -1,8 +1,12 @@
 package ptithcm.entity;
 
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -14,6 +18,9 @@ public class PriorityEntity {
 
 	@Column(name = "MOTA")
 	private String MOTA;
+	
+	@OneToMany(mappedBy = "priorityEntity",fetch  =FetchType.EAGER)
+	private Collection<AccountEntity> accounts;
 
 	public PriorityEntity() {
 	}
@@ -36,6 +43,14 @@ public class PriorityEntity {
 
 	public void setMOTA(String mOTA) {
 		MOTA = mOTA;
+	}
+
+	public Collection<AccountEntity> getAccounts() {
+		return accounts;
+	}
+
+	public void setAccounts(Collection<AccountEntity> accounts) {
+		this.accounts = accounts;
 	}
 
 }
