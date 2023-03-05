@@ -190,7 +190,7 @@ $(document).on('click', ".viewButton", function(e) {
 							<tr>
 								<th><span>STT</span></th>
 								<th><span>Name</span></th>
-								<th><span>Phone Number</span></th>
+								<th><span>Job Position</span></th>
 								<th><span>Mistake</span></th>
 							</tr>
 						</thead>
@@ -199,7 +199,7 @@ $(document).on('click', ".viewButton", function(e) {
 								<tr>
 									<td>${i.count}</td>
 									<td>${staff.HO} ${staff.TEN}</td>
-									<td>${staff.SDT}</td>
+									<td>${staff.jobPosition.TENVITRI}</td>
 									<td>
 										<form action = "DisplayStaffMistake/ShowMistake.htm" method = "get">
 											<button type="submit" class="btn btn-success viewButton" name = "staffId" value = "${staff.MANV}"><i class="fa fa-eye" aria-hidden="true"></i></button>
