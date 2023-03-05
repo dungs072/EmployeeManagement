@@ -465,7 +465,7 @@ input {
 		</div>
 
 		<!-- Modal -->
-
+		
 		<!--delete-warning-->
 		<div class="modal" id="warning" tabindex="-1">
 			<div class="modal-dialog">

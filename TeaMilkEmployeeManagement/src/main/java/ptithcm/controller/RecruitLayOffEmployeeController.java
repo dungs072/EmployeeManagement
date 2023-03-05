@@ -23,7 +23,6 @@ import ptithcm.entity.JobPositionEntity;
 import ptithcm.entity.MistakeEntity;
 import ptithcm.entity.PriorityEntity;
 import ptithcm.entity.StaffEntity;
-
 @Transactional
 @Controller
 @RequestMapping("/Recruit")
@@ -90,7 +89,9 @@ public class RecruitLayOffEmployeeController {
 			JobPositionEntity job = (JobPositionEntity) session.get(JobPositionEntity.class, jobId);
 			staff.setHO(staff.getHO().strip());
 			staff.setTEN(staff.getTEN().strip());
-			staff.setDIACHI(staff.getDIACHI().strip());
+			if(staff.getDIACHI()!=null&&!staff.getDIACHI().isEmpty()) {
+				staff.setDIACHI(staff.getDIACHI().strip());
+			}
 			staff.setJobPosition(job);
 			addEmloyeeToDB(staff, staffId);
 			model.addAttribute("staffIdValue",staffId);
@@ -135,12 +136,19 @@ public class RecruitLayOffEmployeeController {
 
 	@RequestMapping(value = "/UpdateStaff", method = RequestMethod.GET)
 	public String updateInforEmployee(HttpServletRequest request, ModelMap model, StaffEntity staff) {
+		
 		Session session = factory.getCurrentSession();
 		String maCV = request.getParameter("jobId");
 		String birthdayStr = request.getParameter("birthday");
 		if (!birthdayStr.isEmpty()) {
 			Date birthday = Date.valueOf(birthdayStr);
 			staff.setNGAYSINH(birthday);
+		}
+		if(staff.getEMAIL()!=null&&!staff.getEMAIL().isEmpty()) {
+			staff.setEMAIL(staff.getEMAIL().strip());
+		}
+		if(staff.getDIACHI()!=null&&!staff.getDIACHI().isEmpty()) {
+			staff.setDIACHI(staff.getDIACHI().strip());
 		}
 
 		staff.setMANV(currentStaffId);
@@ -149,6 +157,8 @@ public class RecruitLayOffEmployeeController {
 
 		staff.setJobPosition(job);
 		updateStaff(session, staff);
+
+	
 		staffList = getStaffs();
 		model.addAttribute("staffs", staffList);
 		handleCheckInput(model);
@@ -181,6 +191,24 @@ public class RecruitLayOffEmployeeController {
 		model.addAttribute("isWrongIDCard","false");
 		model.addAttribute("isWrongPhoneNumber","false");
 	}
+	
+	private boolean hasIdentificationCardNumberInDB(String idCard, String staffId) {
+		Session session = factory.getCurrentSession();
+		String hql = "SELECT COUNT(*) FROM StaffEntity WHERE CCCD = :idCard AND MANV!=:staffId";
+		Query query = session.createQuery(hql);
+		query.setString("idCard", idCard);
+		query.setString("staffId", staffId);
+		return (long)query.uniqueResult()>0;
+	}
+	private boolean hasPhoneNumberInDB(String phoneNumber, String staffId) {
+		Session session = factory.getCurrentSession();
+		String hql = "SELECT COUNT(*) FROM StaffEntity WHERE SDT = :phoneNumber AND MANV!=:staffId";
+		Query query = session.createQuery(hql);
+		query.setString("phoneNumber", phoneNumber);
+		query.setString("staffId", staffId);
+		return (long)query.uniqueResult()>0;
+	}
+	
 	
 	private boolean hasIdentificationCardNumberInDB(String idCard) {
 		Session session = factory.getCurrentSession();
