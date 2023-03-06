@@ -1,9 +1,12 @@
 package ptithcm.controller;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import javax.xml.bind.DatatypeConverter;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -38,7 +41,19 @@ public class EnableEmployeeController {
 		String staffId = request.getParameter("yes-warning");
 		AccountEntity account = (AccountEntity) session.get(AccountEntity.class, staffId);
 		account.setTRANGTHAI(true);
-		account.setMK("123");
+		MessageDigest md;
+		String oldPassword = "123";
+		String newHashPassword = "";
+		try {
+			md = MessageDigest.getInstance("MD5");
+			md.update(oldPassword.getBytes());
+			byte[] digest = md.digest();
+			newHashPassword = DatatypeConverter.printHexBinary(digest).toUpperCase();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		account.setMK(newHashPassword);
 		session.saveOrUpdate(account);
 		return displayMainView(model);
 	}
@@ -64,9 +79,12 @@ public class EnableEmployeeController {
 	private List<StaffEntity> searchStaffList(Session session,String searchText) {
 		if(searchText.isEmpty()) {return getDisabledStaff();}
 		
-		String hql = "FROM StaffEntity WHERE MANV != 'ADMIN' "
-				+ " AND MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = false) AND "
-				+ "HO+TEN LIKE CONCAT('%',:search,'%') ORDER BY TEN";
+		String hql = "FROM StaffEntity WHERE MANV !='ADMIN' AND"
+				+ " MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = true) AND"
+				+ " (HO LIKE CONCAT('%',:search,'%')) OR "
+				+ " (TEN LIKE CONCAT('%',:search,'%')) OR "
+				+ " (jobPosition.TENVITRI LIKE CONCAT ('%',:search,'%'))"
+				+ " ORDER BY TEN";
 		Query query = session.createQuery(hql);
 		query.setParameter("search",searchText);
 		return query.list();

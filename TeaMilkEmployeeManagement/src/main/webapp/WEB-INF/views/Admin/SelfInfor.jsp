@@ -198,7 +198,7 @@
 							value="" maxlength="50" />
 					</div>
 					
-					<button type="submit" class="btn btn-primary btn-customized mt-4">
+					<button type="submit" class="btn btn-success btn-customized mt-4">
 						Save</button>
 				</form:form>
 				<!-- Form end -->

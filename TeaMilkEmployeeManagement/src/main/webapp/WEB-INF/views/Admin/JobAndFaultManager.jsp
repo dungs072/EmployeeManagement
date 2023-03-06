@@ -271,12 +271,10 @@ tbody tr:hover {
 											<c:choose>
 												<c:when test="${job.canUpdate==true}">
 													<button type="submit" name="InforJob"
-														class="btn btn-secondary detailJob" value="${job.MACV}">Detail</button>
+														class="btn btn-secondary detailJob" value="${job.MACV}"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
 												</c:when>
 												<c:otherwise>
-													<button type="submit" name="InforJob"
-														class="btn btn-secondary detailJob" value="${job.MACV}"
-														disabled>Detail</button>
+
 												</c:otherwise>
 											</c:choose>
 
@@ -285,14 +283,11 @@ tbody tr:hover {
 												<c:when test="${job.canDelete==true}">
 													<button type="button" name="deleteJob"
 														class="btn btn-danger deleteJob" value="${job.MACV}"
-														data-bs-toggle="modal" data-bs-target="#jobWarning">Delete
+														data-bs-toggle="modal" data-bs-target="#jobWarning"><i class="fa fa-trash" aria-hidden="true"></i>
 													</button>
 												</c:when>
 												<c:otherwise>
-													<button type="button" name="deleteJob"
-														class="btn btn-danger deleteJob" value="${job.MACV}"
-														data-bs-toggle="modal" data-bs-target="#jobWarning"
-														disabled>Delete</button>
+													
 												</c:otherwise>
 											</c:choose>
 
@@ -336,20 +331,16 @@ tbody tr:hover {
 									<td>
 										<form action="JobAndFault/ShowFault.htm" method="get">
 											<button type="submit" name=InforFault
-												class="btn btn-secondary detailFault" value="${fault.IDLOI}">Detail</button>
+												class="btn btn-secondary detailFault" value="${fault.IDLOI}"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
 											<c:choose>
 
 												<c:when test="${fault.canDelete==true}">
 													<button type="button" name="deleteFaults"
 														class="btn btn-danger deleteFault" value="${fault.IDLOI}"
-														data-bs-toggle="modal" data-bs-target="#faultWarning">Delete
+														data-bs-toggle="modal" data-bs-target="#faultWarning"><i class="fa fa-trash" aria-hidden="true"></i>
 													</button>
 												</c:when>
 												<c:otherwise>
-													<button type="button" name="deleteFault"
-														class="btn btn-danger deleteFault" value="${fault.IDLOI}"
-														data-bs-toggle="modal" data-bs-target="#faultWarning"
-														disabled>Delete</button>
 												</c:otherwise>
 											</c:choose>
 
@@ -392,7 +383,7 @@ tbody tr:hover {
 									<td>
 										<button type="button" name="settingShift"
 											class="btn btn-secondary settingShift" value="${shift.IDCA},${shift.TENCA}"
-											data-bs-toggle="modal" data-bs-target="#settingShift">Setting
+											data-bs-toggle="modal" data-bs-target="#settingShift"><i class="fa fa-cog" aria-hidden="true"></i>
 										</button>
 									</td>
 								</tr>

@@ -6,13 +6,65 @@
 <meta charset="UTF-8">
 <%@include file="/WEB-INF/views/include/StaffHeader.jsp"%>
 <base href="${pageContext.servletContext.contextPath }/">
-<title>Your information</title>
+<title>Salary History</title>
 <style>
-.InputInvalid{
-color:red;
-font-style: italic;
-margin-left:5px;
-margin-top:5px;
+.tableWrap {
+	height: 390px;
+	border: 2px solid black;
+	overflow: auto;
+}
+
+/* Set header to stick to the top of the container. */
+thead tr th {
+	position: sticky;
+	top: 0;
+	color: aliceblue;
+}
+
+/* If we use border,
+  we must use table-collapse to avoid
+  a slight movement of the header row */
+table {
+	border-collapse: collapse;
+}
+
+/* Because we must set sticky on th,
+   we have to apply background styles here
+   rather than on thead */
+th {
+	padding: 16px;
+	padding-left: 15px;
+	border-left: 1px dotted rgba(200, 209, 224, 0.6);
+	border-bottom: 1px solid #e8e8e8;
+	background: #4e73df;
+	text-align: center;
+	/* With border-collapse, we must use box-shadow or psuedo elements
+    for the header borders */
+	box-shadow: 0px 0px 0 2px #e8e8e8;
+}
+
+/* Basic Demo styling */
+table {
+	width: 100%;
+	font-family: sans-serif;
+}
+
+table td {
+	padding: 16px;
+	text-align: center;
+}
+
+tbody tr {
+	border-bottom: 2px solid #e8e8e8;
+}
+
+thead {
+	font-weight: 500;
+	color: rgba(0, 0, 0, 0.85);
+}
+
+tbody tr:hover {
+	background: #e6f7ff;
 }
 </style>
 </head>
@@ -108,99 +160,33 @@ margin-top:5px;
 		</div>
 		<div class="main">
 	<div class="container">
-		<div class="row align-items-center" style="height: 100vh;">
-			<div class="mx-auto col-10 col-md-8 col-lg-6">
-				<!-- Form -->
-				<form:form class="form-example" action="SelfInfor/update.htm" method="get" modelAttribute = "staff">
-					<h1>Your Information</h1>
-					<p class="description">Add information about yourself.</p>
-					<!-- Input fields -->
-					<div class="form-group">
-						<label for="firstname">First name:</label> <input type="text"
-							class="form-control username" id="firstname"
-							placeholder="First name..." name="HO" required value = "${staff.HO}"
-							maxlength="30" pattern="^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\W|_]+" />
-					</div>
-					<div class="form-group">
-						<label for="lastname">Last name:</label> <input type="text"
-							class="form-control username" id="lastname"
-							placeholder="Last name..." name="TEN" required value = "${staff.TEN}"
-							maxlength="30" pattern="^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\W|_]+"/>
-					</div>
-					<div class="form-group">
-						<label for="birthday">Birthday:</label> <input type="date"
-							class="form-control username" id="birthday" 
-							placeholder="00/00/0000..." name="birthday"
-							value="${staff.NGAYSINH}" />
-					</div>
-					<c:if test="${staff.GIOITINH=='Nam'}">
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="GIOITINH" checked
-								id="gender1" value = "Nam"> <label class="form-check-label"
-								for="flexRadioDefault1"> Male </label>
-							
+		<div class="row">
+			<div class="col">
+				<div class="row mt-5">
+					<div class="col">
+						<div class="tableWrap">
+							<table class="employeeTable">
+								<thead>
+									<tr>
+										<th><span>STT</span></th>
+										<th><span>Received Date</span></th>
+										<th><span>Amount</span></th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach var="bill" varStatus="i" items="${bills}">
+										<tr>
+											<td>${i.count}</td>
+											<td>${bill.THOIGIANNHAN}</td>
+											<td>${bill.LUONGNHAN}</td>
+										</tr>
+									</c:forEach>
+
+								</tbody>
+							</table>
 						</div>
-						<div class="form-check">
-						<input class="form-check-input" type="radio" name="GIOITINH"
-							id="gender2" value = "Nữ"> <label class="form-check-label"
-							for="flexRadioDefault2"> Female </label>
 					</div>
-					</c:if>
-					
-					<c:if test="${staff.GIOITINH=='Nữ'}">
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="GIOITINH"
-								id="gender1" value = "Nam"> <label class="form-check-label"
-								for="flexRadioDefault1"> Male </label>
-							
-						</div>
-						<div class="form-check">
-						<input class="form-check-input" type="radio" name="GIOITINH"
-							id="gender2" checked value = "Nữ"> <label class="form-check-label"
-							for="flexRadioDefault2"> Female </label>
-					</div>
-					</c:if>
-
-					
-
-					<div class="form-group">
-						<label for="idcard">Identification card number:</label> <input
-							type="text" class="form-control username" id="CCCD"
-							name="CCCD"
-							oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
-							maxlength="12" required value = "${staff.CCCD}" />
-						<p class = "InputInvalid">${idCardMessage}</p>
-					</div>
-
-					<div class="form-group">
-						<label for="phoneNumber">Phone number:</label> <input type="text"
-							class="form-control username" id="phoneNumber" name="SDT"
-							oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
-							maxlength="10" required value = "${staff.SDT}"/>
-						<p class = "InputInvalid">${phoneMessage}</p>
-					</div>
-					<div class="form-group">
-						<label for="email">Email:</label> <input type="email"
-							class="form-control username" id="email"
-							placeholder="name123@gmail.com" name="EMAIL" value = "${staff.EMAIL}"
-							maxlength="50" />
-					</div>
-
-					<div class="form-group">
-						<label for="address">Address:</label> <input type="text"
-							class="form-control username" id="adderess" name="DIACHI" value = "${staff.DIACHI}"
-							value="" maxlength="50" />
-					</div>
-					<div class="form-group">
-						<label for="salary">Accumulated salary:</label> <input type="text" readonly
-							class="form-control username" id="salary" value = "${staff.LUONGTICHLUY}"
-							value="" maxlength="50" />
-					</div>
-					
-					<button type="submit" class="btn btn-success btn-customized mt-4">
-						Save</button>
-				</form:form>
-				<!-- Form end -->
+				</div>
 			</div>
 		</div>
 	</div>

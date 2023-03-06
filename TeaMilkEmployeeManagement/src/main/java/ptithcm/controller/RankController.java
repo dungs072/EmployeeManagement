@@ -1,12 +1,12 @@
 package ptithcm.controller;
 
-
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+
 
 import ptithcm.bean.PassDataBetweenControllerHandler;
 import ptithcm.entity.StaffEntity;
@@ -47,6 +47,9 @@ public class RankController  {
 	@Autowired
 	SessionFactory factory;
 	
+	@Autowired
+	SessionFactory factory;
+
 	@Autowired
 	@Qualifier("staffPassDataHandler")
 	PassDataBetweenControllerHandler staffPassDataBetweenControllerHandler;
@@ -82,6 +85,7 @@ public class RankController  {
 		Collections.sort(records,new sortNumOfShift());
 		model.addAttribute("list", records);
 		return "Admin/Rank";
+
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -94,6 +98,7 @@ public class RankController  {
 		query.setLong("month", Long.valueOf(month));
 		return query.list();
 	}
+
 	
 	private String returnToSpecificAccount() {
 		String priority = staffPassDataBetweenControllerHandler.getAuthorityId().strip();

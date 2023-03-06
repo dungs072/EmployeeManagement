@@ -1,9 +1,12 @@
 package ptithcm.controller;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import javax.xml.bind.DatatypeConverter;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -33,8 +36,6 @@ public class LoginController {
 	@Autowired
 	@Qualifier("staffPassDataHandler")
 	PassDataBetweenControllerHandler staffPassDataBetweenControllerHandler;
-	
-	
 	
 	@RequestMapping(value = "Login-Form",method = RequestMethod.GET)
 	public String login()
@@ -95,10 +96,23 @@ public class LoginController {
 	public String hasExistedAccount(String userName, String password) {
 		String priority = "";
 		Session session = factory.getCurrentSession();
+		
+		MessageDigest md;
+		String newHashPassword = "";
+		try {
+			md = MessageDigest.getInstance("MD5");
+			md.update(password.getBytes());
+			byte[] digest = md.digest();
+			newHashPassword = DatatypeConverter.printHexBinary(digest).toUpperCase();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		String hql = "SELECT priorityEntity.MAQUYEN FROM AccountEntity WHERE TENTK = :userName AND MK = :password AND TRANGTHAI = true";
 		Query query = session.createQuery(hql);
 		query.setString("userName", userName);
-		query.setString("password", password);
+		query.setString("password", newHashPassword);
 		priority = (String) query.uniqueResult();
 		return priority;
 	}

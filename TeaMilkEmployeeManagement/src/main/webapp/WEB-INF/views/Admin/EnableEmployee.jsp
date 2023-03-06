@@ -216,7 +216,7 @@ tbody tr:hover {
 					<form action="EnabledStaff/SearchStaff.htm" method="get">
 						<input type="text" name="searchInput"
 							placeholder="Search employee..">
-						<button type="submit" class="btn btn-outline-dark">Search</button>
+						<button type="submit" class="btn btn-outline-dark"><i class="fa fa-search" aria-hidden="true"></i></button>
 					</form>
 
 				</div>
@@ -249,7 +249,7 @@ tbody tr:hover {
 										<button type="button" name="InforStaff"
 												class="btn btn-success enableButton"
 												data-bs-toggle="modal" data-bs-target="#warning"
-												value="${staff.MANV}">Enable</button>
+												value="${staff.MANV}"><i class="fa fa-toggle-on" aria-hidden="true"></i></button>
 									</td>
 								</tr>
 							</c:forEach>
