@@ -27,7 +27,6 @@
 <script type = "text/javascript">
 
 	$(window).on('load',function(){
-		alert(1);
 		var click = localStorage.getItem("isClick2");
 		if(click == "true"){
 			var maNV = $(document).find(".idStaff");
@@ -38,7 +37,6 @@
 	})
 
 	$(document).on('click', ".setFault", function(e) {	
-		alert(1);
 		localStorage.setItem("isClick2", "true");
 		localStorage.setItem("valueOfButton",$(this).val());
 	})
@@ -231,7 +229,7 @@
 												</c:choose>
 												<td>
 													<!-- Button trigger modal -->
-													<form action = "home.htm">
+													<form action = "homeAnother.htm">
 													<button type="submit" class="btn btn-danger setFault"
 														value="${s.staff.MANV}"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></button>
 													</form>

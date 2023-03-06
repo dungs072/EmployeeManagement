@@ -246,7 +246,7 @@
 												</c:choose>
 												<td>
 													<!-- Button trigger modal -->
-													<form action = "home.htm">
+													<form action = "homeAnother.htm">
 													<button type="submit" class="btn btn-danger setFault"
 														value="${s.staff.MANV}"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></button>
 														</form>
