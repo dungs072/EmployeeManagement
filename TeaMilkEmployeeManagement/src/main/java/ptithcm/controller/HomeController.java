@@ -194,6 +194,7 @@ public class HomeController{
 		}
 	}
 	
+	@RequestMapping("/homeAnother")
 	public String showDetailShift(ModelMap model) {
 		List<OpenShiftEntity> listOpenId = getIdAOpenShift(idShiftShow, date_sql);
 		if(listOpenId.isEmpty()) {
