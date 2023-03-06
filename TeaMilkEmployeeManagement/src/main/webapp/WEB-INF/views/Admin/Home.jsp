@@ -16,6 +16,7 @@
 	color: black;
 	border: 3px solid blue;
 	border-radius: 15px;
+	
 }
 
 .shift {
@@ -166,8 +167,8 @@
 				<div class="container-fluid">
 					<div class="shift">
 						<div class="row">
-							<div class="col-md-3">
-								<h2>Shift on day</h2>
+							<div class="col-md-2">
+								<h4>Shift on day</h4>
 								<div class="row">
 									<div class="col-md-12 info-shift">
 										<h3>Shift 1</h3>
@@ -199,7 +200,7 @@
 									</div>
 								</div>
 							</div>
-							<div class=" col-xs-9 col-sm-9 col-md-9 col-lg-9 shift-now">
+							<div class=" col-xs-10 col-sm-10 col-md-10 col-lg-10 shift-now">
 								<div class="row">
 									<div class=" col-md-6">
 										<h3>Shift number: ${idca}</h3>

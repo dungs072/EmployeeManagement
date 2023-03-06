@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@include file="/WEB-INF/views/include/AdminHeader.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -79,7 +80,9 @@
     </style>
 </head>
 <body>
+	<div class= "row" > RANK SCORE</div>
 	    <div class="container">
+	    
         <div class="row justify-content-md-center">
             <div class="col-10">
                 <div class="tableWrap">
@@ -87,80 +90,20 @@
                         <thead>
                             <tr>
                                 <th><span>Rank</span></th>
-                                <th><span>Name</span></th>
+                                <th><span>ID Staff</span></th>
+                                <th><span> Name </span></th>
                                 <th><span>Shifts</span></th>
-                                <th><span>Mistakes</span></th>
-                                <th><span>Action</span></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1st</td>
-                                <td>Nguyễn Văn A</td>
-                                <td>5</td>
-                                <td>6</td>
-                                <td>
-                                    <form>
-                                        <button type="button" class="btn btn-secondary settingButton">Setting</button>
-                                        <button type="button" class="btn btn-danger deleteButton">Delete</button>
-                                    </form>
-                                </td>
+                        <c:forEach var = "staff" varStatus="i" items = "${list}">
+                        	<tr>
+                                <td>${i.count}</td>
+                                <td>${staff[0].MANV}</td>
+                                <td>${staff[0].HO} ${staff[0].TEN}</td>
+                                <td>${staff[1]}</td>
                             </tr>
-                            <tr>
-                                <td>1st</td>
-                                <td>Nguyễn Văn A</td>
-                                <td>5</td>
-                                <td>6</td>
-                                <td>
-                                    <form>
-                                        <button type="button" class="btn btn-secondary settingButton">Setting</button>
-                                        <button type="button" class="btn btn-danger deleteButton">Delete</button>
-                                    </form>
-                                </td>
-                             
-                            </tr>
-
-                            <tr>
-                                <td>1st</td>
-                                <td>Nguyễn Văn A</td>
-                                <td>5</td>
-                                <td>6</td>
-                                <td>
-                                    <form>
-                                        <button type="button" class="btn btn-secondary settingButton">Setting</button>
-                                        <button type="button" class="btn btn-danger deleteButton">Delete</button>
-                                    </form>
-                                </td>
-                             
-                            </tr>
-
-                            <tr>
-                                <td>1st</td>
-                                <td>Nguyễn Văn A</td>
-                                <td>5</td>
-                                <td>6</td>
-                                <td>
-                                    <form>
-                                        <button type="button" class="btn btn-secondary settingButton">Setting</button>
-                                        <button type="button" class="btn btn-danger deleteButton">Delete</button>
-                                    </form>
-                                </td>
-                             
-                            </tr>
-
-                            <tr>
-                                <td>1st</td>
-                                <td>Nguyễn Văn A</td>
-                                <td>5</td>
-                                <td>6</td>
-                                <td>
-                                    <form>
-                                        <button type="button" class="btn btn-secondary settingButton">Setting</button>
-                                        <button type="button" class="btn btn-danger deleteButton">Delete</button>
-                                    </form>
-                                </td>
-                             
-                            </tr>
+                        </c:forEach>
                         </tbody>
                     </table>
                 </div>
