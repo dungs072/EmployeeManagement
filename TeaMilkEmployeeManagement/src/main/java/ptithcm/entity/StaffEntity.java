@@ -218,4 +218,9 @@ public class StaffEntity implements Primarykeyable {
 		LUONGTICHLUY = LUONGTICHLUY - salary;
 	}
 	
+	public void editSalary(float oldSalary,float newSalary) {
+		LUONGTICHLUY-=oldSalary;
+		LUONGTICHLUY+=newSalary;
+	}
+	
 }

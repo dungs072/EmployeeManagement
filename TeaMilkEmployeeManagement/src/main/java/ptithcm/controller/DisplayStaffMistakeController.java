@@ -1,5 +1,7 @@
 package ptithcm.controller;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,8 +46,28 @@ public class DisplayStaffMistakeController {
 		List<MistakeHistoryEntity> mistakeHistoryList = getSpecificMistakeHistories(map,staffId);
 		StaffEntity staff = (StaffEntity) session.get(StaffEntity.class, staffId);
 		map.addAttribute("specificStaff",staff);
+		for(var mistakeHistory:mistakeHistoryList) {
+			mistakeHistory.setCanDelete(canDeleteSpecificMistakeHistory(mistakeHistory));
+		}
 		map.addAttribute("mistakeHistoryList",mistakeHistoryList);
 		return displayMainView(map);
+	}
+	@RequestMapping(value = "/DeleteMistake")
+	public String deleteEmployeeMistake(HttpServletRequest request,ModelMap map) {
+		Session session = factory.getCurrentSession();
+		String mistakeHistoryId = request.getParameter("yesDeleteMistake");
+		MistakeHistoryEntity mistakeHistory = (MistakeHistoryEntity) session.get(MistakeHistoryEntity.class, mistakeHistoryId);
+		if(canDeleteSpecificMistakeHistory(mistakeHistory)){
+			mistakeHistory.deleteLink();
+			session.delete(mistakeHistory);
+		}
+		return displayMainView(map);
+	}
+	
+	private boolean canDeleteSpecificMistakeHistory(MistakeHistoryEntity mistakeHistory) {
+		Date currentDay = Date.valueOf(LocalDate.now());
+		Date workDay = mistakeHistory.getShiftDetailEntity().getOpenshift().getNGAYLAMVIEC();
+		return workDay.compareTo(currentDay)==0;
 	}
 	
 	@SuppressWarnings("unchecked")

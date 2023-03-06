@@ -246,6 +246,7 @@ tbody tr:hover {
 									<th><span>STT</span></th>
 									<th><span>Employee Id</span></th>
 									<th><span>Full Name</span></th>
+									<th><span>Job position</span></th>
 									<th><span>Salary</span></th>
 									<th><span>Print Salary Bill</span></th>
 									<th><span>History</span></th>
@@ -257,13 +258,23 @@ tbody tr:hover {
 										<td>${i.count}</td>
 										<td>${staff.MANV}</td>
 										<td>${staff.HO}  ${staff.TEN}</td>
+										<td>${staff.jobPosition.TENVITRI}</td>
 										<td><span>${staff.LUONGTICHLUY}</span></td>
 										<td>
+											<c:choose>
+												<c:when test = "${staff.LUONGTICHLUY>0}">
+													<form action = "salary.htm">
+														<button type="submit" class="btn btn-success valueButton"
+														value="${staff.MANV}+${staff.HO}+${staff.TEN}+${staff.LUONGTICHLUY}"><i class="fa fa-print" aria-hidden="true"></i></button>
+													</form>	
+												</c:when>					
+												<c:otherwise>
+														<button type="button" class="btn btn-success valueButton" disabled
+														value="${staff.MANV}+${staff.HO}+${staff.TEN}+${staff.LUONGTICHLUY}"><i class="fa fa-print" aria-hidden="true"></i></button>	
+												</c:otherwise>
+											</c:choose>
 											<!-- Button trigger modal -->
-											<form action = "salary.htm">
-											<button type="submit" class="btn btn-success valueButton"
-												value="${staff.MANV}+${staff.HO}+${staff.TEN}+${staff.LUONGTICHLUY}"><i class="fa fa-print" aria-hidden="true"></i></button>
-											</form>
+											
 										</td>
 										<td>
 											<form action = "historySalary.htm">

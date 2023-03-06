@@ -47,6 +47,7 @@ public class HomeController{
 	long millis = System.currentTimeMillis();
 	Date date_sql = new Date(millis);
 	
+	
 	@RequestMapping("/home")
 	public String showShift(ModelMap model) {
 		LocalTime time = LocalTime.now();
@@ -79,9 +80,10 @@ public class HomeController{
 		long now = System.currentTimeMillis();
 		Time time = new Time(now);
 		float salary;
-		String currentStaff = request.getParameter("updateSalary");
-		salary = Float.parseFloat(request.getParameter("salaryOfShift"));
-		updateSalaryToDB(currentStaff, salary, time);
+		String currentStaffSalary = request.getParameter("updateSalaryInfor");
+		String[] infor = currentStaffSalary.split(",");
+		salary = Float.parseFloat(infor[1]);
+		updateSalaryToDB(infor[0], salary, time);
 		return showDetailShift(model);
 	}
 
@@ -130,6 +132,22 @@ public class HomeController{
 			check.updateSOLANVIPHAM(times);
 			session.update(check);
 		}
+	}
+	
+	@RequestMapping(value = "/Edit")
+	public String editSalaryOfThisShift(HttpServletRequest request, ModelMap map) {
+		Session session = factory.getCurrentSession();
+		String[] rawData = request.getParameter("yesEdit").split(",");
+		String newSalaryStr = request.getParameter("editInput");
+		ShiftDetailEntity shiftDetailEntity = (ShiftDetailEntity) session.get(ShiftDetailEntity.class,rawData[0].strip());
+		float oldSalary = Float.parseFloat(rawData[1].strip());
+		float newSalary = Float.parseFloat(newSalaryStr);
+		StaffEntity staffEntity = shiftDetailEntity.getStaff();
+		staffEntity.editSalary(oldSalary,newSalary);
+		shiftDetailEntity.setLUONGCA(newSalary);
+		session.update(shiftDetailEntity);
+		session.update(staffEntity);
+		return displayMainViewFunction(map,shiftDetailEntity);
 	}
 
 	public String getIdMistake (String mota) {
@@ -203,7 +221,29 @@ public class HomeController{
 		else {
 			String idcamo = listOpenId.get(0).getID_CA_MO();
 			List<ShiftDetailEntity> list = getAShiftDetail(idcamo);
-			System.out.println(list.get(0).getTHOIGIANCHAMCONG());
+			List<MistakeEntity> listMistake = getMistake();
+			model.addAttribute("shiftNow", list);
+			model.addAttribute("idca", idShiftShow);
+			model.addAttribute("getDate", date_sql);
+			model.addAttribute("faults", listMistake);
+			return returnToSpecificAccount();
+		}
+	}
+	
+
+	private String displayMainViewFunction(ModelMap model,ShiftDetailEntity shiftDetail) {
+		List<OpenShiftEntity> listOpenId = getIdAOpenShift(idShiftShow, date_sql);
+		if(listOpenId.isEmpty()) {
+			return "/Admin/Home";
+		}
+		else {
+			String idcamo = listOpenId.get(0).getID_CA_MO();
+			List<ShiftDetailEntity> list = getAShiftDetail(idcamo);
+			for(var sh:list) {
+				if(sh.getID_CTCA().strip().equals(shiftDetail.getID_CTCA().strip())) {
+					sh.setLUONGCA(shiftDetail.getLUONGCA());
+				}
+			}
 			List<MistakeEntity> listMistake = getMistake();
 			model.addAttribute("shiftNow", list);
 			model.addAttribute("idca", idShiftShow);

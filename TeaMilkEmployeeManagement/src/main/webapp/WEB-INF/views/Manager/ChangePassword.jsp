@@ -130,7 +130,7 @@
 							<div class="form-group">
 								<label for="inputPasswordOld">Current Password</label> <input
 									type="password" class="form-control" id="inputPasswordOld"
-									required="" name="oldPassword">
+									required="" name="oldPassword"  pattern = "[a-zA-Z0-9]+">
 								<div class = "InputInvalid">${oldPasswordMessage}</div>
 							</div>
 							<div class="form-group">
@@ -138,7 +138,7 @@
 								<div class="col">
 									<div class="input-group" id="show_hide_password">
 										<input class="form-control" type="password" maxlength="20"
-											name="newPassword" required="">
+											name="newPassword" required=""  pattern = "[a-zA-Z0-9]+">
 										<div class = "InputInvalid">${newPasswordMessage}</div>
 										<div class="input-group-addon eye-Icon">
 											<a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
@@ -153,7 +153,7 @@
 							<div class="form-group">
 								<label for="inputPasswordNewVerify">Verify</label> <input
 									type="password" class="form-control" maxlength="20"
-									id="inputPasswordNewVerify" required="" name="confirmPassword">
+									id="inputPasswordNewVerify" required="" name="confirmPassword"  pattern = "[a-zA-Z0-9]+">
 								<span class="form-text small text-muted"> To confirm,
 									type the new password again. </span>
 								<div class = "InputInvalid">${confirmPasswordMessage}</div>

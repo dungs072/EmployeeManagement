@@ -144,7 +144,7 @@ input {
 
 <script type="text/javascript">
 	$(window).on('load', function() {
-
+		
 		var value = localStorage.getItem("isClickedAdd");
 		if (value == "true") {
 			$('.saveChangesAddStaff').val(localStorage.getItem("addValue"));
@@ -701,8 +701,7 @@ input {
 						</button>
 					</div>
 					<div class="modal-body">
-						<form action="ManagerRegistration/SettingStaffInShift.htm"
-							method="get">
+						<form>
 							<div class="mb-3">
 								<label for="nameDetail">Name: </label>
 								<h6 id="nameDetail">${shiftDetailEntity.staff.HO} ${shiftDetailEntity.staff.TEN}</h6>
@@ -722,7 +721,7 @@ input {
 											</tr>
 										</thead>
 										<tbody>
-											<c:forEach var="mistake" varStatus="i" items="${shiftDetailEntity.mistakeHistoryEntities}">
+											<c:forEach var="mistake" varStatus="i" items="${mistakeHistories}">
 												<tr>
 													<td>${i.count}</td>
 													<td>${mistake.mistakeEntity.MOTA}</td>

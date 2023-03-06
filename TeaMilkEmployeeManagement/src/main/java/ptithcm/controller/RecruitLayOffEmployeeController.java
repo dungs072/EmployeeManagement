@@ -317,11 +317,18 @@ public class RecruitLayOffEmployeeController {
 		Query query1 = session.createQuery(hql1);
 		query1.setString("id", id);
 		long number1 = (long) query1.uniqueResult();
+		if(number1>0) {return false;}
 		String hql2 = "SELECT COUNT(*) FROM ShiftDetailEntity WHERE staff.MANV = :id";
 		Query query2 = session.createQuery(hql2);
 		query2.setString("id", id);
 		long number2 = (long) query2.uniqueResult();
-		return number1 == 0 && number2 == 0;
+		if(number2>0) {return false;}
+		String hql3 = "SELECT COUNT(*) FROM OpenShiftEntity WHERE staff.MANV = :id";
+		Query query3 = session.createQuery(hql3);
+		query3.setString("id", id);
+		long number3 = (long) query3.uniqueResult();
+		if(number3>0) {return false;}
+		return false;
 
 	}
 

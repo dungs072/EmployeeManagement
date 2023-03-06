@@ -49,7 +49,7 @@ public class SalaryHistoryController {
 	}
 	
 	private String displayPriorityView() {
-		String priorityId = employerPassdataBetweenControllerHandler.getAuthorityId();
+		String priorityId = employerPassdataBetweenControllerHandler.getAuthorityId().strip();
 		if(priorityId.equals("QL")) {
 			return "Manager/SalaryHistory";
 		}
