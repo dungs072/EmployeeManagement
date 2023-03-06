@@ -49,11 +49,6 @@ public class JobAndFaultController {
 		castJobs(jobs);
 		castFaults(mistakes);
 
-		toggleJobDeleteButton(jobs);
-		toggleFaultDeleteButton(mistakes);
-
-		model.addAttribute("faults", mistakes);
-		model.addAttribute("jobs", jobs);
 
 		shifts = getShifts();
 		toggleJobDeleteButton(jobs);
@@ -171,11 +166,14 @@ public class JobAndFaultController {
 	private void toggleJobDeleteButton(List<JobPositionEntity> jobs) {
 		Session session = factory.getCurrentSession();
 		for (var job : jobs) {
+			job.setCanDelete(canDeleteJob(job.getMACV(), session));
 			if (job.getTENVITRI().strip().equals("Manager")) {
 				job.setCanUpdate(false);
+				job.setCanDelete(false);
 			}
-			job.setCanDelete(canDeleteJob(job.getMACV(), session));
+			
 		}
+		
 	}
 
 	private void toggleFaultDeleteButton(List<MistakeEntity> faults) {
@@ -261,5 +259,6 @@ public class JobAndFaultController {
 	private void castJobs(List<? extends Primarykeyable> keys) {
 		jobKeyHandler.initialKeyHandler((List<Primarykeyable>) keys);
 	}
+	
 	
 }
