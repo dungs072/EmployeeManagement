@@ -27,6 +27,7 @@ import ptithcm.bean.ListShiftDataUI;
 import ptithcm.bean.PassDataBetweenControllerHandler;
 import ptithcm.bean.PrimaryKeyWithMoreDataHandler;
 import ptithcm.bean.ShiftDataUI;
+import ptithcm.entity.MistakeHistoryEntity;
 import ptithcm.entity.OpenShiftEntity;
 import ptithcm.entity.ShiftDetailEntity;
 import ptithcm.entity.ShiftEntity;
@@ -264,8 +265,16 @@ public class ManagerRegistrationController {
 		Session session = factory.getCurrentSession();
 		String shiftDetailId = request.getParameter("shiftDetailButton");
 		ShiftDetailEntity shiftDetailEntity = (ShiftDetailEntity) session.get(ShiftDetailEntity.class, shiftDetailId);
+		List<MistakeHistoryEntity> mistakeHistories = getMistakeHistories(shiftDetailId.strip(), session);
+		map.addAttribute("mistakeHistories",mistakeHistories);
 		map.addAttribute("shiftDetailEntity",shiftDetailEntity);
 		return displayMainViewDontDeleteOldUI(request, map);
+	}
+	private List<MistakeHistoryEntity> getMistakeHistories(String shiftDetailId,Session session){
+		String hql = "FROM MistakeHistoryEntity WHERE shiftDetailEntity.ID_CTCA = :shiftDetailId";
+		Query query = session.createQuery(hql);
+		query.setString("shiftDetailId", shiftDetailId);
+		return query.list();
 	}
 	private void updateConfirmState(boolean state) {
 		Session session = factory.getCurrentSession();
@@ -445,7 +454,7 @@ public class ManagerRegistrationController {
 
 	private int sqlDateMinsDays(Date date1, Date date2) {
 		long time_difference = date2.getTime() - date1.getTime();
-		return (int) Math.round(((float)time_difference)/(1000.0*60.0*60.0*24.0)%365.0);
+		return (int) Math.floor(((float)time_difference)/(1000.0*60.0*60.0*24.0)%365.0);
 	}
 
 	private String castToSQLDateFormat(String dateStr) {

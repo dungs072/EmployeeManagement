@@ -87,6 +87,11 @@ $(document).on('click', ".viewButton", function(e) {
 	localStorage.setItem("viewValue", $(this).val());
 	localStorage.setItem("isClickedView", "true");
 })
+
+$(document).on('click',".deleteMistake",function(e){
+	$('#warningDeleteMistake').modal('show');
+	$('.yesDeleteMistake').val($(this).val());
+})
 </script>
 </head>
 <body>
@@ -239,7 +244,7 @@ $(document).on('click', ".viewButton", function(e) {
 	<!--ShowM-->
 	<div class="modal fade" id="showStaffMistake" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalLongTitle">Mistake</h5>
@@ -258,18 +263,25 @@ $(document).on('click', ".viewButton", function(e) {
 					<table class="employeeTable">
 						<thead>
 							<tr>
+								<th><span>Mistake</span></th>
 								<th><span>Violation Date</span></th>
 								<th><span>Shift</span></th>
 								<th><span>Times</span></th>
+								<th><span>Action</span></th>
 							</tr>
 						</thead>
 						<tbody>
 							<c:forEach var="mistakeHistory" varStatus="i" items="${mistakeHistoryList}">
 								<tr>
-									
+									<td>${mistakeHistory.mistakeEntity.MOTA}</td>
 									<td>${mistakeHistory.shiftDetailEntity.openshift.NGAYLAMVIEC}</td>
-									<td>${mistakeHistory.shiftDetailEntity.openShift.shift.IDCA}</td>
+									<td>${mistakeHistory.shiftDetailEntity.openshift.shift.IDCA}</td>
 									<td>${mistakeHistory.SOLANVIPHAM}</td>
+									<td>
+										<c:if test="${mistakeHistory.canDelete==true}">
+											<button type = "button" class = "btn btn-danger deleteMistake" value = "${mistakeHistory.ID_LSLOI}"><i class="fa fa-trash" aria-hidden="true" style = "width:50px;"></i></button>
+										</c:if>
+									</td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -280,5 +292,27 @@ $(document).on('click', ".viewButton", function(e) {
 			</div>
 		</div>
 	</div>
+	
+	<!-- Modal -->
+<div class="modal fade" id="warningDeleteMistake" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Warning</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Do you want to delete the mistake of this employee?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <form action = "DisplayStaffMistake/DeleteMistake.htm">
+				 <button type="submit" class="btn btn-primary yesDeleteMistake" name = "yesDeleteMistake">Yes</button>				
+		</form>
+       
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

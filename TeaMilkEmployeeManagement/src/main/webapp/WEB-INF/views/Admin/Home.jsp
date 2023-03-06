@@ -8,7 +8,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <%@include file="/WEB-INF/views/include/AdminHeader.jsp"%>
 
-<title>Trang chủ</title>
+<title>Main page</title>
 <style>
 .info-shift {
 	height: 150px;
@@ -40,6 +40,20 @@
 	$(document).on('click', ".setFault", function(e) {
 		localStorage.setItem("isClick", "true");
 		localStorage.setItem("valueOfButton",$(this).val());
+	})
+	$(document).on('click',".updateSalary",function(e){
+		var value = $('.salaryAmmount').val();
+		if($.isNumeric(value)){
+			$(document).find('.warningUpdateSalaryButton').val($(this).val()+","+value);
+			$('#updateSalaryWarning').modal('show');
+			
+		}
+	})
+	$(document).on('click',".editButton",function(e){
+		$('#editModal').modal('show');
+		var array = $(this).val().split(',');
+		$(document).find('.editInput').val(array[1]);
+		$(document).find('.yesEdit').val($(this).val());
 	})
 </script>
 </head>
@@ -166,8 +180,8 @@
 				<div class="container-fluid">
 					<div class="shift">
 						<div class="row">
-							<div class="col-md-3">
-								<h2>Shift on day</h2>
+							<div class="col-md-2">
+								<h4>Shift on day</h4>
 								<div class="row">
 									<div class="col-md-12 info-shift">
 										<h3>Shift 1</h3>
@@ -199,7 +213,7 @@
 									</div>
 								</div>
 							</div>
-							<div class=" col-xs-9 col-sm-9 col-md-9 col-lg-9 shift-now">
+							<div class=" col-xs-10 col-sm-10 col-md-10 col-lg-10 shift-now">
 								<div class="row">
 									<div class=" col-md-6">
 										<h3>Shift number: ${idca}</h3>
@@ -214,7 +228,7 @@
 										<tr>
 											<th>Employee Code</th>
 											<th>Fullname</th>
-											<th>Additional jobs</th>
+											<th>Job Position</th>
 											<th>Salary</th>
 											<th>Fault</th>
 											<th>CheckIn</th>
@@ -225,22 +239,23 @@
 											<tr>
 												<td>${s.staff.MANV}</td>
 												<td>${s.staff.HO} ${s.staff.TEN}</td>
-												<td>${s.CONGVIEC }</td>
+												<td>${s.staff.jobPosition.TENVITRI }</td>
 												<c:choose>
 													<c:when test="${empty s.THOIGIANCHAMCONG}">
-														<td><form action="updateSalary.htm" method="get"
-																class="form-inline">
+														<td>
 																<input name="salaryOfShift" type="text"
-																	placeholder="Add salary" value="" required>
-																<button name="updateSalary" type="submit"
-																	class="btn btn-success" value="${s.staff.MANV}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+																	placeholder="Add salary" class = "salaryAmmount" value="" required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+																
+																<button name="updateSalary" type="button"
+																	class="btn btn-success updateSalary" value="${s.staff.MANV.strip()}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
 																</button>
-															</form></td>
+														</td>
 													</c:when>
 													<c:otherwise>
 														<td><form class="form-inline">
 																<div>${s.LUONGCA}</div>
 																<div>${s.THOIGIANCHAMCONG}</div>
+																<button type = button class = "btn btn-success editButton" value = "${s.ID_CTCA},${s.LUONGCA}"><i class="fa fa-pencil" aria-hidden="true"></i></button>
 															</form></td>
 													</c:otherwise>
 												</c:choose>
@@ -263,6 +278,7 @@
 													<c:when test="${not empty s.THOIGIANDILAM}">
 														<td>
 															<div>${s.THOIGIANDILAM}</div>
+															<!-- code there -->
 														</td>
 													</c:when>
 												</c:choose>
@@ -286,7 +302,7 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 	<div class="modal-header">
-	<h2 class="modal-title" id="exampleModalLabel">Ghi nhận lỗi</h2>
+	<h2 class="modal-title" id="exampleModalLabel">Recording Mistake</h2>
 <button type="button" class="close"	data-bs-dismiss="modal" aria-label="Close">
 	<span aria-hidden="true">&times;</span>
 </button>
@@ -307,6 +323,9 @@
 				</c:forEach>
 	</select>
 	</div>
+
+
+
 <div class="form-group">
 	<label for="times">Times</label>
 	<br>
@@ -324,5 +343,55 @@
 </div>
 	</div>
 </form>
+<!-- warning update salary  -->
+<div class="modal fade" id="updateSalaryWarning" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Do you want to add the ammount of salary to this employee ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+		<form action = "updateSalary.htm" method = "get" class="form-inline">
+			 <button type="submit" class="btn btn-primary warningUpdateSalaryButton" name = "updateSalaryInfor">Update</button>
+		</form>
+       
+      </div>
+    </div>
+  </div>
+</div>
+		<!-- open setting max staff -->
+
+		<div class="modal" id="editModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title text-warning">Edit</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<form action="Edit.htm" method="get">
+						<div class="modal-body">
+							<label for="exampleInputEmail1" class="form-label">Salary amount: </label>
+							<div class="number">
+								<input type="text"
+									value="1" class="editInput" name=editInput required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" />
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">No</button>
+							<button type="submit" class="btn btn-primary yesEdit"
+								name="yesEdit" data-bs-dismiss="modal">Yes</button>
+						</div>
+					</form>
+
+				</div>
+			</div>
+		</div>
 </body>
 </html>

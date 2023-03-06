@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "LICHSULOI")
@@ -25,6 +26,9 @@ public class MistakeHistoryEntity {
 
 	@Column(name = "SOLANVIPHAM")
 	private int SOLANVIPHAM;
+	
+	@Transient
+	private boolean canDelete = false;
 
 	public MistakeHistoryEntity() {
 	}
@@ -69,5 +73,17 @@ public class MistakeHistoryEntity {
 	public void updateSOLANVIPHAM(int times) {
 		SOLANVIPHAM = SOLANVIPHAM + times;
 	}
+	public void deleteLink() {
+		shiftDetailEntity = null;
+		mistakeEntity = null;
+	}
 
+	public boolean isCanDelete() {
+		return canDelete;
+	}
+
+	public void setCanDelete(boolean canDelete) {
+		this.canDelete = canDelete;
+	}
+	
 }
