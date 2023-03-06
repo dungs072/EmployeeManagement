@@ -303,7 +303,8 @@ public class RecruitLayOffEmployeeController {
 		
 		String hql = "FROM StaffEntity WHERE MANV !='ADMIN' AND"
 				+ " MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = true) AND"
-				+ " (HO+TEN LIKE CONCAT('%',:search,'%')) OR "
+				+ " (HO LIKE CONCAT('%',:search,'%')) OR "
+				+ " (TEN LIKE CONCAT('%',:search,'%')) OR "
 				+ " (jobPosition.TENVITRI LIKE CONCAT ('%',:search,'%'))"
 				+ " ORDER BY TEN";
 		Query query = session.createQuery(hql);

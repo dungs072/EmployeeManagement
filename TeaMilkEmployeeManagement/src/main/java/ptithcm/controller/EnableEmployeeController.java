@@ -79,9 +79,12 @@ public class EnableEmployeeController {
 	private List<StaffEntity> searchStaffList(Session session,String searchText) {
 		if(searchText.isEmpty()) {return getDisabledStaff();}
 		
-		String hql = "FROM StaffEntity WHERE MANV != 'ADMIN' "
-				+ " AND MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = false) AND "
-				+ "HO+TEN LIKE CONCAT('%',:search,'%') ORDER BY TEN";
+		String hql = "FROM StaffEntity WHERE MANV !='ADMIN' AND"
+				+ " MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = true) AND"
+				+ " (HO LIKE CONCAT('%',:search,'%')) OR "
+				+ " (TEN LIKE CONCAT('%',:search,'%')) OR "
+				+ " (jobPosition.TENVITRI LIKE CONCAT ('%',:search,'%'))"
+				+ " ORDER BY TEN";
 		Query query = session.createQuery(hql);
 		query.setParameter("search",searchText);
 		return query.list();
