@@ -12,7 +12,7 @@
 /* Set a fixed scrollable wrapper */
 .tableWrap {
 	height: 450px;
-	border: 2px solid black;
+	border-radius: 10px;
 	overflow: auto;
 }
 
@@ -61,7 +61,7 @@ tbody tr {
 
 thead {
 	font-weight: 500;
-	color: rgba(0, 0, 0, 0.85);
+	color: rgba(255, 255, 255, 0.85);
 }
 
 tbody tr:hover {
@@ -247,7 +247,7 @@ tbody tr:hover {
 									<th><span>Employee Id</span></th>
 									<th><span>Full Name</span></th>
 									<th><span>Job position</span></th>
-									<th><span>Salary</span></th>
+									<th><span>Ac Salary</span></th>
 									<th><span>Print Salary Bill</span></th>
 									<th><span>History</span></th>
 								</tr>
@@ -261,18 +261,10 @@ tbody tr:hover {
 										<td>${staff.jobPosition.TENVITRI}</td>
 										<td><span>${staff.LUONGTICHLUY}</span></td>
 										<td>
-											<c:choose>
-												<c:when test = "${staff.LUONGTICHLUY>0}">
-													<form action = "salary.htm">
+											<form action = "salary.htm">
 														<button type="submit" class="btn btn-success valueButton"
 														value="${staff.MANV}+${staff.HO}+${staff.TEN}+${staff.LUONGTICHLUY}"><i class="fa fa-print" aria-hidden="true"></i></button>
-													</form>	
-												</c:when>					
-												<c:otherwise>
-														<button type="button" class="btn btn-success valueButton" disabled
-														value="${staff.MANV}+${staff.HO}+${staff.TEN}+${staff.LUONGTICHLUY}"><i class="fa fa-print" aria-hidden="true"></i></button>	
-												</c:otherwise>
-											</c:choose>
+											</form>	
 											<!-- Button trigger modal -->
 											
 										</td>
@@ -324,7 +316,9 @@ tbody tr:hover {
 						<br>
 						 <input class="salary"
 							name="salary" type="text" class="form-check-input" id="salary"
-							value="" required>
+							value="" required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
+							pattern="^(0*[1-9][0-9]*(\.[0-9]+)?|0+\.[0-9]*[1-9][0-9]*)$"
+							maxlength = "8">
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -357,7 +351,6 @@ tbody tr:hover {
 								<tr>
 									<th><span>STT</span></th>
 									<th><span>Employee Id</span></th>
-									<th><span>Salary</span></th>
 									<th><span>Date</span></th>
 									<th><span>Received</span></th>
 								</tr>
@@ -367,7 +360,6 @@ tbody tr:hover {
 									<tr>
 										<td>${i.count}</td>
 										<td>${idStaffHS}</td>
-										<td>${hs.LUONGNHAN}</td>
 										<td>${hs.THOIGIANNHAN}</td>
 										<td>${hs.LUONGNHAN}</td>
 									</tr>

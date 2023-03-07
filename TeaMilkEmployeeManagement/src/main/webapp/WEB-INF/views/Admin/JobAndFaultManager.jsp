@@ -14,7 +14,7 @@
 .tableWrap {
 	margin-top: 40px;
 	height: 450px;
-	border: 2px solid black;
+	border-radius: 10px;
 	overflow: auto;
 }
 .tableShift{

@@ -1,6 +1,7 @@
 package ptithcm.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Controller;
@@ -14,7 +15,9 @@ public class LogoutController {
 
 	@RequestMapping
 	public String logOutAccount(HttpServletRequest request, ModelMap map) {
-		
+		HttpSession session = request.getSession();
+		session.removeAttribute("user");
+		session.invalidate();
 		return "redirect:/Login-Form.htm";
 	}
 }

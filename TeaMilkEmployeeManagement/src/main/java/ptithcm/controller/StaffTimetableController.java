@@ -97,6 +97,9 @@ public class StaffTimetableController {
 	@SuppressWarnings("unchecked")
 	private void putDataToView(String weekDateFromTo) {
 		String ownerId = staffPassDataBetweenControllerHandler.getData();
+		if(weekDateFromTo==null) {
+			weekDateFromTo = getFirstDateAndLastDayOfCurrentWeek();
+		}
 		String[] dates = weekDateFromTo.split(" - ");
 		Date baseDate = Date.valueOf(castToJavaSQLDateFormat(dates[0]));
 		dates[0] = castToSQLDateFormat(dates[0]);

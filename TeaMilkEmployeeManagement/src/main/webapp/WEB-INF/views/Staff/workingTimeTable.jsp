@@ -384,6 +384,10 @@ tbody tr:hover {
 								<h6 id="jobPositionDetail">${shiftDetailEntity.staff.jobPosition.TENVITRI}</h6>
 								<label for="salaryDetail">Salary: </label>
 								<h6 id="salaryDetail">${shiftDetailEntity.LUONGCA}</h6>
+								<label for="salaryDetail">Check in time: </label>
+								<h6 id="salaryDetail">${shiftDetailEntity.THOIGIANDILAM}</h6>
+								<label for="salaryDetail">Check out time: </label>
+								<h6 id="salaryDetail">${shiftDetailEntity.THOIGIANCHAMCONG}</h6>
 								<label for="exampleInputPassword1" class="form-label">To
 									do list</label> <input type="text" class="form-control"
 									id="settingToDoListModal" name="toDoListInput" readonly>

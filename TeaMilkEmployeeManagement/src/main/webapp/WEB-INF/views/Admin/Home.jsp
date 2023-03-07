@@ -220,7 +220,7 @@
 
 									</div>
 									<div class="col-md-6 text-left">
-										<h3>Date: ${getDate}</h3>
+										<h3>Date: <fmt:formatDate value="${getDate}" pattern="dd/MM/yyyy" /> </h3>
 									</div>
 								</div>
 								<table class="table table-striped table-hover">
@@ -241,14 +241,19 @@
 												<td>${s.staff.HO} ${s.staff.TEN}</td>
 												<td>${s.staff.jobPosition.TENVITRI }</td>
 												<c:choose>
-													<c:when test="${empty s.THOIGIANCHAMCONG}">
+													<c:when test="${empty s.THOIGIANCHAMCONG && not empty s.THOIGIANDILAM}">
 														<td>
 																<input name="salaryOfShift" type="text"
-																	placeholder="Add salary" class = "salaryAmmount" value="" required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+																	placeholder="Add salary" class = "salaryAmmount" value="" required pattern="^(0*[1-9][0-9]*(\.[0-9]+)?|0+\.[0-9]*[1-9][0-9]*)$" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
 																
 																<button name="updateSalary" type="button"
 																	class="btn btn-success updateSalary" value="${s.staff.MANV.strip()}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
 																</button>
+														</td>
+													</c:when>
+													<c:when test = "${empty s.THOIGIANDILAM}">
+														<td>
+																<div>${s.LUONGCA}</div>
 														</td>
 													</c:when>
 													<c:otherwise>
@@ -379,7 +384,7 @@
 							<label for="exampleInputEmail1" class="form-label">Salary amount: </label>
 							<div class="number">
 								<input type="text"
-									value="1" class="editInput" name=editInput required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" />
+									value="1" class="editInput" name=editInput required pattern="^(0*[1-9][0-9]*(\.[0-9]+)?|0+\.[0-9]*[1-9][0-9]*)$" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" />
 							</div>
 						</div>
 						<div class="modal-footer">

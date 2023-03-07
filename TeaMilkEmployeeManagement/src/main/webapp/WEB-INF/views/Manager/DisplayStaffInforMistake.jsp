@@ -256,7 +256,9 @@ $(document).on('click',".deleteMistake",function(e){
 							<c:forEach var="mistakeHistory" varStatus="i" items="${mistakeHistoryList}">
 								<tr>
 									<td>${mistakeHistory.mistakeEntity.MOTA}</td>
-									<td>${mistakeHistory.shiftDetailEntity.openshift.NGAYLAMVIEC}</td>
+									<td>
+										<fmt:formatDate value="${mistakeHistory.shiftDetailEntity.openshift.NGAYLAMVIEC}" pattern="dd/MM/yyyy" />
+									</td>
 									<td>${mistakeHistory.shiftDetailEntity.openshift.shift.IDCA}</td>
 									<td>${mistakeHistory.SOLANVIPHAM}</td>
 									<td>
