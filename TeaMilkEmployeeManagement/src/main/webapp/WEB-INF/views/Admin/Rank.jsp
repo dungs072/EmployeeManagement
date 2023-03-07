@@ -1,10 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@include file="/WEB-INF/views/include/AdminHeader.jsp"%>
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <head>
-<meta charset="UTF-8">
+<%@include file="/WEB-INF/views/include/AdminHeader.jsp"%>
 <title>Rank Score</title>
     <style>
         /* Set a fixed scrollable wrapper */
@@ -77,12 +76,39 @@
         tbody tr:hover {
             background: #e6f7ff;
         }
+        .showShift{
+        padding-top: 80px;
+        }
+        .ui-datepicker-calendar {
+        display: none;
+    	}
     </style>
+    <script type="text/javascript">
+        $(function() {
+            $(".date-picker").datepicker( {
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'MM yy',
+            onClose: function(dateText, inst) { 
+            	var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $(this).datepicker('setDate', new Date(year, month, 1));
+            }
+            });
+        });
+    </script>
 </head>
 <body>
-	<div class= "row" > RANK SCORE</div>
+	
 	    <div class="container">
-	    
+	    <div class = "row showShift"></div>
+	    <div class= "row" ><h1> RANK SCORE</h1></div>
+	    <form action = "showInMonth.htm">
+		    <label for="startDate">Date :</label>
+	   		<input name = "startDate" id="startDate" class="date-picker"/>
+	   		<button class="btn btn-primary" type ="submit">Choose</button>
+   		</form>
         <div class="row justify-content-md-center">
             <div class="col-10">
                 <div class="tableWrap">
