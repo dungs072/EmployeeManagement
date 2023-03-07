@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import ptithcm.entity.AccountEntity;
 import ptithcm.entity.MistakeEntity;
 import ptithcm.entity.OpenShiftEntity;
 import ptithcm.entity.SalaryBillEntity;
@@ -68,7 +69,10 @@ public class SalaryController {
 		 long milies = System.currentTimeMillis();
 		 Date date = new Date(milies);
 		 StaffEntity staff = (StaffEntity) session.get(StaffEntity.class, maNV);
-		 staff.paySalary(salary);
+		 AccountEntity account = (AccountEntity) session.get(AccountEntity.class, maNV);
+		 if(!account.getPriorityEntity().getMAQUYEN().strip().equals("QL")) {
+			 staff.paySalary(salary);
+		 }
 		 session.saveOrUpdate(staff);
 		 SalaryBillEntity bill = new SalaryBillEntity();
 		 bill.setTHOIGIANNHAN(date);

@@ -13,7 +13,7 @@
 <style>
 .tableWrap {
 	height: 390px;
-	border: 2px solid black;
+	border-radius: 10px;
 	overflow: auto;
 }
 

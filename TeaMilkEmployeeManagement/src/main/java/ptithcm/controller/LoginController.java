@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import javax.xml.bind.DatatypeConverter;
 
@@ -42,6 +43,7 @@ public class LoginController {
 	{	
 		return "Login";
 	}
+	
 
 	@RequestMapping(value = "/CheckLogin", method = RequestMethod.POST)
 	public String tryLogin(HttpServletRequest request, ModelMap model) {
@@ -70,20 +72,24 @@ public class LoginController {
 			model.addAttribute("PasswordMessage","wrong username or password!!!");
 			return "Login";
 		}
-		
+		HttpSession session = request.getSession();
 		if(priority.strip().equals("AD"))
 		{
+			
 			staffPassDataBetweenControllerHandler.setData(userName);
+			session.setAttribute("user", "AD");
 			return "redirect:/home.htm";
 		}
 		else if(priority.strip().equals("QL"))
 		{
 			staffPassDataBetweenControllerHandler.setData(userName);
+			session.setAttribute("user", "QL");
 			return "redirect:/home.htm";
 		}
 		else if(priority.strip().equals("NV"))
 		{
 			staffPassDataBetweenControllerHandler.setData(userName);
+			session.setAttribute("user", "NV");
 			return "redirect:/StaffTimetable.htm";
 		}
 		else
