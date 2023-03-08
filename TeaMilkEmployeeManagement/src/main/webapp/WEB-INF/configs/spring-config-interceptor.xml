@@ -25,19 +25,32 @@
 			<mvc:mapping path = "/homeAnother.htm"/>
 			<mvc:mapping path = "/checkin.htm"/>
 			<mvc:mapping path = "/ChangePassword/**"/>
+			<mvc:mapping path = "/ChangePassword.htm"/>
 			<mvc:mapping path = "/DisplayStaffMistake/**"/>
+			<mvc:mapping path = "/DisplayStaffMistake.htm"/>
 			<mvc:mapping path = "/EnabledStaff/**"/>
+			<mvc:mapping path = "/EnabledStaff.htm"/>
 			<mvc:mapping path = "/JobAndFault/**"/>
+			<mvc:mapping path = "/JobAndFault.htm"/>
 			<mvc:mapping path = "/ManagerRegistration/**"/>
+			<mvc:mapping path = "/ManagerRegistration.htm"/>
 			<mvc:mapping path = "/MistakeHistory/**"/>
+			<mvc:mapping path = "/MistakeHistory.htm"/>
 			<mvc:mapping path = "/Recruit/**"/>
+			<mvc:mapping path = "/Recruit.htm"/>
 			<mvc:mapping path = "/salary.htm"/>
 			<mvc:mapping path = "/historySalary.htm"/>
 			<mvc:mapping path = "/paySalary.htm"/>
 			<mvc:mapping path = "/SalaryHistory/**"/>
+			<mvc:mapping path = "/SalaryHistory.htm"/>
 			<mvc:mapping path = "/SelfInfor/**"/>
+			<mvc:mapping path = "/SelfInfor.htm"/>
 			<mvc:mapping path = "/StaffRegisterShift/**"/>
+			<mvc:mapping path = "/StaffRegisterShift.htm"/>
 			<mvc:mapping path = "/StaffTimetable/**"/>
+			<mvc:mapping path = "/StaffTimetable.htm"/>
+			<mvc:mapping path = "/rank.htm"/>
+			<mvc:mapping path = "/showInMonth.htm"/>
 			<bean class="ptithcm.interceptor.LoggerInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>

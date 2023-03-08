@@ -62,7 +62,15 @@
 							</h5>
 						</a>
 					</div>
-
+					<div class="nav-option option4">
+						<a style = "text-decoration:none" href = "rank.htm">
+							<h5>
+							<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" class="bi bi-bar-chart-line nav-img" viewBox="0 0 16 16">
+  							<path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1V2zm1 12h2V2h-2v12zm-3 0V7H7v7h2zm-5 0v-3H2v3h2z"/>
+							</svg>Rank
+							</h5>
+						</a>
+					</div>
 					<div class="nav-option option5">
 						<a style = "text-decoration:none" href = "ChangePassword.htm">
 							<h5>
@@ -107,16 +115,16 @@
 					<p class="description">Add information about yourself.</p>
 					<!-- Input fields -->
 					<div class="form-group">
-						<label for="firstname">First name:</label> <form:input path = "HO" type="text"
+						<label for="firstname">First name:</label> <input type="text"
 							class="form-control username" id="firstname"
-							placeholder="First name..." name="firstname"
-							maxlength="30" />
+							placeholder="First name..." name="HO" required value = "${staff.HO}"
+							maxlength="30" pattern="^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\W|]+" />
 					</div>
 					<div class="form-group">
-						<label for="lastname">Last name:</label> <form:input path = "TEN" type="text"
+						<label for="lastname">Last name:</label> <input type="text"
 							class="form-control username" id="lastname"
-							placeholder="Last name..." name="lastname"
-							maxlength="30" />
+							placeholder="Last name..." name="TEN" required value = "${staff.TEN}"
+							maxlength="30" pattern="^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\W|]+"/>
 					</div>
 					<div class="form-group">
 						<label for="birthday">Birthday:</label> <input type="date"
@@ -155,29 +163,31 @@
 					
 
 					<div class="form-group">
-						<label for="idcard">Identification card number:</label> <form:input path = "CCCD"
-							type="text" class="form-control username" id="idcard"
-							name="idcard"
+						<label for="idcard">Identification card number:</label> <input
+							type="text" class="form-control username" id="CCCD"
+							name="CCCD"
 							oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
-							maxlength="12" />
+							maxlength="12" required value = "${staff.CCCD}" />
+						<p class = "InputInvalid">${idCardMessage}</p>
 					</div>
 
 					<div class="form-group">
-						<label for="phoneNumber">Phone number:</label> <form:input type="text" path = "SDT"
-							class="form-control username" id="phoneNumber" name="phoneNumber"
+						<label for="phoneNumber">Phone number:</label> <input type="text"
+							class="form-control username" id="phoneNumber" name="SDT"
 							oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
-							maxlength="10" />
+							maxlength="10" required value = "${staff.SDT}"/>
+						<p class = "InputInvalid">${phoneMessage}</p>
 					</div>
 					<div class="form-group">
-						<label for="email">Email:</label> <form:input type="email" path = "EMAIL"
+						<label for="email">Email:</label> <input type="email"
 							class="form-control username" id="email"
-							placeholder="name123@gmail.com" name="email"
+							placeholder="name123@gmail.com" name="EMAIL" value = "${staff.EMAIL}"
 							maxlength="50" />
 					</div>
 
 					<div class="form-group">
-						<label for="address">Address:</label> <form:input type="text" path = "DIACHI"
-							class="form-control username" id="adderess" name="address"
+						<label for="address">Address:</label> <input type="text"
+							class="form-control username" id="adderess" name="DIACHI" value = "${staff.DIACHI}"
 							value="" maxlength="50" />
 					</div>
 					

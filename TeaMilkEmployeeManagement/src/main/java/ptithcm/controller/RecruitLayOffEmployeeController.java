@@ -71,6 +71,13 @@ public class RecruitLayOffEmployeeController {
 	@RequestMapping(params = "saveAddEmployee")
 	public String addEmloyee(HttpServletRequest request, ModelMap model, StaffEntity staff) {
 		handleCheckInput(model);
+		if(staff.getHO().isBlank()||staff.getTEN().isBlank()) {
+			staffList = getStaffs();
+			List<JobPositionEntity> jobs = getJobs();
+			model.addAttribute("staffs",staffList);
+			model.addAttribute("jobs",jobs);
+			return "/Admin/RecruitEmployee";
+		}
 		if(hasIdentificationCardNumberInDB(staff.getCCCD())) {
 			model.addAttribute("isWrongIDCard","true");
 			model.addAttribute("idCardMessage","This id number existed");
@@ -135,6 +142,12 @@ public class RecruitLayOffEmployeeController {
 	public String updateInforEmployee(HttpServletRequest request, ModelMap model, StaffEntity staff) {
 		
 		Session session = factory.getCurrentSession();
+		if(staff.getHO().isBlank()||staff.getTEN().isBlank()) {
+			staffList = getStaffs();
+			model.addAttribute("staffs", staffList);
+			handleCheckInput(model);
+			return "/Admin/RecruitEmployee";
+		}
 		String maCV = request.getParameter("jobId");
 		String birthdayStr = request.getParameter("birthday");
 		if (!birthdayStr.isEmpty()) {

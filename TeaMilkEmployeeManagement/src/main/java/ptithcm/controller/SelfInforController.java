@@ -37,7 +37,14 @@ public class SelfInforController {
 	}
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
 	public String updateSelfInfor(HttpServletRequest request,ModelMap map,StaffEntity updatedStaff) {
+		
 		Session session = factory.getCurrentSession();
+		if(updatedStaff.getHO().isBlank()) {
+			return displayMainView(session,map);
+		}
+		if(updatedStaff.getTEN().isBlank()) {
+			return displayMainView(session,map);
+		}
 		String staffId = passDataBetweenControllerHandler.getData();
 		if(hasIdentificationCardNumberInDB(updatedStaff.getCCCD().strip(),staffId)) {
 			map.addAttribute("idCardMessage","New id number existed");

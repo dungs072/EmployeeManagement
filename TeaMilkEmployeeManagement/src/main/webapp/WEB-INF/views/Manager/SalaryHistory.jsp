@@ -10,8 +10,8 @@
 <style>
 .tableWrap {
 	height: 390px;
-	border: 2px solid black;
 	overflow: auto;
+	border-radius: 10px;
 }
 
 /* Set header to stick to the top of the container. */
@@ -123,7 +123,15 @@ tbody tr:hover {
 							</h5>
 						</a>
 					</div>
-
+					<div class="nav-option option4">
+						<a style = "text-decoration:none" href = "rank.htm">
+							<h5>
+							<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" class="bi bi-bar-chart-line nav-img" viewBox="0 0 16 16">
+  							<path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1V2zm1 12h2V2h-2v12zm-3 0V7H7v7h2zm-5 0v-3H2v3h2z"/>
+							</svg>Rank
+							</h5>
+						</a>
+					</div>
 					<div class="nav-option option5">
 						<a style = "text-decoration:none" href = "ChangePassword.htm">
 							<h5>
