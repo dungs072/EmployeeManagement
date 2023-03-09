@@ -27,6 +27,7 @@ import ptithcm.bean.ListShiftDataUI;
 import ptithcm.bean.PassDataBetweenControllerHandler;
 import ptithcm.bean.PrimaryKeyWithMoreDataHandler;
 import ptithcm.bean.ShiftDataUI;
+import ptithcm.entity.AccountEntity;
 import ptithcm.entity.MistakeHistoryEntity;
 import ptithcm.entity.OpenShiftEntity;
 import ptithcm.entity.ShiftDetailEntity;
@@ -543,10 +544,12 @@ public class ManagerRegistrationController {
 			if(openShifts[1]!=null) {
 				ShiftDetailEntity shiftDetailEntity = (ShiftDetailEntity) openShifts[1];
 				StaffEntity staff = shiftDetailEntity.getStaff();
+				AccountEntity account = (AccountEntity) session.get(AccountEntity.class, staff.getMANV().strip());
 				String fullName = staff.getHO().strip()+" "+staff.getTEN().strip();
 				String jobName = staff.getJobPosition().getTENVITRI().strip();
 				ShiftDataUI dataUI = new ShiftDataUI(shiftDetailEntity.getID_CTCA().strip(),fullName,jobName,shiftDetailEntity.getCONGVIEC());
 				dataUI.setConfirmed(shiftDetailEntity.isXACNHAN());
+				dataUI.setEnable(account.isTRANGTHAI());
 				shiftUIHash[shiftIndex-1][dateIndex].addShiftDataUI(dataUI);
 				shiftUIHash[shiftIndex-1][dateIndex].calculateLeftStaff();
 			}

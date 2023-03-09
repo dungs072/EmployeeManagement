@@ -475,48 +475,97 @@ input {
 													<c:forEach var="shiftStaff" varStatus="indexStaff"
 														items="${shiftStaffs[indexShift.index][i-1].getListShiftDataUI()}">
 														<li>
-															<div class="text-center d-flex justify-content-center">
-																<div class="card btn-outline-primary"
-																	style="width: 10rem;">
-																	<div class="card-body">
-																		<div class="orderNumber">
-																			<h3>${indexStaff.count}</h3>
-																		</div>
-																		<h5 class="card-title" style="font-size: 10px;">${shiftStaff.fullName}</h5>
-																		<c:choose>
-																			<c:when test = "${shiftStaff.isConfirmed == true}">
-																				<input type="checkbox" class = "confirmCheckBox" onclick="return false;" checked>
-																			</c:when>
-																			<c:otherwise>
-																				<input type="checkbox" class = "confirmCheckBox" onclick="return false;">
-																			</c:otherwise>
-																		</c:choose>
-																			
-																		<c:choose>
-																			<c:when
-																				test="${shiftStaffs[indexShift.index][i-1].canInteract==true}">
-																				<button type="button"
-																					class="btn btn-outline-secondary mb-1 setStaffShiftButton"
-																					data-bs-toggle="modal" data-bs-target="#setShift"
-																					value="${shiftStaff.fullName}+${shiftStaff.jobPositionName}+${shiftStaff.additionalJobs}+${shiftStaff.shiftDetailId}"><i class="fa fa-cogs" aria-hidden="true" style = "width:50px;"></i></button>
-																				<button type="button"
-																					class="btn btn-outline-danger deleteStaffButton"
-																					data-bs-toggle="modal" data-bs-target="#warning"
-																					value="${shiftStaff.shiftDetailId}"><i class="fa fa-trash-o" aria-hidden="true"  style = "width:50px;"></i></button>
-																			</c:when>
-																			<c:otherwise>
-																				<form action = "ManagerRegistration/showShiftDetail.htm" method = "get">
-																					<button type="submit"
-																					class="btn btn-outline-secondary mb-1 detailShiftButton" name = "shiftDetailButton" value = "${shiftStaff.shiftDetailId}"
-																					><i class="fa fa-info-circle" aria-hidden="true" style = "width:50px;"></i></button>
-																				</form>
+														<c:choose>
+															<c:when test = "${shiftStaff.isEnable==true}">
+																<div class="text-center d-flex justify-content-center">
+																	<div class="card btn-outline-primary"
+																		style="width: 10rem;">
+																		<div class="card-body">
+																			<div class="orderNumber">
+																				<h3>${indexStaff.count}</h3>
+																			</div>
+																			<h5 class="card-title" style="font-size: 10px;">${shiftStaff.fullName}</h5>
+																			<c:choose>
+																				<c:when test = "${shiftStaff.isConfirmed == true}">
+																					<input type="checkbox" class = "confirmCheckBox" onclick="return false;" checked>
+																				</c:when>
+																				<c:otherwise>
+																					<input type="checkbox" class = "confirmCheckBox" onclick="return false;">
+																				</c:otherwise>
+																			</c:choose>
 																				
-																			</c:otherwise>
-																		</c:choose>
-
+																			<c:choose>
+																				<c:when
+																					test="${shiftStaffs[indexShift.index][i-1].canInteract==true}">
+																					<button type="button"
+																						class="btn btn-outline-secondary mb-1 setStaffShiftButton"
+																						data-bs-toggle="modal" data-bs-target="#setShift"
+																						value="${shiftStaff.fullName}+${shiftStaff.jobPositionName}+${shiftStaff.additionalJobs}+${shiftStaff.shiftDetailId}"><i class="fa fa-cogs" aria-hidden="true" style = "width:50px;"></i></button>
+																					<button type="button"
+																						class="btn btn-outline-danger deleteStaffButton"
+																						data-bs-toggle="modal" data-bs-target="#warning"
+																						value="${shiftStaff.shiftDetailId}"><i class="fa fa-trash-o" aria-hidden="true"  style = "width:50px;"></i></button>
+																				</c:when>
+																				<c:otherwise>
+																					<form action = "ManagerRegistration/showShiftDetail.htm" method = "get">
+																						<button type="submit"
+																						class="btn btn-outline-secondary mb-1 detailShiftButton" name = "shiftDetailButton" value = "${shiftStaff.shiftDetailId}"
+																						><i class="fa fa-info-circle" aria-hidden="true" style = "width:50px;"></i></button>
+																					</form>
+																					
+																				</c:otherwise>
+																			</c:choose>
+	
+																		</div>
 																	</div>
 																</div>
-															</div>
+															</c:when>
+															<c:otherwise>
+																<div class="text-center d-flex justify-content-center">
+																	<div class="card btn-outline-danger"
+																		style="width: 10rem;">
+																		<div class="card-body">
+																			<div class="orderNumber">
+																				<h3>${indexStaff.count}</h3>
+																			</div>
+																			<h5 class="card-title" style="font-size: 10px;">${shiftStaff.fullName}</h5>
+																			<c:choose>
+																				<c:when test = "${shiftStaff.isConfirmed == true}">
+																					<input type="checkbox" class = "confirmCheckBox" onclick="return false;" checked>
+																				</c:when>
+																				<c:otherwise>
+																					<input type="checkbox" class = "confirmCheckBox" onclick="return false;">
+																				</c:otherwise>
+																			</c:choose>
+																				
+																			<c:choose>
+																				<c:when
+																					test="${shiftStaffs[indexShift.index][i-1].canInteract==true}">
+																					<button type="button"
+																						class="btn btn-outline-secondary mb-1 setStaffShiftButton"
+																						data-bs-toggle="modal" data-bs-target="#setShift"
+																						value="${shiftStaff.fullName}+${shiftStaff.jobPositionName}+${shiftStaff.additionalJobs}+${shiftStaff.shiftDetailId}"><i class="fa fa-cogs" aria-hidden="true" style = "width:50px;"></i></button>
+																					<button type="button"
+																						class="btn btn-outline-danger deleteStaffButton"
+																						data-bs-toggle="modal" data-bs-target="#warning"
+																						value="${shiftStaff.shiftDetailId}"><i class="fa fa-trash-o" aria-hidden="true"  style = "width:50px;"></i></button>
+																				</c:when>
+																				<c:otherwise>
+																					<form action = "ManagerRegistration/showShiftDetail.htm" method = "get">
+																						<button type="submit"
+																						class="btn btn-outline-secondary mb-1 detailShiftButton" name = "shiftDetailButton" value = "${shiftStaff.shiftDetailId}"
+																						><i class="fa fa-info-circle" aria-hidden="true" style = "width:50px;"></i></button>
+																					</form>
+																					
+																				</c:otherwise>
+																			</c:choose>
+	
+																		</div>
+																	</div>
+																</div>
+															</c:otherwise>
+														</c:choose>
+															
 														</li>
 													</c:forEach>
 

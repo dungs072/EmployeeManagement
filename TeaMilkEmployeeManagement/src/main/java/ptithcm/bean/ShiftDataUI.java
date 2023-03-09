@@ -11,6 +11,7 @@ public class ShiftDataUI {
 	
 	private boolean isConfirmed = false;
 	
+	private boolean isEnable = true;
 
 	public ShiftDataUI(String shiftDetailId,String fullName, String jobPositionName,String additionalJobs) {
 		this.fullName = fullName;
@@ -54,6 +55,14 @@ public class ShiftDataUI {
 	}
 	public void setConfirmed(boolean isConfirmed) {
 		this.isConfirmed = isConfirmed;
+	}
+
+	public boolean getIsEnable() {
+		return isEnable;
+	}
+
+	public void setEnable(boolean isEnable) {
+		this.isEnable = isEnable;
 	}
 	
 }
