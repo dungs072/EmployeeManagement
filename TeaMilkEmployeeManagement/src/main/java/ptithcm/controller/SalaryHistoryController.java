@@ -42,7 +42,8 @@ public class SalaryHistoryController {
 	@SuppressWarnings("unchecked")
 	private List<SalaryBillEntity> getSalaryHistory(String ownerId){
 		Session session = factory.getCurrentSession();
-		String hql = "FROM SalaryBillEntity WHERE staffEntity.MANV = :ownerId";
+		String hql = "FROM SalaryBillEntity WHERE staffEntity.MANV = :ownerId "
+				+ "	ORDER BY THOIGIANNHAN DESC";
 		Query query = session.createQuery(hql);
 		query.setString("ownerId", ownerId);
 		return query.list();

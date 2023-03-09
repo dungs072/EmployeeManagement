@@ -67,6 +67,9 @@ thead {
 tbody tr:hover {
 	background: #e6f7ff;
 }
+.searchBar{
+	margin-left:90px;
+}
 
 </style>
 <title>Staff's Salary</title>
@@ -246,7 +249,19 @@ tbody tr:hover {
 			</nav>
 		</div>
 		<div class="main">
-			<div class="row mt-5 justify-content-center">
+			<div class="row searchBar">
+				<div class="col-9">
+					<div class="search mb-1">
+	
+						<form action="searchSalary.htm" method="get">
+							<input type="text" name="searchInput"
+								placeholder="Name, Job position..">
+							<button type="submit" class="btn btn-outline-dark"><i class="fa fa-search" aria-hidden="true"></i></button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="row mt-1 justify-content-center">
 				<div class="col-10">
 					<div class="tableWrap">
 						<table class="employeeTable">
@@ -265,6 +280,30 @@ tbody tr:hover {
 								<c:forEach var="staff" varStatus="i" items="${salaryStaff}">
 									<tr>
 										<td>${i.count}</td>
+										<td>${staff.MANV}</td>
+										<td>${staff.HO}  ${staff.TEN}</td>
+										<td>${staff.jobPosition.TENVITRI}</td>
+										<td><span>${staff.LUONGTICHLUY}</span></td>
+										<td>
+											<form action = "salary.htm">
+														<button type="submit" class="btn btn-success valueButton"
+														value="${staff.MANV}+${staff.HO}+${staff.TEN}+${staff.LUONGTICHLUY}"><i class="fa fa-print" aria-hidden="true"></i></button>
+											</form>	
+											<!-- Button trigger modal -->
+											
+										</td>
+										<td>
+											<form action = "historySalary.htm">
+												<button type="submit" name="history" class="btn btn-secondary viewHistory"
+												value="${staff.MANV}"><i class="fa fa-history" aria-hidden="true"></i></button>
+											</form>
+										</td>
+									</tr>
+								</c:forEach>
+								
+								<c:forEach var="staff" varStatus="i" items="${disabledStaff}">
+									<tr  style="background-color:#adb5bd">
+										<td>${i.count + salaryStaff.size()}</td>
 										<td>${staff.MANV}</td>
 										<td>${staff.HO}  ${staff.TEN}</td>
 										<td>${staff.jobPosition.TENVITRI}</td>

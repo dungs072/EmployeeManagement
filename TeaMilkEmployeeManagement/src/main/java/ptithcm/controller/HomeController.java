@@ -161,7 +161,8 @@ public class HomeController{
 	
 	public List<ShiftDetailEntity> getAShiftDetail(String id) {
 		Session session = factory.getCurrentSession();
-		String hql = "FROM ShiftDetailEntity where ID_CA_MO = :id and XACNHAN = :true";
+		String hql = "FROM ShiftDetailEntity where ID_CA_MO = :id and XACNHAN = :true and "
+				+ " staff.MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = true)";
 		Query query = session.createQuery(hql);
 		query.setString("id", id);
 		query.setBoolean("true", true);
