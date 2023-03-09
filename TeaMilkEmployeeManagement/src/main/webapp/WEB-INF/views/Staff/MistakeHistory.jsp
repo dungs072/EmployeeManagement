@@ -188,7 +188,9 @@ tbody tr:hover {
 										<tr>
 											<td>${i.count}</td>
 											<td>${history.mistakeEntity.MOTA}</td>
-											<td>${history.shiftDetailEntity.openshift.NGAYLAMVIEC}</td>
+											<td>
+												<fmt:formatDate value="${history.shiftDetailEntity.openshift.NGAYLAMVIEC}" pattern="dd/MM/yyyy" />
+											</td>
 											<td><span>${history.shiftDetailEntity.openshift.shift.IDCA}</span></td>
 											<td>${history.SOLANVIPHAM}</td>
 										</tr>

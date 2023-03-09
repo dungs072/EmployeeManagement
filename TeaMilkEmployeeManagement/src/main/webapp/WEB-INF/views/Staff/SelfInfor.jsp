@@ -8,7 +8,7 @@
 <base href="${pageContext.servletContext.contextPath }/">
 <title>Your information</title>
 <style>
-.InputInvalid{
+.InputInvalid p{
 color:red;
 font-style: italic;
 margin-left:5px;
@@ -177,7 +177,10 @@ margin-top:5px;
 							name="CCCD"
 							oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
 							maxlength="12" required value = "${staff.CCCD}" />
-						<p class = "InputInvalid">${idCardMessage}</p>
+						<div class = "InputInvalid">
+							<p>${idCardMessage}</p>
+						</div>
+						
 					</div>
 
 					<div class="form-group">
@@ -185,7 +188,9 @@ margin-top:5px;
 							class="form-control username" id="phoneNumber" name="SDT"
 							oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
 							maxlength="10" required value = "${staff.SDT}"/>
-						<p class = "InputInvalid">${phoneMessage}</p>
+						<div class ="InputInvalid">
+							<p>${phoneMessage}</p>
+						</div>
 					</div>
 					<div class="form-group">
 						<label for="email">Email:</label> <input type="email"
