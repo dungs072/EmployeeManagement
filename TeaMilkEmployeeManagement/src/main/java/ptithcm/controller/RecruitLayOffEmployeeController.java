@@ -341,7 +341,7 @@ public class RecruitLayOffEmployeeController {
 		query3.setString("id", id);
 		long number3 = (long) query3.uniqueResult();
 		if(number3>0) {return false;}
-		return false;
+		return true;
 
 	}
 

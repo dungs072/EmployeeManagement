@@ -369,7 +369,9 @@ tbody tr:hover {
 									<tr>
 										<td>${i.count}</td>
 										<td>${idStaffHS}</td>
-										<td>${hs.THOIGIANNHAN}</td>
+										<td>
+											<fmt:formatDate type = "both" dateStyle = "short" timeStyle = "medium" value="${hs.THOIGIANNHAN}"/>
+										</td>
 										<td>${hs.LUONGNHAN}</td>
 									</tr>
 								</c:forEach>

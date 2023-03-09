@@ -1,6 +1,6 @@
 package ptithcm.entity;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,10 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "PHIEULUONG")
@@ -23,9 +19,7 @@ public class SalaryBillEntity {
 	private int MAPHIEU;
 
 	@Column(name = "THOIGIANNHAN")
-	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "DD/MM/YYYY")
-	private Date THOIGIANNHAN;
+	private Timestamp THOIGIANNHAN;
 
 	@ManyToOne
 	@JoinColumn(name = "MANV")
@@ -37,7 +31,7 @@ public class SalaryBillEntity {
 
 	
 	public SalaryBillEntity() {}
-	public SalaryBillEntity(Date pickupDay, StaffEntity staffEntity) {
+	public SalaryBillEntity(Timestamp pickupDay, StaffEntity staffEntity) {
 		this.THOIGIANNHAN = pickupDay;
 		this.staffEntity = staffEntity;
 	}
@@ -55,11 +49,11 @@ public class SalaryBillEntity {
 	public void setStaffEntity(StaffEntity staffEntity) {
 		this.staffEntity = staffEntity;
 	}
-	public Date getTHOIGIANNHAN() {
+	public Timestamp getTHOIGIANNHAN() {
 		return THOIGIANNHAN;
 	}
 
-	public void setTHOIGIANNHAN(Date tHOIGIANNHAN) {
+	public void setTHOIGIANNHAN(Timestamp tHOIGIANNHAN) {
 		THOIGIANNHAN = tHOIGIANNHAN;
 	}
 

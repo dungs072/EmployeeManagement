@@ -185,7 +185,9 @@ tbody tr:hover {
 									<c:forEach var="bill" varStatus="i" items="${bills}">
 										<tr>
 											<td>${i.count}</td>
-											<td>${bill.THOIGIANNHAN}</td>
+											<td>
+												<fmt:formatDate type = "both" dateStyle = "short" timeStyle = "medium" value="${bill.THOIGIANNHAN}"/>
+											</td>
 											<td>${bill.LUONGNHAN}</td>
 										</tr>
 									</c:forEach>

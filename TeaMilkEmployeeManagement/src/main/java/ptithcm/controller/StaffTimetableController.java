@@ -60,7 +60,9 @@ public class StaffTimetableController {
 	@RequestMapping(value = "Search",method = RequestMethod.GET)
 	public String searchWeek(HttpServletRequest request, ModelMap map) {
 		weekDateFromTo = request.getParameter("searchButton");
-
+		if(weekDateFromTo.isBlank()) {
+			weekDateFromTo = getFirstDateAndLastDayOfCurrentWeek();
+		}
 		return displayMainView(request,map);
 	}
 	@RequestMapping(value = "/Detail",method = RequestMethod.GET)

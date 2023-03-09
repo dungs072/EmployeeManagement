@@ -186,7 +186,7 @@ tbody tr:hover {
 										<tr>
 											<td>${i.count}</td>
 											<td>
-												<fmt:formatDate value="${bill.THOIGIANNHAN}" pattern="dd/MM/yyyy" />
+												<fmt:formatDate type = "both" dateStyle = "short" timeStyle = "medium" value="${bill.THOIGIANNHAN}"/>
 											</td>
 											<td>${bill.LUONGNHAN}</td>
 										</tr>
