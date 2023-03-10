@@ -91,6 +91,9 @@ public class RecruitLayOffEmployeeController {
 			String jobId = request.getParameter("add-jobId");
 			String staffId = staffKeyHandler.getNewKey("NV");
 			JobPositionEntity job = (JobPositionEntity) session.get(JobPositionEntity.class, jobId);
+			if(job.getTENVITRI().strip().equals("Manager")) {
+				staff.setHINHTHUC("FULL");
+			}
 			staff.setHO(staff.getHO().strip());
 			staff.setTEN(staff.getTEN().strip());
 			if(staff.getDIACHI()!=null&&!staff.getDIACHI().isEmpty()) {
@@ -164,7 +167,9 @@ public class RecruitLayOffEmployeeController {
 		staff.setMANV(currentStaffId);
 
 		JobPositionEntity job = (JobPositionEntity) session.get(JobPositionEntity.class, maCV);
-
+		if(job.getTENVITRI().strip().equals("Manager")) {
+			staff.setHINHTHUC("FULL");
+		}
 		staff.setJobPosition(job);
 		updateStaff(session, staff);
 

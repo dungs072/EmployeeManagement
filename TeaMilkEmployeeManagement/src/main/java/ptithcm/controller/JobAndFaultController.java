@@ -1,5 +1,6 @@
 package ptithcm.controller;
 
+import java.sql.Time;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -156,8 +157,12 @@ public class JobAndFaultController {
 		Session session = factory.getCurrentSession();
 		String shiftId = request.getParameter("ShiftId");
 		String description = request.getParameter("Description");
+		String startTimeStr = request.getParameter("startShiftTime");
+		String endTimeStr = request.getParameter("endShiftTime");
 		ShiftEntity shiftEntity = (ShiftEntity) session.get(ShiftEntity.class, shiftId);
 		shiftEntity.setTENCA(description);
+		shiftEntity.setStartShiftTime(Time.valueOf(startTimeStr.substring(0,5)+":00"));
+		shiftEntity.setEndShiftTime(Time.valueOf(endTimeStr.substring(0, 5)+":00"));
 		session.saveOrUpdate(shiftEntity);
 		updateAllTable(model);
 		return "Admin/JobAndFaultManager";
@@ -170,10 +175,8 @@ public class JobAndFaultController {
 			if (job.getTENVITRI().strip().equals("Manager")) {
 				job.setCanUpdate(false);
 				job.setCanDelete(false);
-			}
-			
+			}	
 		}
-		
 	}
 
 	private void toggleFaultDeleteButton(List<MistakeEntity> faults) {

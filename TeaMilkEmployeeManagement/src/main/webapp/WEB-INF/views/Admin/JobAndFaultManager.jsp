@@ -118,8 +118,12 @@ tbody tr:hover {
 			var val = $(this).val().split(",");
 			var shiftInput = $(document).find('.shift');
 			var desInput= $(document).find('.description');
+			var startInput = $(document).find('.startTime');
+			var endInput = $(document).find('.endTime');
 			shiftInput.val(val[0]);
 			desInput.val(val[1]);
+			startInput.val(val[2]);
+			endInput.val(val[3]);
 		});
 		$(window).on('load', function() {
 			var jobValue = localStorage.getItem("isClickedJobInfor");
@@ -381,6 +385,8 @@ tbody tr:hover {
 							<tr>
 								<th><span>Shift</span></th>
 								<th><span>Description</span></th>
+								<th><span>Start time</span></th>
+								<th><span>End time</span></th>
 								<th><span>Action</span></th>
 							</tr>
 						</thead>
@@ -390,8 +396,14 @@ tbody tr:hover {
 									<td>${shift.IDCA}</td>
 									<td>${shift.TENCA}</td>
 									<td>
+										<fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.startShiftTime}" /> 
+									</td>
+									<td>
+										<fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.endShiftTime}" /> 
+									</td>
+									<td>
 										<button type="button" name="settingShift"
-											class="btn btn-secondary settingShift" value="${shift.IDCA},${shift.TENCA}"
+											class="btn btn-secondary settingShift" value="${shift.IDCA},${shift.TENCA},${shift.startShiftTime},${shift.endShiftTime}"
 											data-bs-toggle="modal" data-bs-target="#settingShift"><i class="fa fa-cog" aria-hidden="true"></i>
 										</button>
 									</td>
@@ -494,6 +506,12 @@ tbody tr:hover {
 							<label for="firstname">Description:</label> <input type="text"
 								class="form-control description" placeholder="typing your description"
 								name="Description" value="" maxlength="50" />
+							<label for="firstname">Start time:</label> <input type="time"
+								class="form-control startTime" placeholder="typing start time"
+								name="startShiftTime" required/>
+							<label for="firstname">End time:</label> <input type="time"
+								class="form-control endTime" placeholder="typing end time"
+								name="endShiftTime" required/>
 						</div>
 
 						<div class="modal-footer">

@@ -181,6 +181,7 @@ tbody tr:hover {
 										<th><span>Violation Date</span></th>
 										<th><span>Shift</span></th>
 										<th><span>Times</span></th>
+										<th><span>Punishment</span></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -193,6 +194,7 @@ tbody tr:hover {
 											</td>
 											<td><span>${history.shiftDetailEntity.openshift.shift.IDCA}</span></td>
 											<td>${history.SOLANVIPHAM}</td>
+											<td>${history.description}</td>
 										</tr>
 									</c:forEach>
 

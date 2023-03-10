@@ -232,6 +232,11 @@
 									<div class="col-md-6 text-left">
 										<h3>Date: <fmt:formatDate value="${getDate}" pattern="dd/MM/yyyy" /> </h3>
 									</div>
+									<div class = "row">
+										<div class = "col-md-6 text-left">
+											<h3>Time: <fmt:formatDate type="time" timeStyle="short" value="${startTime}"/> - <fmt:formatDate type="time" timeStyle="short" value="${endTime}"/> </h3>
+										</div>
+									</div>
 								</div>
 								<table class="table table-striped table-hover">
 									<thead>
@@ -324,12 +329,12 @@
 </div>
 <div class="modal-body">
 		<div class="form-group">
-	<label for="idStaff">ID Staff</label>
+	<label for="idStaff">ID Staff:</label>
 	<br> <input
 	name="idStaff" class="idStaff" value="" readonly>
 </div>
 	<div class="form-group">
-		<label for="Fault">Fault</label> 
+		<label for="Fault">Fault:</label> 
 		<br>
 		<select name="fault"
 		id="Fault">
@@ -342,11 +347,17 @@
 
 
 <div class="form-group">
-	<label for="times">Times</label>
+	<label for="times">Times:</label>
 	<br>
 	 <input name="times"
 	type="number"  id="times"
 	value="1">
+	</div>
+<div class="form-group">
+	<label for="times">Punishment:</label>
+	<br>
+	 <input name="punishWay"
+	type="text" maxlength = 30>
 	</div>
 	</div>
 <div class="modal-footer">

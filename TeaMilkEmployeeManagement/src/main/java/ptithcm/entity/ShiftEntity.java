@@ -1,5 +1,6 @@
 package ptithcm.entity;
 
+import java.sql.Time;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +21,12 @@ public class ShiftEntity {
 	private String IDCA;
 	@Column(name = "TENCA")
 	private String TENCA;
+	
+	@Column(name = "THOIGIANBATDAU")
+	private Time startShiftTime;
+	
+	@Column(name = "THOIGIANKETTHUC")
+	private Time endShiftTime;
 	
 	@OneToMany(mappedBy = "shift",fetch  =FetchType.EAGER)
 	private Collection<OpenShiftEntity> openShift;
@@ -53,5 +60,20 @@ public class ShiftEntity {
 
 	public void setOpenShift(Collection<OpenShiftEntity> openShift) {
 		this.openShift = openShift;
+	}
+	public Time getStartShiftTime() {
+		return startShiftTime;
+	}
+
+	public void setStartShiftTime(Time startShiftTime) {
+		this.startShiftTime = startShiftTime;
+	}
+
+	public Time getEndShiftTime() {
+		return endShiftTime;
+	}
+
+	public void setEndShiftTime(Time endShiftTime) {
+		this.endShiftTime = endShiftTime;
 	}
 }

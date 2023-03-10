@@ -12,6 +12,7 @@ public class ListShiftDataUI {
 	private boolean canInteract = true;
 	
 	
+
 	public ListShiftDataUI() {
 		listShiftDataUI = new ArrayList<ShiftDataUI>();
 	}

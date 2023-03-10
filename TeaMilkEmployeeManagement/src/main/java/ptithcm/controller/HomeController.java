@@ -71,6 +71,10 @@ public class HomeController{
 		model.addAttribute("idca", idShiftShow);
 		model.addAttribute("getDate", date_sql);
 		model.addAttribute("faults", listMistake);
+		if(list.size()>0) {
+			model.addAttribute("startTime",list.get(0).getOpenshift().getShift().getStartShiftTime());
+			model.addAttribute("endTime",list.get(0).getOpenshift().getShift().getEndShiftTime());
+		}
 		return returnToSpecificAccount();
 		}
 	}
@@ -104,15 +108,16 @@ public class HomeController{
 	public String setFault(HttpServletRequest request, ModelMap model) {
 		String maNV = request.getParameter("idStaff");
 		String fault = request.getParameter("fault");
+		String descrip = request.getParameter("punishWay");
 		int times = Integer.parseInt(request.getParameter("times"));
 		List<OpenShiftEntity> openshift = getIdAOpenShift(idShiftShow, date_sql);
 		String idcamo = openshift.get(0).getID_CA_MO();
 		String idmistake = getIdMistake(fault);
-		updateFaultToDB(maNV, idcamo, idmistake, times);
+		updateFaultToDB(maNV, idcamo, idmistake, times,descrip);
 		return showDetailShift(model);
 	}
 	
-	public void updateFaultToDB(String maNV, String idcamo, String idloi, int times) {
+	public void updateFaultToDB(String maNV, String idcamo, String idloi, int times,String descrip) {
 		Session session = factory.getCurrentSession();
 		List<ShiftDetailEntity> list = getIdAStaffInShiftDetail(maNV, idShiftShow, date_sql);
 		String id = list.get(0).getID_CTCA();
@@ -126,10 +131,12 @@ public class HomeController{
 			mistakehistory.setMistakeEntity(mistake);
 			mistakehistory.setShiftDetailEntity(shiftdetail);
 			mistakehistory.setSOLANVIPHAM(times);
+			mistakehistory.setDescription(descrip);
 			session.save(mistakehistory);
 		}
 		else {
 			check.updateSOLANVIPHAM(times);
+			check.setDescription(descrip);
 			session.update(check);
 		}
 	}
@@ -209,6 +216,10 @@ public class HomeController{
 			model.addAttribute("idca", idShiftShow);
 			model.addAttribute("getDate", date_sql);
 			model.addAttribute("faults", listMistake);
+			if(list.size()>0) {
+				model.addAttribute("startTime",list.get(0).getOpenshift().getShift().getStartShiftTime());
+				model.addAttribute("endTime",list.get(0).getOpenshift().getShift().getEndShiftTime());
+			}
 			return returnToSpecificAccount();
 		}
 	}
@@ -227,6 +238,10 @@ public class HomeController{
 			model.addAttribute("idca", idShiftShow);
 			model.addAttribute("getDate", date_sql);
 			model.addAttribute("faults", listMistake);
+			if(list.size()>0) {
+				model.addAttribute("startTime",list.get(0).getOpenshift().getShift().getStartShiftTime());
+				model.addAttribute("endTime",list.get(0).getOpenshift().getShift().getEndShiftTime());
+			}
 			return returnToSpecificAccount();
 		}
 	}
@@ -250,6 +265,11 @@ public class HomeController{
 			model.addAttribute("idca", idShiftShow);
 			model.addAttribute("getDate", date_sql);
 			model.addAttribute("faults", listMistake);
+			if(list.size()>0) {
+				model.addAttribute("startTime",list.get(0).getOpenshift().getShift().getStartShiftTime());
+				model.addAttribute("endTime",list.get(0).getOpenshift().getShift().getEndShiftTime());
+			}
+			
 			return returnToSpecificAccount();
 		}
 	}

@@ -15,6 +15,9 @@ public class MistakeHistoryEntity {
 
 	@Id
 	private String ID_LSLOI;
+	
+	@Column(name = "MOTA")
+	private String description;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "IDLOI")
@@ -84,6 +87,14 @@ public class MistakeHistoryEntity {
 
 	public void setCanDelete(boolean canDelete) {
 		this.canDelete = canDelete;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 }

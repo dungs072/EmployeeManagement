@@ -271,6 +271,7 @@ tbody tr:hover {
 									<th><span>Employee Id</span></th>
 									<th><span>Full Name</span></th>
 									<th><span>Job position</span></th>
+									<th><span>Type</span></th>
 									<th><span>Ac Salary</span></th>
 									<th><span>Print Salary Bill</span></th>
 									<th><span>History</span></th>
@@ -283,6 +284,7 @@ tbody tr:hover {
 										<td>${staff.MANV}</td>
 										<td>${staff.HO}  ${staff.TEN}</td>
 										<td>${staff.jobPosition.TENVITRI}</td>
+										<td>${staff.HINHTHUC}</td>
 										<td><span>${staff.LUONGTICHLUY}</span></td>
 										<td>
 											<form action = "salary.htm">
@@ -307,6 +309,7 @@ tbody tr:hover {
 										<td>${staff.MANV}</td>
 										<td>${staff.HO}  ${staff.TEN}</td>
 										<td>${staff.jobPosition.TENVITRI}</td>
+										<td>${staff.HINHTHUC}</td>
 										<td><span>${staff.LUONGTICHLUY}</span></td>
 										<td>
 											<form action = "salary.htm">

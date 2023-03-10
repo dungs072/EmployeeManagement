@@ -209,6 +209,35 @@ margin-top:5px;
 							class="form-control username" id="salary" value = "${staff.LUONGTICHLUY}"
 							value="" maxlength="50" />
 					</div>
+				
+					
+					<c:if test="${staff.HINHTHUC=='PART'}">
+						<div class="form-check">
+							<input class="form-check-input" type="radio"
+								id="gender1" value = "PART" checked disabled> <label class="form-check-label"
+								for="flexRadioDefault1"> Part time </label>
+							
+						</div>
+						<div class="form-check">
+						<input class="form-check-input" type="radio" 
+							id="gender2" checked value = "FULL" disabled> <label class="form-check-label"
+							for="flexRadioDefault2"> Full time </label>
+					</div>
+					</c:if>
+					<c:if test="${staff.HINHTHUC=='FULL'}">
+						<div class="form-check">
+							<input class="form-check-input" type="radio" 
+								id="gender1" value = "PART" disabled > <label class="form-check-label"
+								for="flexRadioDefault1"> Part time </label>
+							
+						</div>
+						<div class="form-check">
+						<input class="form-check-input" type="radio"
+							id="gender2" checked value = "FULL" checked disabled> <label class="form-check-label"
+							for="flexRadioDefault2"> Full time </label>
+					</div>
+					</c:if>
+					
 					
 					<button type="submit" class="btn btn-success btn-customized mt-4">
 						Save</button>

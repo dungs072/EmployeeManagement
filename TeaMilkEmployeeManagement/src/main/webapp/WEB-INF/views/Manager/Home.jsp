@@ -214,6 +214,11 @@
 										<h3>Date: <fmt:formatDate value="${getDate}" pattern="dd/MM/yyyy" /> </h3>
 									</div>
 								</div>
+								<div class = "row">
+									<div class = "col-md-6 text-left">
+										<h3>Time: <fmt:formatDate type="time" timeStyle="short" value="${startTime}"/> - <fmt:formatDate type="time" timeStyle="short" value="${endTime}"/> </h3>
+									</div>
+								</div>
 								<table class="table table-striped table-hover">
 									<thead>
 										<tr>
@@ -326,6 +331,13 @@
 																				type="number" id="times"
 																				value="1">
 																		</div>
+																		<div class="form-group">
+																		<label for="times">Punishment:</label>
+																		<br>
+																		 <input name="punishWay" maxlength = 30
+																		type="text">
+																		</div>
+																
 																	</div>
 																	<div class="modal-footer">
 																		<button type="button" class="btn btn-secondary"

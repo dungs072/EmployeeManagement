@@ -56,6 +56,9 @@ public class StaffEntity implements Primarykeyable {
 
 	@Column(name = "LUONGTICHLUY")
 	private float LUONGTICHLUY;
+	
+	@Column(name = "HINHTHUC")
+	private String HINHTHUC;
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "MACV")
@@ -199,11 +202,20 @@ public class StaffEntity implements Primarykeyable {
 		this.SDT = staff.getSDT();
 		this.DIACHI = staff.getDIACHI();
 		this.NGAYSINH = staff.getNGAYSINH();
+		this.HINHTHUC = staff.getHINHTHUC();
 		if(staff.getJobPosition()==null) {return;}
 		this.jobPosition = staff.getJobPosition();
 	}
 	
 	
+
+	public String getHINHTHUC() {
+		return HINHTHUC;
+	}
+
+	public void setHINHTHUC(String hINHTHUC) {
+		HINHTHUC = hINHTHUC;
+	}
 
 	@Override
 	public String getPrimaryKey() {

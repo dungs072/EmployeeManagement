@@ -371,6 +371,9 @@ input {
 								<th class="bg-primary">
 									<h6 class="text-center text-light">Shift ${shift.IDCA}</h6>
 									<h6 class="text-center text-light small">${shift.TENCA}</h6>
+									<h6 class="text-center text-light small">
+										<fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.startShiftTime}" /> - <fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.endShiftTime}" /> 
+									</h6>
 								</th>
 								<c:forEach var="i" begin="1" end="7">
 									<td><c:if
