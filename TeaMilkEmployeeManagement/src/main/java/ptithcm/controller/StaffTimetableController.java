@@ -116,7 +116,6 @@ public class StaffTimetableController {
 		query.setString("lastDate", dates[1]);
 		query.setString("staffId", ownerId);
 		List<ShiftDetailEntity> shiftDetailList = query.list();
-		
 		for(var shiftDetail:shiftDetailList) {
 			StaffEntity staff = shiftDetail.getStaff();
 			int row = Integer.parseInt(shiftDetail.getOpenshift().getShift().getIDCA().strip())-1;

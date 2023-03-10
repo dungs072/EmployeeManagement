@@ -11,6 +11,7 @@ public class StaffShiftDataUI {
 	private String additionalJob;
 	
 	
+
 	public StaffShiftDataUI(String fullName, boolean isConfirmed) {
 		this.fullName = fullName;
 		this.isConfirmed = isConfirmed;

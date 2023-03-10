@@ -41,7 +41,7 @@ public class MistakeHistoryController {
 	@SuppressWarnings("unchecked")
 	private List<MistakeHistoryEntity> getMistakeHistory(String ownerId){
 		Session session = factory.getCurrentSession();
-		String hql = "FROM MistakeHistoryEntity WHERE shiftDetailEntity.staff.MANV = :ownerId";
+		String hql = "FROM MistakeHistoryEntity WHERE shiftDetailEntity.staff.MANV = :ownerId ORDER BY shiftDetailEntity.openshift.NGAYLAMVIEC DESC";
 		Query query = session.createQuery(hql);
 		query.setString("ownerId", ownerId);
 		return query.list();

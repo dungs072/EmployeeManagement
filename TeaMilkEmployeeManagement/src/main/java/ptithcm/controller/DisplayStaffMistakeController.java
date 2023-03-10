@@ -73,7 +73,7 @@ public class DisplayStaffMistakeController {
 	@SuppressWarnings("unchecked")
 	private List<MistakeHistoryEntity> getSpecificMistakeHistories(ModelMap map,String staffId) {
 		Session session = factory.getCurrentSession();
-		String hql = "FROM MistakeHistoryEntity WHERE shiftDetailEntity.staff.MANV = :staffId";
+		String hql = "FROM MistakeHistoryEntity WHERE shiftDetailEntity.staff.MANV = :staffId ORDER BY shiftDetailEntity.openshift.NGAYLAMVIEC DESC";
 		Query query = session.createQuery(hql);
 		query.setString("staffId",staffId);
 		return query.list();

@@ -257,6 +257,7 @@ $(document).on('click',".deleteMistake",function(e){
 								<th><span>Violation Date</span></th>
 								<th><span>Shift</span></th>
 								<th><span>Times</span></th>
+								<th><span>Punishment</span>
 								<th><span>Action</span></th>
 							</tr>
 						</thead>
@@ -269,6 +270,7 @@ $(document).on('click',".deleteMistake",function(e){
 									</td>
 									<td>${mistakeHistory.shiftDetailEntity.openshift.shift.IDCA}</td>
 									<td>${mistakeHistory.SOLANVIPHAM}</td>
+									<td>${mistakeHistory.description}</td>
 									<td>
 										<c:if test="${mistakeHistory.canDelete==true}">
 											<button type = "button" class = "btn btn-danger deleteMistake" value = "${mistakeHistory.ID_LSLOI}"><i class="fa fa-trash" aria-hidden="true" style = "width:50px;"></i></button>

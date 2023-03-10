@@ -1,6 +1,7 @@
 package ptithcm.controller;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -238,6 +239,7 @@ public class ManagerRegistrationController {
 		String shift_date = request.getParameter("yesSettingMaxStaff");
 		String openShiftId = getOpenShiftId(shift_date);
 		String maxStaffStr = request.getParameter("maxStaffSetting");
+		
 		OpenShiftEntity openShiftEntity = (OpenShiftEntity) session.get(OpenShiftEntity.class, openShiftId);
 		openShiftEntity.setSOLUONGDANGKI(Integer.parseInt(maxStaffStr));
 		session.saveOrUpdate(openShiftEntity);
@@ -435,7 +437,7 @@ public class ManagerRegistrationController {
 		return query.list();
 	}
 	private void deleteShiftDetails(String openShiftId, Session session) {
-		String sql = "DELETE FROM CHITIETCA WHERE ID_CTCA LIKE CONCAT('%',:openShiftId)";
+		String sql = "DELETE FROM CHITIETDANGKICA WHERE ID_CTCA LIKE CONCAT('%',:openShiftId)";
 		Query query = session.createSQLQuery(sql);
 		query.setString("openShiftId", openShiftId);
 		query.executeUpdate();

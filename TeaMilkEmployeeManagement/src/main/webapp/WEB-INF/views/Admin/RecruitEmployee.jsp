@@ -78,6 +78,16 @@ margin-top:5px;
 </style>
 <script th:inline="javascript">
 	$(document).ready(function() {
+		
+		
+						$('.jobSelection').change( function() {
+							if($(this).val().trim()=="CV7"){
+								$('.typeJob').hide();
+							}
+							else{
+								$('.typeJob').show();
+							}
+			 			});
 						//call function
 						$(document).on('click', ".deleteEmployee", function(e) {
 
@@ -321,8 +331,9 @@ margin-top:5px;
 								<th><span>STT</span></th>
 								<th><span>Employee Id</span></th>
 								<th><span>Full Name</span></th>
-								<th><span>Phone number</span></th>
+								<th><span>Gender</span></th>
 								<th><span>Position</span></th>
+								<th><span>Type</span>
 								<th><span>Action</span></th>
 							</tr>
 						</thead>
@@ -332,8 +343,20 @@ margin-top:5px;
 									<td>${i.count}</td>
 									<td>${staff.MANV}</td>
 									<td>${staff.HO} ${staff.TEN}</td>
-									<td><span>${staff.SDT}</span></td>
+									<td><span>${staff.GIOITINH}</span></td>
 									<td><span>${staff.jobPosition.TENVITRI}</span></td>
+									<td>
+										<span>
+											<c:choose >
+												<c:when test = "${staff.HINHTHUC == 'PART'}">
+													Part time
+												</c:when>
+												<c:otherwise>
+													Full time
+												</c:otherwise>
+											</c:choose>
+										</span>
+									</td>
 									<td>
 										<form action="Recruit/InforStaff.htm" method="get">
 											<button type="submit" name="InforStaff"
@@ -425,7 +448,7 @@ margin-top:5px;
 						</div>
 						<div class="form-group">
 							<label for="add-jobId">Job position:</label> <select
-								name="add-jobId" class="form-select"
+								name="add-jobId" class="form-select jobSelection" id = "jobSelection"
 								aria-label="Default select example">
 								<c:forEach var="job" varStatus="i" items="${jobs}">
 									<option value="${job.MACV}">${job.TENVITRI}</option>
@@ -433,6 +456,18 @@ margin-top:5px;
 
 							</select>
 						</div>
+						<div class="form-check typeJob">
+							<input class="form-check-input" type="radio" name="HINHTHUC"
+								value="FULL"> <label
+								class="form-check-label" for="flexRadioDefault1"> Full Time </label>
+						</div>
+						<div class="form-check typeJob">
+							<input class="form-check-input" type="radio" name="HINHTHUC"
+								value="PART" checked> <label
+								class="form-check-label" for="flexRadioDefault2"> Part Time
+							</label>
+						</div>
+						
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Close</button>
@@ -548,7 +583,7 @@ margin-top:5px;
 						</div>
 						<div class="form-group">
 							<label for="jobPosition">Job position:</label> <select
-								name="jobId" class="form-select" id = "jobPosition"
+								name="jobId" class="form-select jobSelection" id = "jobPosition"
 								aria-label="Default select example">
 								<c:forEach var="job" varStatus="i" items="${jobs}">
 									<c:choose>
@@ -562,6 +597,55 @@ margin-top:5px;
 								</c:forEach>
 							</select>
 						</div>
+						<c:if test = "${staff.jobPosition.TENVITRI != 'Manager'}">
+								<c:set var="hinhthuc" scope="session" value="${staff.HINHTHUC }" />
+								<c:if test="${hinhthuc == 'FULL'}">
+		
+									<div class="form-check typeJob">
+										<input class="form-check-input" type="radio" name="HINHTHUC"
+											id="gender1" value="FULL" checked> <label
+											class="form-check-label" for="flexRadioDefault1"> Full Time
+										</label>
+									</div>
+									<div class="form-check typeJob">
+										<input class="form-check-input gender" type="radio" name="HINHTHUC"
+											id="gender2" value="PART"> <label
+											class="form-check-label" for="flexRadioDefault2">
+											Part Time </label>
+									</div>
+								</c:if>
+		
+								<c:if test="${hinhthuc == 'PART'}">
+		
+									<div class="form-check typeJob">
+										<input class="form-check-input" type="radio" name="HINHTHUC"
+											id="gender1" value="FULL" > <label
+											class="form-check-label" for="flexRadioDefault1"> Full Time
+										</label>
+									</div>
+									<div class="form-check typeJob">
+										<input class="form-check-input gender" type="radio" name="HINHTHUC"
+											id="gender2" value="PART" checked> <label
+											class="form-check-label" for="flexRadioDefault2">
+											Part Time </label>
+									</div>
+								</c:if>
+						</c:if>
+						<c:if test = "${staff.jobPosition.TENVITRI == 'Manager'}">
+									<div class="form-check typeJob">
+										<input class="form-check-input" type="radio" name="HINHTHUC"
+											id="gender1" value="FULL" checked> <label
+											class="form-check-label" for="flexRadioDefault1"> Full Time
+										</label>
+									</div>
+									<div class="form-check typeJob">
+										<input class="form-check-input gender" type="radio" name="HINHTHUC"
+											id="gender2" value="PART"> <label
+											class="form-check-label" for="flexRadioDefault2">
+											Part Time </label>
+									</div>
+						</c:if>
+						
 						<div class="modal-footer">
 
 							<button type="button" class="btn btn-secondary"

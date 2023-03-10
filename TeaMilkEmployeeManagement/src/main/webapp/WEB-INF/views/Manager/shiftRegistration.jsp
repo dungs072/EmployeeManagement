@@ -140,6 +140,7 @@ input {
 	text-align: left;
 	vertical-align: top;
 }
+
 </style>
 
 <script type="text/javascript">
@@ -194,6 +195,8 @@ input {
 		var inputRange = $(document).find('.inputMaxStaff');
 		var minusSetting = $(document).find('.minus-setting');
 		var yesSettingMaxStaffButton = $(document).find('.yesSettingMaxStaff');
+		var startTimeInput = $(document).find('.startTimeInput');
+		var endTimeInput = $(document).find('.endTimeInput');
 		minusSetting.val(datas[3]);
 		inputRange.val(datas[2]);
 		yesSettingMaxStaffButton.val(datas[0] + "," + datas[1])
@@ -455,6 +458,9 @@ input {
 								<th class="bg-primary">
 									<h6 class="text-center text-light">Shift ${shift.IDCA}</h6>
 									<h6 class="text-center text-light small">${shift.TENCA}</h6>
+									<h6 class="text-center text-light small">
+										<fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.startShiftTime}" /> - <fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.endShiftTime}" /> 
+									</h6>
 								</th>
 								<c:forEach var="i" begin="1" end="7">
 									<td><c:if
@@ -464,6 +470,7 @@ input {
 													<div class="card-body">
 														<h5 class="card-title" style="font-size: 10px;">Registrations
 															left:  ${shiftStaffs[indexShift.index][i-1].leftStaff}</h5>
+											
 													</div>
 												</div>
 											</div>
@@ -829,7 +836,7 @@ input {
 									<c:forEach var="staff" varStatus="i" items="${staffs}">
 										<option
 											value="${staff.MANV},${staff.HO} ${staff.TEN},${staff.jobPosition.TENVITRI}">${staff.HO}
-											${staff.TEN} ${staff.jobPosition.TENVITRI }</option>
+											${staff.TEN} - ${staff.jobPosition.TENVITRI} - ${staff.HINHTHUC}</option>
 									</c:forEach>
 								</select>
 
@@ -873,6 +880,7 @@ input {
 									value="1" class="inputMaxStaff" name=maxStaffSetting /> <span
 									class="plus">+</span>
 							</div>
+							
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"

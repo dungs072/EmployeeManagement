@@ -1,6 +1,8 @@
 package ptithcm.entity;
 
+import java.sql.Timestamp;
 import java.sql.Date;
+import java.sql.Time;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,6 +28,8 @@ public class OpenShiftEntity {
 
 	@Column(name = "SOLUONGDANGKI")
 	private int SOLUONGDANGKI;
+	
+	
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "IDCA")
@@ -102,5 +106,7 @@ public class OpenShiftEntity {
 		setShift(null);
 		setStaff(null);
 	}
+
+
 
 }

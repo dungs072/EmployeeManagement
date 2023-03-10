@@ -331,6 +331,9 @@ tbody tr:hover {
 								<th class="bg-primary">
 									<h6 class="text-center text-light">Shift ${shift.IDCA}</h6>
 									<h6 class="text-center text-light small">${shift.TENCA}</h6>
+									<h6 class="text-center text-light small">
+										<fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.startShiftTime}" /> - <fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.endShiftTime}" /> 
+									</h6>
 								</th>
 								<c:forEach var="i" begin="1" end="7">
 									<td><c:if
@@ -341,9 +344,12 @@ tbody tr:hover {
 														style="width: 10rem;">
 														<div class="card-body">
 															<div class="orderNumber">
-																<h3>${indexStaff.count}</h3>
+																<h5 class="card-title" style="font-size: 10px;">
+																	${shiftStaffs[indexShift.index][i-1].fullName}
+																</h5>
+																
 															</div>
-															<h5 class="card-title" style="font-size: 10px;">${shiftStaffs[indexShift.index][i-1].fullName}</h5>
+															
 															<form action = "StaffTimetable/Detail.htm" method = "get">
 																<button type="submit" name="detailButton"
 																	class="btn btn-outline-secondary detailButton"
