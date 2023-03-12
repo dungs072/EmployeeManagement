@@ -76,7 +76,7 @@ margin-left:5px;
 margin-top:5px;
 }
 </style>
-<script th:inline="javascript">
+<script type="text/javascript">
 	$(document).ready(function() {
 		
 		
@@ -91,8 +91,12 @@ margin-top:5px;
 						//call function
 						$(document).on('click', ".deleteEmployee", function(e) {
 
-							var yesButton = $(document).find('.yes-warning')
-							yesButton.val($(this).val())
+							var yesButton = $(document).find('.yes-warning');
+							yesButton.val($(this).val());
+						});
+						$(document).on('click',".disableEmployee",function(e){
+							var yesButton = $(document).find('.yes-disable-warning');
+							yesButton.val($(this).val());
 						});
 
 						$(".detailButton").click(function() {
@@ -101,9 +105,6 @@ margin-top:5px;
 							saveButton.val($(this).val());
 						});
 
-						$(".addModalButton").click(function() {
-							localStorage.setItem("isClickedAddStaffButton", "true");
-						});
 
 						$(".add-save-created").click(function() {
 							localStorage.setItem("isClickedSaveStaffButton","true");
@@ -124,19 +125,12 @@ margin-top:5px;
 							localStorage.setItem("resetId", $(this).val());
 						});
 						$(window).on('load',function() {
-
 							var value = localStorage.getItem("isClickedInfor");
 							if (value == "true") {
 								$("#detailModal").modal("show");
 								localStorage.setItem("isClickedInfor","false");
-								
 							}
 							
-							var addValue = localStorage.getItem("isClickedAddStaffButton");
-							if (addValue == "true") {
-								$("#addModal").modal("show");
-								localStorage.setItem("isClickedAddStaffButton","false");
-							}
 							var isWrongIdCard = [[${isWrongIDCard}]];
 							var isWrongPhoneNumber = [[${isWrongPhoneNumber}]];
 
@@ -153,8 +147,7 @@ margin-top:5px;
 									localStorage.setItem("isClickedSaveStaffButton","false");
 								}
 								else{
-									$('#createdModal').modal("show");
-									$(document).find('#username').val($('.add-save-created').val());
+									
 									localStorage.setItem("isClickedSaveStaffButton","false");
 								}
 							}
@@ -166,8 +159,33 @@ margin-top:5px;
 								localStorage.setItem("isClickedReset","false");
 
 							}
-			});
-
+							
+							var isSuccessUpdate =[[${updateSuccess}]];
+							if(isSuccessUpdate=="true"){
+								$('#UpdateSuccessModal').modal('show');
+							}
+							else if(isSuccessUpdate =="false"){
+								$("#detailModal").modal("show");
+							}
+							
+							var isShowJob = [[${isShowJob}]];
+							if(isShowJob=="true"){
+								$("#addModal").modal("show");
+							}
+							
+							var isAddSuccess = [[${addSuccess}]];
+							if(isAddSuccess=="true"){
+								$('#createdModal').modal("show");
+								$(document).find('#username').val($('.add-save-created').val());
+							}
+							var canDelete = [[${canDelete}]];
+							if(canDelete=="true"){
+								$('#deleteSuccess').modal("show");
+							}
+							else if(canDelete=="false"){
+								$('#deleteFail').modal("show");
+							}
+						});
 	});
 </script>
 
@@ -366,8 +384,11 @@ margin-top:5px;
 												class="btn btn-secondary resetPassword"
 												value="${staff.MANV}" data-bs-toggle="modal"
 												data-bs-target="#ResetWarning"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+											<button type="button" name="disableEmployee"
+												class="btn btn-outline-dark disableEmployee" value="${staff.MANV}"
+												data-bs-toggle="modal" data-bs-target="#disable"><i class="fa fa-toggle-off" aria-hidden="true" style = "width:14px;"></i></button>
 											<button type="button" name="deleteEmployee"
-												class="btn btn-danger deleteEmployee" value="${staff.MANV}"
+												class="btn btn-outline-danger deleteEmployee" value="${staff.MANV}"
 												data-bs-toggle="modal" data-bs-target="#warning"><i class="fa fa-trash" aria-hidden="true"></i></button>
 										</form>
 
@@ -403,13 +424,13 @@ margin-top:5px;
 					<form action="Recruit.htm" method="post">
 						<div class="form-group">
 							<label for="firstname">First name:</label> <input type="text"
-								class="form-control firstName" pattern="^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\W|_]+"
+								class="form-control firstName" pattern="[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+.*[^ ].*"
 								placeholder="First name..." name="HO" maxlength="30" required />
 						</div>
 						<!-- fix pattern there -->
 						<div class="form-group">
 							<label for="lastname">Last name:</label> <input type="text"
-								class="form-control lastName" pattern="^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\W|_]+"
+								class="form-control lastName" pattern="[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+"
 								placeholder="Last name..." name="TEN" maxlength="30" required/>
 						</div>
 						<div class="form-check">
@@ -429,22 +450,22 @@ margin-top:5px;
 								name="CCCD"
 								oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
 								maxlength="12" 
-								pattern=".{11,12}"
+								pattern="(0)+([0-9]{11})\b"
 								required/>
 							<p class = "InputInvalid">${idCardMessage}</p>
 						</div>
 
 						<div class="form-group">
-							<label for="phoneNumber">Phone number:</label> <input type="text"
+							<label for="phoneNumber">Phone number:</label> <input type="tel"
 								class="form-control phoneNumber" name="SDT"
 								oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
-								maxlength="10" pattern=".{9,10}" required />
+								maxlength="10" pattern = "(84|0[3|5|7|8|9])+([0-9]{8})\b" required />
 							<p class = "InputInvalid">${phoneMessage}</p>
 						</div>
 						<div class="form-group">
 							<label for="address">Address:</label> <input type="text"
 								class="form-control address" id="adderess" name="DIACHI"
-								value="97 Man Thiện" maxlength="50" required/>
+								value="97 Man Thiện" maxlength="50" pattern = ".*[^ ].*"/>
 						</div>
 						<div class="form-group">
 							<label for="add-jobId">Job position:</label> <select
@@ -472,8 +493,8 @@ margin-top:5px;
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Close</button>
 							<button type="submit" name="saveAddEmployee"
-								class="btn btn-primary add-save-created"
-								value="${staffIdValue}">Save changes</button>
+								class="btn btn-success add-save-created"
+								value="${staffIdValue}">Add</button>
 						</div>
 					</form>
 				</div>
@@ -497,17 +518,16 @@ margin-top:5px;
 					</button>
 				</div>
 				<div class="modal-body">
-					<form action="Recruit/UpdateStaff.htm" method="get"
-						modelAttribute="staff">
+					<form action="Recruit/UpdateStaff.htm" method="post">
 						<div class="form-group">
 							<label for="firstname">First name:</label> <input type="text"
-								class="form-control" id="firstname" pattern="^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s\W|_]+"
+								class="form-control" id="firstname" pattern="[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+.*[^ ].*"
 								placeholder="First name..." name="HO" value="${staff.HO}"
 								maxlength="30" required/>
 						</div>
 						<div class="form-group">
 							<label for="lastname">Last name:</label> <input type="text"
-								class="form-control" id="lastname" pattern="^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\W|_]+"
+								class="form-control" id="lastname" pattern="[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+"
 								placeholder="Last name..." name="TEN" value="${staff.TEN}"
 								maxlength="30" required/>
 						</div>
@@ -550,7 +570,7 @@ margin-top:5px;
 
 						<div class="form-group">
 							<label for="birthday">Birthday:</label> <input type="date"
-								class="form-control" id="birthday" name="birthday"
+								class="form-control" id="birthday" name="birthday" max="2022-01-01" min = "1950-01-01"
 								value="${staff.NGAYSINH }" maxlength="12" />
 						</div>
 						<div class="form-group">
@@ -558,7 +578,7 @@ margin-top:5px;
 								type="text" class="form-control" id="idcard"
 								name="CCCD" value="${staff.CCCD }"
 								oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
-								maxlength="12" readonly />
+								maxlength="12" pattern="(0)+([0-9]{11})\b"  required/>
 								<p class = "InputInvalid">${idCardMessage}</p>
 						</div>
 
@@ -567,7 +587,7 @@ margin-top:5px;
 								class="form-control" id="phoneNumber" name="SDT"
 								value="${staff.SDT }"
 								oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
-								maxlength="10" readonly/>
+								maxlength="10" pattern = "(84|0[3|5|7|8|9])+([0-9]{8})\b" required/>
 								<p class = "InputInvalid">${phoneMessage}</p>
 						</div>
 						<div class="form-group">
@@ -579,7 +599,7 @@ margin-top:5px;
 						<div class="form-group">
 							<label for="address">Address:</label> <input type="text"
 								class="form-control" id="address" name="DIACHI"
-								value="${staff.DIACHI }" maxlength="50" />
+								value="${staff.DIACHI }" maxlength="50" pattern = ".*[^ ].*"/>
 						</div>
 						<div class="form-group">
 							<label for="jobPosition">Job position:</label> <select
@@ -651,7 +671,7 @@ margin-top:5px;
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Close</button>
 							<button type="submit" class="btn btn-primary saveUpdate"
-								data-bs-dismiss="modal" name="saveUpdate">Save changes</button>
+								name="saveUpdate">Save changes</button>
 						</div>
 					</form>
 				</div>
@@ -665,13 +685,17 @@ margin-top:5px;
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">New account</h5>
+					<h5 class = "modal-title">Add new staff successfully!!!</h5>
+					
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
+					<div class = "mb-3 row">
+						<h5 class="modal-title">New account</h5>
+					</div>
 					<div class="mb-3 row">
-						<label for="staticEmail" class="col-sm-2 col-form-label">Username: </label>
+						<label for="staticEmail" class="col-sm-2 col-form-label">User name: </label>
 						<div class="col-sm-10">
 							<input type="text" readonly class="form-control-plaintext"
 								id="username">
@@ -680,7 +704,7 @@ margin-top:5px;
 					<div class="mb-3 row">
 						<label for="inputPassword" class="col-sm-2 col-form-label">Password: </label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" value="123" readonly>
+							<input type="text" class="form-control" value="******" readonly>
 						</div>
 					</div>
 				</div>
@@ -720,6 +744,32 @@ margin-top:5px;
 			</div>
 		</div>
 	</div>
+	
+	<!-- disable -->
+	<div class="modal" tabindex="-1" id="disable">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Warning</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Are you sure about disabling it ?</p>
+				</div>
+				<div class="modal-footer">
+					<form action="Recruit/DisableStaff.htm" method="get">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">No</button>
+						<button type="submit" class="btn btn-primary yes-disable-warning"
+							data-bs-dismiss="modal" name="yes-disable-warning">Yes</button>
+					</form>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
 
 	<!-- Reset -->
 	<div class="modal" tabindex="-1" id="ResetWarning">
@@ -731,7 +781,7 @@ margin-top:5px;
 						aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<p>Do you want to reset this password account to 123 ?</p>
+					<p>Do you want to reset the password for this account ?</p>
 				</div>
 				<div class="modal-footer">
 					<form action="Recruit/ResetPassword.htm" method="get">
@@ -751,22 +801,21 @@ margin-top:5px;
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">New Password</h5>
+					<h5 class="modal-title">Reset password successfully!!!</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
 					<div class="mb-3 row">
-						<label for="staticEmail" class="col-sm-2 col-form-label">Username</label>
+						<label for="staticEmail" class="col-sm-2 col-form-label">Account </label>
 						<div class="col-sm-10">
 							<input type="text" readonly class="form-control-plaintext"
 								id="ResetUsername">
 						</div>
-					</div>
-					<div class="mb-3 row">
-						<label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+						<label for="staticEmail" class="col-sm-2 col-form-label">Password </label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" value="123" readonly>
+							<input type="text" readonly class="form-control-plaintext"
+								id="ResetUsername" value = "******">
 						</div>
 					</div>
 				</div>
@@ -775,6 +824,86 @@ margin-top:5px;
 						<button type="button" class="btn btn-success"
 							data-bs-dismiss="modal">Ok</button>
 					</form>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Notification -->
+	<div class="modal" tabindex="-1" id="UpdateSuccessModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">!!!</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Update staff's information successfully</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success"
+					data-bs-dismiss="modal">Ok</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Notification -->
+	<div class="modal" tabindex="-1" id="UpdateFailedModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">!!!</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Fail to update staff's information</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger"
+					data-bs-dismiss="modal">Ok</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Notification -->
+	<div class="modal" tabindex="-1" id="deleteSuccess">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Notification!!!</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Delete this employee successfully</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success"
+					data-bs-dismiss="modal">Ok</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Notification -->
+	<div class="modal" tabindex="-1" id="deleteFail">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Warning !!!</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Fail to delete this employee because she or he has links to other information</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger"
+					data-bs-dismiss="modal">Ok</button>
 
 				</div>
 			</div>
