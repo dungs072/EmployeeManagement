@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ptithcm.bean.IncrementNumberAndTextKeyHandler;
+import ptithcm.bean.PassDataBetweenControllerHandler;
 import ptithcm.bean.Primarykeyable;
 import ptithcm.entity.AccountEntity;
 import ptithcm.entity.JobPositionEntity;
@@ -41,6 +42,9 @@ public class RecruitLayOffEmployeeController {
 	@Qualifier("staffKeyHandler")
 	IncrementNumberAndTextKeyHandler staffKeyHandler;
 	
+	@Autowired
+	@Qualifier("staffPassDataHandler")
+	PassDataBetweenControllerHandler staffPassDataBetweenControllerHandler;
 
 
 	private List<StaffEntity> staffList;
@@ -64,6 +68,7 @@ public class RecruitLayOffEmployeeController {
 		staffList = getStaffs();
 		model.addAttribute("jobs", jobs);
 		model.addAttribute("staffs", staffList);
+		model.addAttribute("isShowJob",true);
 		handleCheckInput(model);
 		return "/Admin/RecruitEmployee";
 	}
@@ -71,6 +76,7 @@ public class RecruitLayOffEmployeeController {
 	@RequestMapping(params = "saveAddEmployee")
 	public String addEmloyee(HttpServletRequest request, ModelMap model, StaffEntity staff) {
 		handleCheckInput(model);
+
 		if(staff.getHO().isBlank()||staff.getTEN().isBlank()) {
 			staffList = getStaffs();
 			List<JobPositionEntity> jobs = getJobs();
@@ -102,6 +108,7 @@ public class RecruitLayOffEmployeeController {
 			staff.setJobPosition(job);
 			addEmloyeeToDB(staff, staffId);
 			model.addAttribute("staffIdValue",staffId);
+			model.addAttribute("addSuccess",true);
 		}
 		
 
@@ -141,13 +148,42 @@ public class RecruitLayOffEmployeeController {
 		return "/Admin/RecruitEmployee";
 	}
 
-	@RequestMapping(value = "/UpdateStaff", method = RequestMethod.GET)
+	@RequestMapping(value = "/UpdateStaff", method = RequestMethod.POST)
 	public String updateInforEmployee(HttpServletRequest request, ModelMap model, StaffEntity staff) {
 		
 		Session session = factory.getCurrentSession();
+		List<JobPositionEntity> jobs = getJobs();
 		if(staff.getHO().isBlank()||staff.getTEN().isBlank()) {
 			staffList = getStaffs();
+			StaffEntity oldstaff = getStaff(currentStaffId);
+			model.addAttribute("updateSuccess",false);
 			model.addAttribute("staffs", staffList);
+			model.addAttribute("staff", oldstaff);
+			model.addAttribute("jobs", jobs);
+			handleCheckInput(model);
+			return "/Admin/RecruitEmployee";
+		}
+		if(hasIdentificationCardNumberInDB(staff.getCCCD(),currentStaffId)) {
+			StaffEntity oldstaff = getStaff(currentStaffId);
+			model.addAttribute("isWrongIDCard","true");
+			model.addAttribute("idCardMessage","The new id number existed");
+			staffList = getStaffs();
+			model.addAttribute("updateSuccess",false);
+			model.addAttribute("staffs", staffList);
+			model.addAttribute("staff", oldstaff);
+			model.addAttribute("jobs", jobs);
+			handleCheckInput(model);
+			return "/Admin/RecruitEmployee";
+		}
+		else if(hasPhoneNumberInDB(staff.getSDT(),currentStaffId)) {
+			StaffEntity oldstaff = getStaff(currentStaffId);
+			model.addAttribute("isWrongPhoneNumber","true");
+			model.addAttribute("phoneMessage","The new phone number existed");
+			staffList = getStaffs();
+			model.addAttribute("updateSuccess",false);
+			model.addAttribute("staffs", staffList);
+			model.addAttribute("staff", oldstaff);
+			model.addAttribute("jobs", jobs);
 			handleCheckInput(model);
 			return "/Admin/RecruitEmployee";
 		}
@@ -176,6 +212,7 @@ public class RecruitLayOffEmployeeController {
 	
 		staffList = getStaffs();
 		model.addAttribute("staffs", staffList);
+		model.addAttribute("updateSuccess",true);
 		handleCheckInput(model);
 		return "/Admin/RecruitEmployee";
 	}
