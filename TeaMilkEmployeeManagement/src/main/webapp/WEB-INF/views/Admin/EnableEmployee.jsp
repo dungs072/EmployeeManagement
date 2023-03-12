@@ -281,22 +281,22 @@ tbody tr:hover {
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">New account</h5>
+					<h5 class="modal-title">Enable this account successfully</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
 					<div class="mb-3 row">
-						<label for="staticEmail" class="col-sm-2 col-form-label">Username</label>
+						<label for="staticEmail" class="col-sm-2 col-form-label">User name: </label>
 						<div class="col-sm-10">
 							<input type="text" readonly class="form-control-plaintext"
 								id="username">
 						</div>
 					</div>
 					<div class="mb-3 row">
-						<label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+						<label for="inputPassword" class="col-sm-2 col-form-label">Password: </label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" value = "123" readonly>
+							<input type="text" class="form-control" value = "******" readonly>
 						</div>
 					</div>
 				</div>
