@@ -134,6 +134,7 @@ public class RecruitLayOffEmployeeController {
 		disableAccount(session, staffId.strip());
 		staffList = getStaffs();
 		model.addAttribute("staffs", staffList);
+		model.addAttribute("disableSuccess",true);
 		return "/Admin/RecruitEmployee";
 	}
 

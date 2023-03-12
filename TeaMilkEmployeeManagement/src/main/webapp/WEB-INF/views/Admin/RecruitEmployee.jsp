@@ -185,6 +185,11 @@ margin-top:5px;
 							else if(canDelete=="false"){
 								$('#deleteFail').modal("show");
 							}
+							
+							var disableSuccess = [[${disableSuccess}]];
+							if(disableSuccess=="true"){
+								$('#disableSuccess').modal("show");
+							}
 						});
 	});
 </script>
@@ -424,7 +429,7 @@ margin-top:5px;
 					<form action="Recruit.htm" method="post">
 						<div class="form-group">
 							<label for="firstname">First name:</label> <input type="text"
-								class="form-control firstName" pattern="[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+.*[^ ].*"
+								class="form-control firstName" pattern="([a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]\s*)+"
 								placeholder="First name..." name="HO" maxlength="30" required />
 						</div>
 						<!-- fix pattern there -->
@@ -465,7 +470,7 @@ margin-top:5px;
 						<div class="form-group">
 							<label for="address">Address:</label> <input type="text"
 								class="form-control address" id="adderess" name="DIACHI"
-								value="97 Man Thiện" maxlength="50" pattern = ".*[^ ].*"/>
+								value="97 Man Thiện" maxlength="50" pattern="([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]\s*)+"/>
 						</div>
 						<div class="form-group">
 							<label for="add-jobId">Job position:</label> <select
@@ -521,7 +526,7 @@ margin-top:5px;
 					<form action="Recruit/UpdateStaff.htm" method="post">
 						<div class="form-group">
 							<label for="firstname">First name:</label> <input type="text"
-								class="form-control" id="firstname" pattern="[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+.*[^ ].*"
+								class="form-control" id="firstname" pattern="([a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]\s*)+"
 								placeholder="First name..." name="HO" value="${staff.HO}"
 								maxlength="30" required/>
 						</div>
@@ -599,7 +604,7 @@ margin-top:5px;
 						<div class="form-group">
 							<label for="address">Address:</label> <input type="text"
 								class="form-control" id="address" name="DIACHI"
-								value="${staff.DIACHI }" maxlength="50" pattern = ".*[^ ].*"/>
+								value="${staff.DIACHI }" maxlength="50" pattern="([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]\s*)+"/>
 						</div>
 						<div class="form-group">
 							<label for="jobPosition">Job position:</label> <select
@@ -903,6 +908,27 @@ margin-top:5px;
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-danger"
+					data-bs-dismiss="modal">Ok</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Notification -->
+	<div class="modal" tabindex="-1" id="disableSuccess">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Notification !!!</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Disable this account successfully</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success"
 					data-bs-dismiss="modal">Ok</button>
 
 				</div>
