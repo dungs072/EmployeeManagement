@@ -21,6 +21,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import ptithcm.bean.FormatString;
 import ptithcm.bean.IncrementNumberAndTextKeyHandler;
 import ptithcm.bean.PassDataBetweenControllerHandler;
 import ptithcm.bean.Primarykeyable;
@@ -46,6 +47,9 @@ public class RecruitLayOffEmployeeController {
 	@Qualifier("staffPassDataHandler")
 	PassDataBetweenControllerHandler staffPassDataBetweenControllerHandler;
 
+	@Autowired
+	@Qualifier("formatText")
+	FormatString formatString;
 
 	private List<StaffEntity> staffList;
 	private String currentStaffId;
@@ -77,13 +81,6 @@ public class RecruitLayOffEmployeeController {
 	public String addEmloyee(HttpServletRequest request, ModelMap model, StaffEntity staff) {
 		handleCheckInput(model);
 
-		if(staff.getHO().isBlank()||staff.getTEN().isBlank()) {
-			staffList = getStaffs();
-			List<JobPositionEntity> jobs = getJobs();
-			model.addAttribute("staffs",staffList);
-			model.addAttribute("jobs",jobs);
-			return "/Admin/RecruitEmployee";
-		}
 		if(hasIdentificationCardNumberInDB(staff.getCCCD())) {
 			model.addAttribute("isWrongIDCard","true");
 			model.addAttribute("idCardMessage","This id number existed");
@@ -100,10 +97,10 @@ public class RecruitLayOffEmployeeController {
 			if(job.getTENVITRI().strip().equals("Manager")) {
 				staff.setHINHTHUC("FULL");
 			}
-			staff.setHO(staff.getHO().strip());
-			staff.setTEN(staff.getTEN().strip());
-			if(staff.getDIACHI()!=null&&!staff.getDIACHI().isEmpty()) {
-				staff.setDIACHI(staff.getDIACHI().strip());
+			staff.setHO(formatString.getTextFormat(staff.getHO()));
+			staff.setTEN(formatString.getTextFormat(staff.getTEN()));
+			if(staff.getDIACHI()!=null) {
+				staff.setDIACHI(formatString.getTextFormat(staff.getDIACHI()));
 			}
 			staff.setJobPosition(job);
 			addEmloyeeToDB(staff, staffId);
@@ -122,12 +119,21 @@ public class RecruitLayOffEmployeeController {
 	@RequestMapping(value = "/DeleteStaff", method = RequestMethod.GET)
 	public String deleteEmployee(HttpServletRequest request, ModelMap model) {
 		String staffId = request.getParameter("yes-warning");
-		deleteEmployeeFromDB(staffId);
+		deleteEmployeeFromDB(staffId,model);
 		staffList = getStaffs();
 		List<JobPositionEntity> jobs = getJobs();
 		model.addAttribute("staffs", staffList);
 		model.addAttribute("jobs", jobs);
 		handleCheckInput(model);
+		return "/Admin/RecruitEmployee";
+	}
+	@RequestMapping(value = "/DisableStaff",method = RequestMethod.GET)
+	public String disableEmployee(HttpServletRequest request, ModelMap model) {
+		Session session = factory.getCurrentSession();
+		String staffId = request.getParameter("yes-disable-warning");
+		disableAccount(session, staffId.strip());
+		staffList = getStaffs();
+		model.addAttribute("staffs", staffList);
 		return "/Admin/RecruitEmployee";
 	}
 
@@ -197,9 +203,10 @@ public class RecruitLayOffEmployeeController {
 			staff.setEMAIL(staff.getEMAIL().strip());
 		}
 		if(staff.getDIACHI()!=null&&!staff.getDIACHI().isEmpty()) {
-			staff.setDIACHI(staff.getDIACHI().strip());
+			staff.setDIACHI(formatString.getTextFormat(staff.getDIACHI()));
 		}
-
+		staff.setHO(formatString.getTextFormat(staff.getHO()));
+		staff.setTEN(formatString.getTextFormat(staff.getTEN()));
 		staff.setMANV(currentStaffId);
 
 		JobPositionEntity job = (JobPositionEntity) session.get(JobPositionEntity.class, maCV);
@@ -318,7 +325,7 @@ public class RecruitLayOffEmployeeController {
 		session.save(account);
 	}
 
-	private void deleteEmployeeFromDB(String id) {
+	private void deleteEmployeeFromDB(String id,ModelMap map) {
 		StaffEntity staff = new StaffEntity();
 		staff.setMANV(id);
 		Session session = factory.getCurrentSession();
@@ -328,8 +335,9 @@ public class RecruitLayOffEmployeeController {
 
 			session.delete(account);
 			session.delete(staff);
+			map.addAttribute("canDelete",true);
 		} else {
-			disableAccount(session, id);
+			map.addAttribute("canDelete",false);
 		}
 
 	}
