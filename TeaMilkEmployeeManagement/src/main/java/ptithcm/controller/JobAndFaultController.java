@@ -67,7 +67,7 @@ public class JobAndFaultController {
 		String jobId = jobKeyHandler.getNewKey("CV");
 		addJobToDB(job, jobId);
 		updateAllTable(model);
-
+		model.addAttribute("addSuccess",true);
 		return "/Admin/JobAndFaultManager";
 	}
 
@@ -76,6 +76,7 @@ public class JobAndFaultController {
 		String faultId = faultKeyHandler.getNewKey("L");
 		addFaultToDB(fault, faultId);
 		updateAllTable(model);
+		model.addAttribute("addSuccess",true);
 		return "/Admin/JobAndFaultManager";
 	}
 
@@ -87,6 +88,7 @@ public class JobAndFaultController {
 		job.setMACV(jobId);
 		if (canDeleteJob(jobId, session)) {
 			session.delete(job);
+			model.addAttribute("deleteSuccess",true);
 		}
 		updateAllTable(model);
 		return "/Admin/JobAndFaultManager";
@@ -100,6 +102,7 @@ public class JobAndFaultController {
 		fault.setIDLOI(faultId);
 		if (canDeleteJob(faultId, session)) {
 			session.delete(fault);
+			model.addAttribute("deleteSuccess",true);
 		}
 		updateAllTable(model);
 		return "/Admin/JobAndFaultManager";
@@ -137,6 +140,7 @@ public class JobAndFaultController {
 		job.setTENVITRI(nameJob);
 		session.saveOrUpdate(job);
 		updateAllTable(model);
+		model.addAttribute("updateSuccess",true);
 		return "/Admin/JobAndFaultManager";
 	}
 
@@ -149,6 +153,7 @@ public class JobAndFaultController {
 		fault.setMOTA(desFault);
 		session.saveOrUpdate(fault);
 		updateAllTable(model);
+		model.addAttribute("updateSuccess",true);
 		return "/Admin/JobAndFaultManager";
 	}
 	
@@ -159,12 +164,22 @@ public class JobAndFaultController {
 		String description = request.getParameter("Description");
 		String startTimeStr = request.getParameter("startShiftTime");
 		String endTimeStr = request.getParameter("endShiftTime");
-		ShiftEntity shiftEntity = (ShiftEntity) session.get(ShiftEntity.class, shiftId);
-		shiftEntity.setTENCA(description);
-		shiftEntity.setStartShiftTime(Time.valueOf(startTimeStr.substring(0,5)+":00"));
-		shiftEntity.setEndShiftTime(Time.valueOf(endTimeStr.substring(0, 5)+":00"));
-		session.saveOrUpdate(shiftEntity);
+		Time startTime = Time.valueOf(startTimeStr.substring(0,5)+":00");
+		Time endTime = Time.valueOf(endTimeStr.substring(0, 5)+":00");
+		if(startTime.compareTo(endTime)>=0) {
+			model.addAttribute("cannotUpdateTime",false);
+		}
+		else {
+			ShiftEntity shiftEntity = (ShiftEntity) session.get(ShiftEntity.class, shiftId);
+			shiftEntity.setTENCA(description);
+			shiftEntity.setStartShiftTime(startTime);
+			shiftEntity.setEndShiftTime(endTime);
+			session.saveOrUpdate(shiftEntity);
+			model.addAttribute("updateSuccess",true);
+		}
+		
 		updateAllTable(model);
+		
 		return "Admin/JobAndFaultManager";
 	}
 	
