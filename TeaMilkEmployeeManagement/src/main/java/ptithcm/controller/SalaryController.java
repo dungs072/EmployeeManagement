@@ -75,7 +75,7 @@ public class SalaryController {
 				+ " (HO LIKE CONCAT('%',:search,'%')) OR "
 				+ " (TEN LIKE CONCAT('%',:search,'%')) OR "
 				+ " (jobPosition.TENVITRI LIKE CONCAT ('%',:search,'%'))"
-				+ " ORDER BY TEN";
+				+ " ORDER BY LUONGTICHLUY DESC";
 		Query query = session.createQuery(hql);
 		query.setParameter("search", searchText);
 		return query.list();
@@ -89,7 +89,7 @@ public class SalaryController {
 				+ " (HO LIKE CONCAT('%',:search,'%')) OR "
 				+ " (TEN LIKE CONCAT('%',:search,'%')) OR "
 				+ " (jobPosition.TENVITRI LIKE CONCAT ('%',:search,'%'))"
-				+ " ORDER BY TEN";
+				+ " ORDER BY LUONGTICHLUY DESC";
 		Query query = session.createQuery(hql);
 		query.setParameter("search", searchText);
 		return query.list();
@@ -130,7 +130,8 @@ public class SalaryController {
 	 public List<StaffEntity> getEnabledStaffs(){
 		 Session session = factory.getCurrentSession();
 			String hql="From StaffEntity Where MANV != :admin AND"
-					+ " MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = true)";
+					+ " MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = true) "
+					+ " ORDER BY LUONGTICHLUY DESC";
 			Query query = session.createQuery(hql);
 			query.setString("admin", "ADMIN");
 			return query.list();
@@ -138,7 +139,8 @@ public class SalaryController {
 	 public List<StaffEntity> getDisabledStaffs(){
 		 Session session = factory.getCurrentSession();
 			String hql="From StaffEntity Where MANV != :admin AND"
-					+ " MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = false)";
+					+ " MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = false) "
+					+ " ORDER BY LUONGTICHLUY DESC)";
 			Query query = session.createQuery(hql);
 			query.setString("admin", "ADMIN");
 			return query.list();

@@ -137,7 +137,22 @@ tbody tr:hover {
 				$("#faultDetailModal").modal("show");
 				localStorage.setItem("isClickedFaultInfor", "false");
 			}
-
+			var addSuccess = [[${addSuccess}]];
+			if(addSuccess=="true"){
+				$('#addSuccess').modal("show");
+			}
+			var deleteSuccess = [[${deleteSuccess}]];
+			if(deleteSuccess=="true"){
+				$('#deleteSuccess').modal("show");
+			}
+			var updateSuccess = [[${updateSuccess}]];
+			if(updateSuccess=="true"){
+				$('#updateSuccess').modal("show");
+			}
+			var cannotUpdateTime = [[${cannotUpdateTime}]]
+			if(cannotUpdateTime=="false"){
+				$('#cannotSetTime').modal("show");
+			}
 		});
 
 	});
@@ -438,14 +453,13 @@ tbody tr:hover {
 						<div class="form-group">
 							<label for="firstname">Job type:</label> <input type="text"
 								class="form-control username" placeholder="job title"
-								name="TENVITRI" value="Server" maxlength="30" />
+								name="TENVITRI" value="Server" maxlength="30" required pattern="([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]\s*)+"/>
 						</div>
 
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Close</button>
-							<button type="submit" class="btn btn-primary"
-								data-bs-dismiss="modal">Save changes</button>
+							<button type="submit" class="btn btn-primary">Save changes</button>
 						</div>
 					</form>
 				</div>
@@ -470,14 +484,14 @@ tbody tr:hover {
 						<div class="form-group">
 							<label for="firstname">Fault type:</label> <input type="text"
 								class="form-control username" placeholder="fault name"
-								name="MOTA" value="Đi làm trễ" maxlength="50" />
+								name="MOTA" value="Đi làm trễ" maxlength="50" required pattern="([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]\s*)+"/>
 						</div>
 
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Close</button>
 							<button type="submit" class="btn btn-primary"
-								data-bs-dismiss="modal">Save changes</button>
+								>Save changes</button>
 						</div>
 					</form>
 				</div>
@@ -505,7 +519,7 @@ tbody tr:hover {
 								name="ShiftId" value="" maxlength="50" readonly />
 							<label for="firstname">Description:</label> <input type="text"
 								class="form-control description" placeholder="typing your description"
-								name="Description" value="" maxlength="50" />
+								name="Description" value="" maxlength="50" pattern="([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]\s*)+"/>
 							<label for="firstname">Start time:</label> <input type="time"
 								class="form-control startTime" placeholder="typing start time"
 								name="startShiftTime" required/>
@@ -518,7 +532,7 @@ tbody tr:hover {
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Close</button>
 							<button type="submit" class="btn btn-primary"
-								data-bs-dismiss="modal">Save changes</button>
+								>Save changes</button>
 						</div>
 					</form>
 				</div>
@@ -544,13 +558,13 @@ tbody tr:hover {
 						<div class="form-group">
 							<label for="firstname">Job title:</label> <input type="text"
 								class="form-control username" id="TENVITRI" placeholder="...."
-								name="updateTENVITRI" value="${showJob.TENVITRI}" maxlength="30" />
+								name="updateTENVITRI" value="${showJob.TENVITRI}" maxlength="30" pattern="([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]\s*)+" />
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Close</button>
 							<button type="submit" class="btn btn-primary saveJobUpdate"
-								data-bs-dismiss="modal" name="updateJobId"
+								name="updateJobId"
 								value="${showJob.MACV}">Save changes</button>
 						</div>
 					</form>
@@ -579,13 +593,13 @@ tbody tr:hover {
 						<div class="form-group">
 							<label for="firstname">Fault title:</label> <input type="text"
 								class="form-control username" id="MOTA" placeholder="...."
-								name="updateMOTA" value="${showFault.MOTA}" maxlength="30" />
+								name="updateMOTA" value="${showFault.MOTA}" maxlength="30" pattern="([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]\s*)+" />
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Close</button>
 							<button type="submit" class="btn btn-primary saveFaultUpdate"
-								data-bs-dismiss="modal" name="updateFaultId"
+								name="updateFaultId"
 								value="${showFault.IDLOI}">Save changes</button>
 						</div>
 					</form>
@@ -620,7 +634,7 @@ tbody tr:hover {
 		</div>
 	</div>
 
-	<!-- delete fault -->
+	<!-- delete fault -->>
 	<div class="modal" tabindex="-1" id="faultWarning">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -643,7 +657,84 @@ tbody tr:hover {
 			</div>
 		</div>
 	</div>
-
+	
+	<!-- Notification -->
+	<div class="modal" tabindex="-1" id="addSuccess">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Notification</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Add successfully</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success"
+							data-bs-dismiss="modal">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal" tabindex="-1" id="deleteSuccess">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Notification</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Delete successfully</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success"
+							data-bs-dismiss="modal">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal" tabindex="-1" id="updateSuccess">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Notification</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Update successfully</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success"
+							data-bs-dismiss="modal">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal" tabindex="-1" id="cannotSetTime">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Notification</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Cannot set start time and end time of the shift 
+						because start time must be less than end time</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger"
+							data-bs-dismiss="modal">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </body>
 </html>
