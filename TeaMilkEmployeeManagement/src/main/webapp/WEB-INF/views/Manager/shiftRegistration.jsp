@@ -403,16 +403,31 @@ input {
 			</div>
 			<div class="col-sm-2">
 				<div class="col-auto">
-						<button type="button" class="btn btn-success"
-							data-bs-toggle="modal" data-bs-target="#confirmWarning"><i class="fa fa-check-square" aria-hidden="true"></i> Confirm</button>
+						<button type="button" class="btn btn-success" style="width: 100px;" title = "Confirm is ready for all not ready registrations in this week"
+							data-bs-toggle="modal" data-bs-target="#confirmWarning"><i class="fa fa-check-square" aria-hidden="true"></i></button>
 					</div>
 			</div>
+			
+			<div class="col-sm-2">
+				<div class="col-auto">
+						<button type="button" class="btn btn-success" style="width: 100px;" title = "Apply the next day registrations for all the next days in this week"
+							data-bs-toggle="modal" data-bs-target="#confirmWarning"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i></button>
+					</div>
+			</div>
+			
+			<div class="col-sm-2">
+				<div class="col-auto">
+						<button type="button" class="btn btn-success" style="width: 100px;" title = "Apply registrations for the next week"
+							data-bs-toggle="modal" data-bs-target="#confirmWarning"><i class="fa fa-calendar" aria-hidden="true"></i></button>
+					</div>
+			</div>
+			
 			<div class="col-sm-2">
 				<form action=ManagerRegistration/Search.htm method="get"
 					class="headerForm">
 					<div class="col-auto">
-						<button type="button" class="btn btn-danger"
-							data-bs-toggle="modal" data-bs-target="#cancelConfirmWarning"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+						<button type="button" class="btn btn-danger" style="width: 100px;" title = "Cancel all ready registrations in this week"
+							data-bs-toggle="modal" data-bs-target="#cancelConfirmWarning"><i class="fa fa-ban" aria-hidden="true"></i></button>
 					</div>
 				</form>
 			</div>
@@ -1012,6 +1027,31 @@ input {
 						<p>All shift registrations will be cancel confirmations !!!</p>
 					</div>
 					<form action = "ManagerRegistration/cancelConfirmShifts.htm" method = "get">
+						<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">No</button>
+						<button type="submit" class="btn btn-primary"
+							data-bs-dismiss="modal">Yes</button>
+					</div>
+					</form>
+					
+				</div>
+			</div>
+			</div>
+			
+		<!--apply-for-day-->
+		<div class="modal" id="cancelConfirmWarning" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>All shift registrations in the next day will be register for left days in the week !!!</p>
+					</div>
+					<form action = "ManagerRegistration/applyTheNextDay.htm" method = "get">
 						<div class="modal-footer">
 						<button type="button" class="btn btn-secondary"
 							data-bs-dismiss="modal">No</button>

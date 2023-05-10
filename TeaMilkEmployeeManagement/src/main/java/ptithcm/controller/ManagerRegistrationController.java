@@ -2,10 +2,12 @@ package ptithcm.controller;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 import static java.time.temporal.TemporalAdjusters.previousOrSame;
 
@@ -263,6 +265,11 @@ public class ManagerRegistrationController {
 		updateConfirmState(false);
 		return displayMainViewDontDeleteOldUI(request, map);
 	}
+	@RequestMapping(value = "/applyTheNextDay",method = RequestMethod.GET)
+	public String applyTheNextDayInCurrentWeek(HttpServletRequest request,ModelMap map) {
+		
+		return displayMainViewDontDeleteOldUI(request,map);
+	}
 	@RequestMapping(value = "/showShiftDetail",method = RequestMethod.GET)
 	public String showShiftDetail(HttpServletRequest request, ModelMap map) {
 		Session session = factory.getCurrentSession();
@@ -279,6 +286,38 @@ public class ManagerRegistrationController {
 		query.setString("shiftDetailId", shiftDetailId);
 		return query.list();
 	}
+	private void handleApplyTheNextDayInCurrentWeek() {
+		Session session = factory.getCurrentSession();
+		
+		LocalDate currentDate = LocalDate.now();
+
+		// Find the first day of the current week (Assuming Monday as the first day of
+		// the week)
+		LocalDate firstDayOfWeek = currentDate;
+		while (firstDayOfWeek.getDayOfWeek() != DayOfWeek.MONDAY) {
+			firstDayOfWeek = firstDayOfWeek.minusDays(1);
+		}
+
+		// Create a list to store the days of the week
+		List<LocalDate> weekDays = new ArrayList<>();
+		
+		// Add the days of the week to the list
+        long daysDifference = ChronoUnit.DAYS.between(currentDate, firstDayOfWeek);
+        int intDifference = Math.toIntExact(daysDifference);
+		for (int i = intDifference+2; i < 7; i++) {
+			LocalDate day = firstDayOfWeek.plusDays(i);
+			weekDays.add(day);
+			
+		}
+	
+
+	}
+//	private ArrayList<OpenShiftEntity> getCurrentOpenShifts(Session session,LocalDate currentDate){
+//		String primaryDateAfterPlus = castToCreatePrimaryKeyFormat(currentDate.toString());
+//		
+//		String openShiftId1 = primaryDateAfterPlus+"-"+"1";
+//		OpenShiftEntity openShiftEntity = (OpenShiftEntity) session.get(OpenShiftEntity.class, openShiftId);
+//	}
 	private void updateConfirmState(boolean state) {
 		Session session = factory.getCurrentSession();
 		long millis=System.currentTimeMillis();  

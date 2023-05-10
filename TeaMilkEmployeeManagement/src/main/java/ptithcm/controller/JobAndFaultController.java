@@ -9,8 +9,10 @@ import javax.transaction.Transactional;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,18 +67,33 @@ public class JobAndFaultController {
 	@RequestMapping(value = "/AddJob", method = RequestMethod.GET)
 	public String addJob(ModelMap model, JobPositionEntity job) {
 		String jobId = jobKeyHandler.getNewKey("CV");
-		addJobToDB(job, jobId);
-		updateAllTable(model);
-		model.addAttribute("addSuccess",true);
+		if(canAddJob(job.getTENVITRI())) {
+			addJobToDB(job, jobId);
+
+			updateAllTable(model);
+			model.addAttribute("addSuccess",true);
+		}
+		else {
+			updateAllTable(model);
+			model.addAttribute("cannotAddJob",true);
+		}
+		
 		return "/Admin/JobAndFaultManager";
 	}
 
 	@RequestMapping(value = "/AddFault", method = RequestMethod.GET)
 	public String addFault(ModelMap model, MistakeEntity fault) {
 		String faultId = faultKeyHandler.getNewKey("L");
-		addFaultToDB(fault, faultId);
-		updateAllTable(model);
-		model.addAttribute("addSuccess",true);
+		if(canAddFault(fault.getMOTA())) {
+			addFaultToDB(fault, faultId);
+			updateAllTable(model);
+			model.addAttribute("addSuccess",true);
+		}
+		else {
+			updateAllTable(model);
+			model.addAttribute("cannotAddFault",true);
+		}
+		
 		return "/Admin/JobAndFaultManager";
 	}
 
@@ -136,8 +153,10 @@ public class JobAndFaultController {
 		Session session = factory.getCurrentSession();
 		String jobId = request.getParameter("updateJobId");
 		String nameJob = request.getParameter("updateTENVITRI");
+		float salary = Float.parseFloat(request.getParameter("updateSalaryPerHour"));
 		JobPositionEntity job = (JobPositionEntity) session.get(JobPositionEntity.class, jobId);
 		job.setTENVITRI(nameJob);
+		job.setLUONGTHEOGIO(salary);
 		session.saveOrUpdate(job);
 		updateAllTable(model);
 		model.addAttribute("updateSuccess",true);
@@ -214,11 +233,13 @@ public class JobAndFaultController {
 
 	private void addJobToDB(JobPositionEntity job, String id) {
 		if (job == null) {
-			return;
+			return ;
 		}
 		job.setMACV(id);
 		Session session = factory.getCurrentSession();
 		session.save(job);
+		
+		
 	}
 
 	private void addFaultToDB(MistakeEntity fault, String id) {
@@ -236,6 +257,20 @@ public class JobAndFaultController {
 		Query query = session.createQuery(hql);
 		query.setString("id", id);
 		return (long) query.uniqueResult() == 0;
+	}
+	private boolean canAddJob(String jobName) {
+		Session session = factory.getCurrentSession();
+		String hql = "SELECT COUNT(*) FROM JobPositionEntity  WHERE TENVITRI = :jobName";
+		Query query = session.createQuery(hql);
+		query.setString("jobName", jobName);
+		return (long)query.uniqueResult()==0;
+	}
+	private boolean canAddFault(String faultName) {
+		Session session = factory.getCurrentSession();
+		String hql = "SELECT COUNT(*) FROM MistakeEntity  WHERE MOTA = :faultName";
+		Query query = session.createQuery(hql);
+		query.setString("faultName", faultName);
+		return (long)query.uniqueResult()==0;
 	}
 
 	@SuppressWarnings("unused")

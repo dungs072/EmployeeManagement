@@ -42,12 +42,9 @@
 	})
 	
 	$(document).on('click',".updateSalary",function(e){
-		var value = $('.salaryAmmount').val();
-		if($.isNumeric(value)){
-			$(document).find('.warningUpdateSalaryButton').val($(this).val()+","+value);
-			$('#updateSalaryWarning').modal('show');
-			
-		}
+		
+		$(document).find('.warningUpdateSalaryButton').val($(this).val()+","+"0.0");
+		$('#updateSalaryWarning').modal('show');
 	})
 	$(document).on('click',".editButton",function(e){
 		$('#editModal').modal('show');
@@ -225,9 +222,9 @@
 											<th>Employee Code</th>
 											<th>Fullname</th>
 											<th>Job position</th>
-											<th>Salary</th>
+											<th>Check in</th>
 											<th>Fault</th>
-											<th>CheckIn</th>
+											<th>Check out</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -236,38 +233,6 @@
 												<td>${s.staff.MANV}</td>
 												<td>${s.staff.HO} ${s.staff.TEN}</td>
 												<td>${s.staff.jobPosition.TENVITRI }</td>
-												<c:choose>
-													<c:when test="${empty s.THOIGIANCHAMCONG && not empty s.THOIGIANDILAM}">
-														<td>
-																<input name="salaryOfShift" type="text"
-																	placeholder="Add salary" class = "salaryAmmount" value="" required pattern="^(0*[1-9][0-9]*(\.[0-9]+)?|0+\.[0-9]*[1-9][0-9]*)$" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
-																
-																<button name="updateSalary" type="button"
-																	class="btn btn-success updateSalary" value="${s.staff.MANV.strip()}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-																</button>
-														</td>
-													</c:when>
-													<c:when test = "${empty s.THOIGIANDILAM}">
-														<td>
-																<div>${s.LUONGCA}</div>
-														</td>
-													</c:when>
-													<c:otherwise>
-														<td><form class="form-inline">
-																<div>${s.LUONGCA}</div>
-																<div>${s.THOIGIANCHAMCONG}</div>
-																<button type = button class = "btn btn-success editButton" value = "${s.ID_CTCA},${s.LUONGCA}"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-															</form></td>
-													</c:otherwise>
-												</c:choose>
-												<td>
-													<!-- Button trigger modal -->
-													<form action = "homeAnother.htm">
-													<button type="submit" class="btn btn-danger setFault"
-														value="${s.staff.MANV}"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></button>
-													</form>
-													
-												</td>
 												<c:choose>
 													<c:when test="${empty s.THOIGIANDILAM}">
 														<td>
@@ -283,6 +248,34 @@
 														</td>
 													</c:when>
 												</c:choose>
+												
+												<td>
+													<!-- Button trigger modal -->
+													<form action = "homeAnother.htm">
+													<button type="submit" class="btn btn-danger setFault"
+														value="${s.staff.MANV}"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></button>
+													</form>
+													
+												</td>
+												
+												<c:choose>
+													<c:when test="${empty s.THOIGIANCHAMCONG && not empty s.THOIGIANDILAM}">
+														<td>
+																<button name="updateSalary" type="button"
+																	class="btn btn-success updateSalary" value="${s.staff.MANV.strip()}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+																</button>
+														</td>
+													</c:when>
+									
+													<c:otherwise>
+														<td><form class="form-inline">
+																<div>${s.THOIGIANCHAMCONG}</div>
+																
+															</form></td>
+													</c:otherwise>
+												</c:choose>
+												
+												
 											</tr>
 										</c:forEach>
 									</tbody>
@@ -358,12 +351,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Do you want to add the ammount of salary to this employee ?
+        Do you want to check out time for this staff ?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
 		<form action = "updateSalary.htm" method = "get" class="form-inline">
-			 <button type="submit" class="btn btn-primary warningUpdateSalaryButton" name = "updateSalaryInfor">Update</button>
+			 <button type="submit" class="btn btn-primary warningUpdateSalaryButton" name = "updateSalaryInfor" value = "0.0">Yes</button>
 		</form>
        
       </div>

@@ -19,8 +19,19 @@ public class JobPositionEntity implements Primarykeyable {
 	@Id
 	private String MACV;
 
-	@Column(name = "TENVITRI")
+	@Column(name = "TENVITRI",unique = true)
 	private String TENVITRI;
+	
+	@Column(name = "LUONGTHEOGIO")
+	private float LUONGTHEOGIO;
+
+	public float getLUONGTHEOGIO() {
+		return LUONGTHEOGIO;
+	}
+
+	public void setLUONGTHEOGIO(float lUONGTHEOGIO) {
+		LUONGTHEOGIO = lUONGTHEOGIO;
+	}
 
 	@Transient
 	private boolean canDelete;
