@@ -93,15 +93,49 @@ public class HomeController{
 
 	public void updateSalaryToDB(String maNV, Float salary, Time time) {
 		Session session = factory.getCurrentSession();
-		StaffEntity staff = (StaffEntity) (session.get(StaffEntity.class, maNV));
-		staff.updateSalary(salary);
-		session.saveOrUpdate(staff);
 		List<ShiftDetailEntity> list = getIdAStaffInShiftDetail(maNV, idShiftShow, date_sql);
 		String IdAStaffInShiftDetail = list.get(0).getID_CTCA();
 		ShiftDetailEntity shift = (ShiftDetailEntity) session.get(ShiftDetailEntity.class, IdAStaffInShiftDetail);
+		if(shift.getTHOIGIANCHAMCONG()==null) {
+			shift.setTHOIGIANCHAMCONG(time);
+		}
+		
+		StaffEntity staff = (StaffEntity) (session.get(StaffEntity.class, maNV));
+		if(!staffPassDataBetweenControllerHandler.getData().contains("AD")||shift.getLUONGCA()==0) {
+			float salaryPerHour = staff.getJobPosition().getLUONGTHEOGIO();
+			Time startWorkShiftTime = shift.getTHOIGIANDILAM();
+			Time endWorkShiftTime = shift.getTHOIGIANCHAMCONG();
+			Time startShiftTime = shift.getOpenshift().getShift().getStartShiftTime();
+			Time endShiftTime = shift.getOpenshift().getShift().getEndShiftTime();
+		    
+			if(startWorkShiftTime.compareTo(endShiftTime)==1) {
+				salary = 0f;
+			}
+			else {
+				long timeInMillis1 = startWorkShiftTime.getTime();
+		        long timeInMillis2 = startShiftTime.getTime();
+				
+				Time startTime = timeInMillis1>timeInMillis2?startWorkShiftTime:startShiftTime;
+				timeInMillis1 = endWorkShiftTime.getTime();
+				timeInMillis2 = endShiftTime.getTime();
+				Time endTime = timeInMillis1>timeInMillis2?endShiftTime:endWorkShiftTime;
+				
+				long timeInMillis11 = startTime.getTime();
+		        long timeInMillis22 = endTime.getTime();
+
+		        int hoursDifference = (int) ((timeInMillis22 - timeInMillis11) / (1000f * 60f * 60f));
+		        salary = salaryPerHour* hoursDifference;
+			}
+			
+		}
+		
+		float oldSalary = shift.getLUONGCA();
 		shift.setLUONGCA(salary);
-		shift.setTHOIGIANCHAMCONG(time);
+		
 		session.update(shift);
+		
+		staff.editSalary(oldSalary,salary);
+		session.saveOrUpdate(staff);
 	}
 	
 	@RequestMapping(value="/setFault", method=RequestMethod.GET)
@@ -291,6 +325,7 @@ public class HomeController{
 		updateTimeCheckInToDB(time, idctca);
 		return showDetailShift(model);
 	}
+
 	
 	public void updateTimeCheckInToDB(Time time, String idCtCa) {
 		Session session = factory.getCurrentSession();

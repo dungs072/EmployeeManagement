@@ -19,7 +19,7 @@ public class MistakeEntity implements Primarykeyable {
 	@Id
 	private String IDLOI;
 
-	@Column(name = "TENLOI")
+	@Column(name = "TENLOI",unique = true)
 	private String MOTA;
 
 	@OneToMany(mappedBy = "mistakeEntity", fetch = FetchType.EAGER)

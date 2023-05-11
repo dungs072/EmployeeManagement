@@ -141,6 +141,14 @@ tbody tr:hover {
 			if(addSuccess=="true"){
 				$('#addSuccess').modal("show");
 			}
+			var cannotAddSuccess = [[${cannotAddJob}]]
+			if(cannotAddSuccess=="true"){
+				$('#cannotAddJob').modal("show");
+			}
+			var cannotAddFault = [[${cannotAddFault}]]
+			if(cannotAddFault=="true"){
+				$('#cannotAddFault').modal("show");
+			}
 			var deleteSuccess = [[${deleteSuccess}]];
 			if(deleteSuccess=="true"){
 				$('#deleteSuccess').modal("show");
@@ -285,6 +293,7 @@ tbody tr:hover {
 							<tr>
 								<th><span>STT</span></th>
 								<th><span>Job type</span></th>
+								<th><span>Salary per hour</span></th>
 								<th><span>Action</span></th>
 							</tr>
 						</thead>
@@ -294,12 +303,16 @@ tbody tr:hover {
 									<td>${i.count}</td>
 									<td>${job.TENVITRI}</td>
 									<td>
+										<fmt:setLocale value = "vi"/>
+         								<fmt:formatNumber value = "${job.LUONGTHEOGIO}" type = "currency" pattern="#,##0.00 ₫"/>
+									</td>
+									<td>
 										<form action="JobAndFault/ShowJob.htm" method="get">
-
+											<button type="submit" name="InforJob"
+												class="btn btn-secondary detailJob" value="${job.MACV}"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
 											<c:choose>
 												<c:when test="${job.canUpdate==true}">
-													<button type="submit" name="InforJob"
-														class="btn btn-secondary detailJob" value="${job.MACV}"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+													
 												</c:when>
 												<c:otherwise>
 
@@ -328,7 +341,7 @@ tbody tr:hover {
 							</c:forEach>
 
 							<tr class="footButton">
-								<td colspan="3">
+								<td colspan="4">
 									<button type="button" class="btn btn-success addBtn"
 										data-bs-toggle="modal" data-bs-target="#addJobModal">
 										+</button>
@@ -454,6 +467,9 @@ tbody tr:hover {
 							<label for="firstname">Job type:</label> <input type="text"
 								class="form-control username" placeholder="job title"
 								name="TENVITRI" value="Server" maxlength="30" required pattern="([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]\s*)+"/>
+							<label for="firstname">Salary per hour:</label> <input type="text"
+								class="form-control username" id="LUONGTHEOGIO" placeholder="...."
+								name="LUONGTHEOGIO" value="10000.0" maxlength="30" pattern="^\d+(\.\d)?$"/>
 						</div>
 
 						<div class="modal-footer">
@@ -556,10 +572,25 @@ tbody tr:hover {
 				<div class="modal-body">
 					<form action="JobAndFault/UpdateJob.htm" method="get">
 						<div class="form-group">
-							<label for="firstname">Job title:</label> <input type="text"
-								class="form-control username" id="TENVITRI" placeholder="...."
-								name="updateTENVITRI" value="${showJob.TENVITRI}" maxlength="30" pattern="([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]\s*)+" />
+							<c:choose>
+								<c:when test="${showJob.TENVITRI=='Manager'}">
+									<label for="firstname">Job title:</label> <input type="text" readonly
+										class="form-control username" id="TENVITRI" placeholder="...."
+										name="updateTENVITRI" value="${showJob.TENVITRI}" maxlength="30" pattern="([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]\s*)+" />			
+								</c:when>
+								<c:otherwise>
+									<label for="firstname">Job title:</label> <input type="text"
+									class="form-control username" id="TENVITRI" placeholder="...."
+									name="updateTENVITRI" value="${showJob.TENVITRI}" maxlength="30" pattern="([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]\s*)+" />
+								</c:otherwise>
+							</c:choose>
+							
+							
+							<label for="firstname">Salary per hour:</label> <input type="text"
+								class="form-control username" id="LUONGTHEOGIO" placeholder="...."
+								name="updateSalaryPerHour" value="${showJob.LUONGTHEOGIO}" maxlength="30" pattern="^\d+(\.\d)?$"/>
 						</div>
+						
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Close</button>
@@ -669,6 +700,42 @@ tbody tr:hover {
 				</div>
 				<div class="modal-body">
 					<p>Add successfully</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success"
+							data-bs-dismiss="modal">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal" tabindex="-1" id="cannotAddJob">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Error</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Cannot add job with same name </p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success"
+							data-bs-dismiss="modal">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal" tabindex="-1" id="cannotAddFault">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Error</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Cannot add fault with same name</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-success"

@@ -7,7 +7,6 @@
 <meta charset="UTF-8">
 <%@include file="/WEB-INF/views/include/AdminHeader.jsp"%>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
 <style>
 /* Set a fixed scrollable wrapper */
 .tableWrap {
@@ -287,8 +286,8 @@ tbody tr:hover {
 										<td>${staff.HINHTHUC}</td>
 										<td>
 											<span>
-												 	<fmt:setLocale value = "vi_VN"/>
-         											<fmt:formatNumber value = "${staff.LUONGTICHLUY}" type = "currency" maxFractionDigits="0"/>
+												 	<fmt:setLocale value = "vi"/>
+         											<fmt:formatNumber value = "${staff.LUONGTICHLUY}" type = "currency" pattern="#,##0.00 ₫"/>
 											</span>
 										</td>
 										<td>
@@ -315,7 +314,10 @@ tbody tr:hover {
 										<td>${staff.HO}  ${staff.TEN}</td>
 										<td>${staff.jobPosition.TENVITRI}</td>
 										<td>${staff.HINHTHUC}</td>
-										<td><span>${staff.LUONGTICHLUY}</span></td>
+										<td><span>
+											<fmt:setLocale value = "vi"/>
+         									<fmt:formatNumber value = "${staff.LUONGTICHLUY}" type = "currency" pattern="#,##0.00 ₫"/>
+										</span></td>
 										<td>
 											<form action = "salary.htm">
 														<button type="submit" class="btn btn-success valueButton"
