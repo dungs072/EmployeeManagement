@@ -3,6 +3,7 @@ package ptithcm.controller;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,11 +53,11 @@ public class HomeController{
 	public String showShift(ModelMap model) {
 		LocalTime time = LocalTime.now();
 		int hour = time.getHour();
-		if (hour >= 7 && hour < 11) {
+		if (hour >= 7 && hour <= 12) {
 			idShiftShow = "1";
-		} else if (hour >= 13 && hour < 17) {
+		} else if (hour > 12 && hour < 17) {
 			idShiftShow = "2";
-		} else if (hour >= 17 && hour < 21) {
+		} else if (hour >= 17 && hour < 24) {
 			idShiftShow = "3";
 		}
 		List<OpenShiftEntity> listOpenId = getIdAOpenShift(idShiftShow, date_sql);
@@ -103,28 +104,34 @@ public class HomeController{
 		StaffEntity staff = (StaffEntity) (session.get(StaffEntity.class, maNV));
 		if(!staffPassDataBetweenControllerHandler.getData().contains("AD")||shift.getLUONGCA()==0) {
 			float salaryPerHour = staff.getJobPosition().getLUONGTHEOGIO();
-			Time startWorkShiftTime = shift.getTHOIGIANDILAM();
-			Time endWorkShiftTime = shift.getTHOIGIANCHAMCONG();
-			Time startShiftTime = shift.getOpenshift().getShift().getStartShiftTime();
-			Time endShiftTime = shift.getOpenshift().getShift().getEndShiftTime();
+			LocalTime startWorkShiftTime = shift.getTHOIGIANDILAM().toLocalTime();
+			LocalTime endWorkShiftTime = shift.getTHOIGIANCHAMCONG().toLocalTime();
+			LocalTime startShiftTime = shift.getOpenshift().getShift().getStartShiftTime().toLocalTime();
+			LocalTime endShiftTime = shift.getOpenshift().getShift().getEndShiftTime().toLocalTime();
 		    
-			if(startWorkShiftTime.compareTo(endShiftTime)==1) {
+
+			System.out.println(startWorkShiftTime.toString());
+			System.out.println(startShiftTime.toString());
+			System.out.println(endWorkShiftTime.toString());
+			System.out.println(endShiftTime);
+			int startWorkEndShiftValue = startWorkShiftTime.compareTo(endShiftTime);
+			int endWorkStartShiftValue = endWorkShiftTime.compareTo(startShiftTime);
+			if(startWorkEndShiftValue>=0 || endWorkStartShiftValue<=0) {
 				salary = 0f;
 			}
 			else {
-				long timeInMillis1 = startWorkShiftTime.getTime();
-		        long timeInMillis2 = startShiftTime.getTime();
+				int startValue = startWorkShiftTime.compareTo(startShiftTime);
+				int endValue = endWorkShiftTime.compareTo(endShiftTime);
 				
-				Time startTime = timeInMillis1>timeInMillis2?startWorkShiftTime:startShiftTime;
-				timeInMillis1 = endWorkShiftTime.getTime();
-				timeInMillis2 = endShiftTime.getTime();
-				Time endTime = timeInMillis1>timeInMillis2?endShiftTime:endWorkShiftTime;
 				
-				long timeInMillis11 = startTime.getTime();
-		        long timeInMillis22 = endTime.getTime();
-
-		        int hoursDifference = (int) ((timeInMillis22 - timeInMillis11) / (1000f * 60f * 60f));
-		        salary = salaryPerHour* hoursDifference;
+				LocalTime startTime = startValue>=0?startWorkShiftTime:startShiftTime;
+				LocalTime endTime = endValue>=0?endShiftTime:endWorkShiftTime;
+				
+				System.out.println(startTime.toString());
+				System.out.println(endTime.toString());
+				
+				long differenceHours = startTime.until(endTime, ChronoUnit.HOURS);
+		        salary = salaryPerHour* differenceHours;
 			}
 			
 		}
