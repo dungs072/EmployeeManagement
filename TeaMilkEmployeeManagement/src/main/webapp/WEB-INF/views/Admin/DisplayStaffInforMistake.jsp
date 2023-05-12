@@ -219,6 +219,7 @@ $(document).on('click',".deleteMistake",function(e){
 						<thead>
 							<tr>
 								<th><span>STT</span></th>
+								<th><span>Id</span></th>
 								<th><span>Name</span></th>
 								<th><span>Job Position</span></th>
 								<th><span>Mistake</span></th>
@@ -228,6 +229,7 @@ $(document).on('click',".deleteMistake",function(e){
 							<c:forEach var="staff" varStatus="i" items="${staffs}">
 								<tr>
 									<td>${i.count}</td>
+									<td>${staff.MANV}</td>
 									<td>${staff.HO} ${staff.TEN}</td>
 									<td>${staff.jobPosition.TENVITRI}</td>
 									<td>

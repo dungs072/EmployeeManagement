@@ -33,6 +33,8 @@ import ptithcm.bean.PrimaryKeyWithMoreDataHandler;
 @Transactional
 @Controller
 public class HomeController{
+	private String passData = ""; 
+	private String authorityId = "";
 	@Autowired
 	SessionFactory factory;
 	
@@ -51,6 +53,18 @@ public class HomeController{
 	
 	@RequestMapping("/home")
 	public String showShift(ModelMap model) {
+		
+		if(passData.isEmpty()) {
+			if(staffPassDataBetweenControllerHandler!=null) {
+				passData = staffPassDataBetweenControllerHandler.getData();
+			}
+		}
+		if(authorityId.isEmpty()) {
+			if(staffPassDataBetweenControllerHandler!=null) {
+				authorityId = staffPassDataBetweenControllerHandler.getAuthorityId();
+			}
+		}
+		
 		LocalTime time = LocalTime.now();
 		int hour = time.getHour();
 		if (hour >= 7 && hour <= 12) {
@@ -93,6 +107,7 @@ public class HomeController{
 	}
 
 	public void updateSalaryToDB(String maNV, Float salary, Time time) {
+
 		Session session = factory.getCurrentSession();
 		List<ShiftDetailEntity> list = getIdAStaffInShiftDetail(maNV, idShiftShow, date_sql);
 		String IdAStaffInShiftDetail = list.get(0).getID_CTCA();
@@ -102,18 +117,13 @@ public class HomeController{
 		}
 		
 		StaffEntity staff = (StaffEntity) (session.get(StaffEntity.class, maNV));
-		if(!staffPassDataBetweenControllerHandler.getData().contains("AD")||shift.getLUONGCA()==0) {
+		if(!passData.contains("AD")||shift.getLUONGCA()==0) {
 			float salaryPerHour = staff.getJobPosition().getLUONGTHEOGIO();
 			LocalTime startWorkShiftTime = shift.getTHOIGIANDILAM().toLocalTime();
 			LocalTime endWorkShiftTime = shift.getTHOIGIANCHAMCONG().toLocalTime();
 			LocalTime startShiftTime = shift.getOpenshift().getShift().getStartShiftTime().toLocalTime();
 			LocalTime endShiftTime = shift.getOpenshift().getShift().getEndShiftTime().toLocalTime();
 		    
-
-			System.out.println(startWorkShiftTime.toString());
-			System.out.println(startShiftTime.toString());
-			System.out.println(endWorkShiftTime.toString());
-			System.out.println(endShiftTime);
 			int startWorkEndShiftValue = startWorkShiftTime.compareTo(endShiftTime);
 			int endWorkStartShiftValue = endWorkShiftTime.compareTo(startShiftTime);
 			if(startWorkEndShiftValue>=0 || endWorkStartShiftValue<=0) {
@@ -126,10 +136,7 @@ public class HomeController{
 				
 				LocalTime startTime = startValue>=0?startWorkShiftTime:startShiftTime;
 				LocalTime endTime = endValue>=0?endShiftTime:endWorkShiftTime;
-				
-				System.out.println(startTime.toString());
-				System.out.println(endTime.toString());
-				
+		
 				long differenceHours = startTime.until(endTime, ChronoUnit.HOURS);
 		        salary = salaryPerHour* differenceHours;
 			}
@@ -341,8 +348,10 @@ public class HomeController{
 		session.update(checkin);
 	}
 	private String returnToSpecificAccount() {
-		String priority = staffPassDataBetweenControllerHandler.getAuthorityId().strip();
-		if(priority.equals("AD")) {
+		if(!staffPassDataBetweenControllerHandler.getAuthorityId().isEmpty()){
+			authorityId = staffPassDataBetweenControllerHandler.getAuthorityId().strip();
+		}
+		if(authorityId.equals("AD")) {
 			return "Admin/Home";
 		}
 		else{

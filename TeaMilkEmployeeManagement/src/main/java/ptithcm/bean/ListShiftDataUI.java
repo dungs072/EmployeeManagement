@@ -11,7 +11,18 @@ public class ListShiftDataUI {
 	
 	private boolean canInteract = true;
 	
+	private String fullNameManager;
+	private String staffId;
 	
+
+
+	public String getFullNameManager() {
+		return fullNameManager;
+	}
+
+	public void setFullNameManager(String fullNameManager) {
+		this.fullNameManager = fullNameManager;
+	}
 
 	public ListShiftDataUI() {
 		listShiftDataUI = new ArrayList<ShiftDataUI>();
@@ -72,6 +83,17 @@ public class ListShiftDataUI {
 	}
 	public void setCanInteract(boolean canInteract) {
 		this.canInteract = canInteract;
+	}
+	public String getStaffId() {
+		return staffId;
+	}
+
+	public void setStaffId(String staffId) {
+		this.staffId = staffId;
+	}
+
+	public void setCanInteract(String otherStaffId) {
+		this.canInteract = otherStaffId.equals(staffId.trim());
 	}
 	
 }

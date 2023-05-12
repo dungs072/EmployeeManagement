@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.Session;
+
 @Entity
 @Table(name = "CA_MO")
 public class OpenShiftEntity {
@@ -101,10 +103,20 @@ public class OpenShiftEntity {
 		this.shiftDetailEntites.add(detailEntity);
 	}
 	
+	
 	public void deleteAllLinks()
 	{
 		setShift(null);
 		setStaff(null);
+	}
+	public void setDetailEntitiesClone(Set<ShiftDetailEntity> detailEntities,Session session) {
+		Set<ShiftDetailEntity> shiftDetails = new HashSet<>();;
+		for(var detail:detailEntities) {
+			ShiftDetailEntity shiftDetail = detail.clone(this);
+			session.saveOrUpdate(shiftDetail);
+			shiftDetails.add(shiftDetail);
+		}
+		this.setDetailEntities(shiftDetails);
 	}
 
 

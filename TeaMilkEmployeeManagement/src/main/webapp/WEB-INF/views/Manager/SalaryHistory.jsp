@@ -66,7 +66,31 @@ thead {
 tbody tr:hover {
 	background: #e6f7ff;
 }
+
 </style>
+<style>
+  .form-groupp {
+    margin-left: 12px;
+  }
+  .custom-label {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+  }
+  .form-row {
+    display: flex;
+    align-items: center;
+  }
+
+  .form-group {
+    margin-right: 10px;
+  }
+</style>
+
 </head>
 <body>
 <div class="main-container">
@@ -167,6 +191,27 @@ tbody tr:hover {
 			</nav>
 		</div>
 		<div class="main">
+	<div class = "datePickers">
+		<div class = "row">
+			<form action=SalaryHistory/Search.htm method="get">
+			  <div class="form-row">
+			    <div class="form-group form-groupp">
+			      	<label for="datepicker" class = "custom-label bg-primary">From date: </label>
+					<input type="date" name="fromDate" >
+			    </div>
+			    <div class="form-group">
+				     <label for="datepicker" class = "custom-label bg-primary">To date: </label>
+					<input type="date" name="toDate">
+			    </div>
+			    <div class="form-group">
+			      <button type="submit" name="searchButton"
+					class="btn btn-outline-primary searchButton"><i class="fa fa-search" aria-hidden="true"></i></button>
+			    </div>
+			  </div>
+			</form>
+			
+		</div>
+	</div>
 	<div class="container">
 		<div class="row">
 			<div class="col">
@@ -186,9 +231,12 @@ tbody tr:hover {
 										<tr>
 											<td>${i.count}</td>
 											<td>
-												<fmt:formatDate type = "both" dateStyle = "short" timeStyle = "medium" value="${bill.THOIGIANNHAN}"/>
+												<fmt:formatDate value="${bill.THOIGIANNHAN}"  pattern="dd/MM/yyyy"/>
 											</td>
-											<td>${bill.LUONGNHAN}</td>
+											<td>
+												<fmt:setLocale value = "vi"/>
+         										<fmt:formatNumber value = "${bill.LUONGNHAN}" type = "currency" pattern="#,##0.00 ₫"/>
+											</td>
 										</tr>
 									</c:forEach>
 

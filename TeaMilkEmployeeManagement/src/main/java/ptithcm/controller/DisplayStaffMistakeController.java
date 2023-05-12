@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import ptithcm.bean.PassDataBetweenControllerHandler;
 import ptithcm.entity.MistakeHistoryEntity;
@@ -63,6 +64,29 @@ public class DisplayStaffMistakeController {
 		}
 		return displayMainView(map);
 	}
+	@RequestMapping(value = "/SearchStaff", method = RequestMethod.GET)
+	public String searchEmployee(HttpServletRequest request, ModelMap model) {
+		Session session = factory.getCurrentSession();
+		String searchText = request.getParameter("searchInput");
+		List<StaffEntity> staffList = searchStaffList(session, searchText);
+		model.addAttribute("staffs", staffList);
+		return returnToSpecificAccount();
+	}
+	@SuppressWarnings("unchecked")
+	private List<StaffEntity> searchStaffList(Session session,String searchText) {
+		if(searchText.isEmpty()) {return getStaffsMistake();}
+		
+		String hql = "FROM StaffEntity WHERE MANV !='ADMIN' AND"
+				+ " MANV IN (SELECT TENTK FROM AccountEntity WHERE priorityEntity.MAQUYEN='NV') AND"
+				+ " ((HO LIKE CONCAT('%',:search,'%')) OR "
+				+ " (TEN LIKE CONCAT('%',:search,'%')) OR "
+				+ " (jobPosition.TENVITRI LIKE CONCAT ('%',:search,'%')))"
+				+ " ORDER BY TEN";
+		Query query = session.createQuery(hql);
+		query.setParameter("search", searchText);
+		return query.list();
+	}
+	
 	
 	private boolean canDeleteSpecificMistakeHistory(MistakeHistoryEntity mistakeHistory) {
 		Date currentDay = Date.valueOf(LocalDate.now());

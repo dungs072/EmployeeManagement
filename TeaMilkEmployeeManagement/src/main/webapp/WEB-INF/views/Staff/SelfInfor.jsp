@@ -220,7 +220,7 @@ margin-top:5px;
 						</div>
 						<div class="form-check">
 						<input class="form-check-input" type="radio" 
-							id="gender2" checked value = "FULL" disabled> <label class="form-check-label"
+							id="gender2" value = "FULL" disabled> <label class="form-check-label"
 							for="flexRadioDefault2"> Full time </label>
 					</div>
 					</c:if>
@@ -233,7 +233,7 @@ margin-top:5px;
 						</div>
 						<div class="form-check">
 						<input class="form-check-input" type="radio"
-							id="gender2" checked value = "FULL" checked disabled> <label class="form-check-label"
+							id="gender2" checked value = "FULL" disabled> <label class="form-check-label"
 							for="flexRadioDefault2"> Full time </label>
 					</div>
 					</c:if>
