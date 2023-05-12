@@ -10,7 +10,7 @@
 <style>
 /* Set a fixed scrollable wrapper */
 .tableWrap {
-	margin-top: 50px;
+	margin-top: 20px;
 	height: 400px;
 	overflow: auto;
 	border-radius: 10px;
@@ -70,6 +70,10 @@ thead {
 
 tbody tr:hover {
 	background: #e6f7ff;
+}
+.search{
+	margin-left: 115px;
+	
 }
 </style>
 
@@ -193,6 +197,16 @@ $(document).on('click',".deleteMistake",function(e){
 			</nav>
 		</div>
 <div class="main">
+	<div class = "row">
+		<div class = "search">
+			<form action="DisplayStaffMistake/SearchStaff.htm" method="get">
+							<input type="text" name="searchInput"
+								placeholder="Name, Job position..">
+							<button type="submit" class="btn btn-outline-dark"><i class="fa fa-search" aria-hidden="true"></i></button>
+			</form>
+		</div>
+	</div>
+	
 	<div class="container">
 		<div class="row justify-content-md-center">
 			<div class="col-10">
@@ -201,6 +215,7 @@ $(document).on('click',".deleteMistake",function(e){
 						<thead>
 							<tr>
 								<th><span>STT</span></th>
+								<th><span>Id</span></th>
 								<th><span>Name</span></th>
 								<th><span>Job Position</span></th>
 								<th><span>Mistake</span></th>
@@ -210,6 +225,7 @@ $(document).on('click',".deleteMistake",function(e){
 							<c:forEach var="staff" varStatus="i" items="${staffs}">
 								<tr>
 									<td>${i.count}</td>
+									<td>${staff.MANV}</td>
 									<td>${staff.HO} ${staff.TEN}</td>
 									<td>${staff.jobPosition.TENVITRI}</td>
 									<td>

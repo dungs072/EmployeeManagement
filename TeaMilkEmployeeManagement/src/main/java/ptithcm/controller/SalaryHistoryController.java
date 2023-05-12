@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import ptithcm.bean.PassDataBetweenControllerHandler;
 import ptithcm.entity.MistakeHistoryEntity;
@@ -22,7 +23,7 @@ import ptithcm.entity.SalaryBillEntity;
 @Controller
 @RequestMapping("/SalaryHistory")
 public class SalaryHistoryController {
-	
+	private String priorityId ="";
 	@Autowired
 	SessionFactory factory;
 	
@@ -33,8 +34,37 @@ public class SalaryHistoryController {
 	
 	@RequestMapping
 	public String showSalaryHistory(HttpServletRequest request, ModelMap map) {
+		if(employerPassdataBetweenControllerHandler!=null) {
+			if(employerPassdataBetweenControllerHandler.getAuthorityId()!=null) {
+				priorityId = employerPassdataBetweenControllerHandler.getAuthorityId().trim();
+			}
+			
+		}
 		String ownerId = employerPassdataBetweenControllerHandler.getData();
 		List<SalaryBillEntity> salaryHistories = getSalaryHistory(ownerId);
+		map.addAttribute("bills",salaryHistories);
+		return displayPriorityView();
+	}
+	@RequestMapping(value = "Search", method = RequestMethod.GET)
+	public String searchHistorySalary(HttpServletRequest request, ModelMap map) {
+		if(employerPassdataBetweenControllerHandler!=null) {
+			if(employerPassdataBetweenControllerHandler.getAuthorityId()!=null) {
+				priorityId = employerPassdataBetweenControllerHandler.getAuthorityId().trim();
+			}
+			
+		}
+		String fromDate = request.getParameter("fromDate").toString();
+		String toDate = request.getParameter("toDate").toString();
+		String ownerId = employerPassdataBetweenControllerHandler.getData();
+		List<SalaryBillEntity> salaryHistories;
+		if(fromDate.isEmpty()||toDate.isEmpty()) {
+			salaryHistories = getSalaryHistory(ownerId);
+		}
+		else {
+			salaryHistories = getSalaryHistoryBetweenDates(ownerId,fromDate,toDate);
+		}
+		
+		
 		map.addAttribute("bills",salaryHistories);
 		return displayPriorityView();
 	}
@@ -48,9 +78,19 @@ public class SalaryHistoryController {
 		query.setString("ownerId", ownerId);
 		return query.list();
 	}
+	@SuppressWarnings("unchecked")
+	private List<SalaryBillEntity> getSalaryHistoryBetweenDates(String ownerId,String fromDay, String toDay){
+		Session session = factory.getCurrentSession();
+		String hql = "FROM SalaryBillEntity WHERE staffEntity.MANV = :ownerId AND THOIGIANNHAN BETWEEN :fromDay AND :toDay"
+				+ "	ORDER BY THOIGIANNHAN DESC";
+		Query query = session.createQuery(hql);
+		query.setString("ownerId", ownerId);
+		query.setString("fromDay", fromDay);
+		query.setString("toDay", toDay);
+		return query.list();
+	}
 	
 	private String displayPriorityView() {
-		String priorityId = employerPassdataBetweenControllerHandler.getAuthorityId().strip();
 		if(priorityId.equals("QL")) {
 			return "Manager/SalaryHistory";
 		}

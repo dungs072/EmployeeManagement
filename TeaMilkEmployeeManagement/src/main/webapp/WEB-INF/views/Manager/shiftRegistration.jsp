@@ -38,6 +38,7 @@ table {
 	margin-right: auto;
 	height: 100%;
 	table-layout: fixed;
+	overflow: auto
 }
 
 td {
@@ -50,7 +51,6 @@ span {
 .tableWrap {
 	margin-top: 40px;
 	height: 450px;
-	border: 2px solid black;
 	overflow: auto;
 }
 th {
@@ -87,6 +87,7 @@ th {
     for the header borders */
 	box-shadow: 0px 0px 0 2px #e8e8e8;
 }
+
 
 /* Basic Demo styling */
 table {
@@ -142,7 +143,45 @@ input {
 }
 
 </style>
+<style>
+  /* Add a fixed position to the table header */
+  .sticky-header {
+    position: sticky;
+    top: 0;
+    background-color: #4e73df; /* Optional styling for the header */
+    z-index: 1; /* Ensure the header appears above other elements */
+  }
+	.fixed-cell {
+	  position: relative;
+	}
+	
+	.move-effect {
+	  position: sticky;
+	  top: 0;
+	  /*background-color: #fff; /* Adjust the background color as needed */
+	}
+</style>
 
+<script>
+	var moveEffects = document.querySelectorAll('.move-effect');
+	
+	window.addEventListener('scroll', function() {
+	  for (var i = 0; i < moveEffects.length; i++) {
+	    var moveEffect = moveEffects[i];
+	    var distanceToTop = moveEffect.parentNode.getBoundingClientRect().top;
+	    moveEffect.style.transform = 'translateY(' + distanceToTop + 'px)';
+	  }
+	});
+	$(window).on('load',function() {
+		var isUpdateSuccess = [[${updateSuccess}]];
+		if(isUpdateSuccess=="true"){
+			$('#updateSuccess').modal("show");
+		}
+	});
+	
+	
+
+</script>
 <script type="text/javascript">
 	$(window).on('load', function() {
 		
@@ -411,14 +450,14 @@ input {
 			<div class="col-sm-2">
 				<div class="col-auto">
 						<button type="button" class="btn btn-success" style="width: 100px;" title = "Apply the next day registrations for all the next days in this week"
-							data-bs-toggle="modal" data-bs-target="#confirmWarning"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i></button>
+							data-bs-toggle="modal" data-bs-target="#applyDays"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i></button>
 					</div>
 			</div>
 			
 			<div class="col-sm-2">
 				<div class="col-auto">
 						<button type="button" class="btn btn-success" style="width: 100px;" title = "Apply registrations for the next week"
-							data-bs-toggle="modal" data-bs-target="#confirmWarning"><i class="fa fa-calendar" aria-hidden="true"></i></button>
+							data-bs-toggle="modal" data-bs-target="#applyWeek"><i class="fa fa-calendar" aria-hidden="true"></i></button>
 					</div>
 			</div>
 			
@@ -439,7 +478,7 @@ input {
 			<div class="mt-2 row align-items-center scrollit">
 				<table class="table table-bordered" id="shiftTable">
 					<thead class="bg-primary">
-						<tr>
+						<tr class = "sticky-header">
 							<th scope="col">
 								<h6 class="text-center text-light">Time table</h6>
 							</th>
@@ -470,21 +509,35 @@ input {
 
 						<c:forEach var="shift" varStatus="indexShift" items="${shifts}">
 							<tr>
-								<th class="bg-primary">
-									<h6 class="text-center text-light">Shift ${shift.IDCA}</h6>
-									<h6 class="text-center text-light small">${shift.TENCA}</h6>
-									<h6 class="text-center text-light small">
-										<fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.startShiftTime}" /> - <fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.endShiftTime}" /> 
-									</h6>
+								<th style="background-color: #4e73df;" class = "fixed-cell">
+									<div class="move-effect">
+										<h6 class="text-center text-light">Shift ${shift.IDCA}</h6>
+										<h6 class="text-center text-light small">${shift.TENCA}</h6>
+										<h6 style="font-size: 12px;" class="text-center text-light small">
+											<fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.startShiftTime}" /> - <fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.endShiftTime}" /> 
+										</h6>
+									</div>
+									
 								</th>
 								<c:forEach var="i" begin="1" end="7">
-									<td><c:if
+									<td>
+										
+										<c:if
 											test="${not empty shiftStaffs[indexShift.index][i-1]}">
 											<div class="text-center d-flex justify-content-center mb-1">
 												<div class="card bg-secondary" style="width: 10rem;">
 													<div class="card-body">
-														<h5 class="card-title" style="font-size: 10px;">Registrations
+														<h5 class="card-title" style="font-size: 8px;">Registrations
 															left:  ${shiftStaffs[indexShift.index][i-1].leftStaff}</h5>
+													</div>
+												</div>
+											</div>
+											<div class="text-center d-flex justify-content-center mb-1">
+												<div class="card bg-info" style="width: 10rem;">
+													<div class="card-body">
+														<h5 class="card-title" style="font-size: 10px;"> <strong>Manager</strong> 
+														
+														 ${shiftStaffs[indexShift.index][i-1].fullNameManager}</h5>
 											
 													</div>
 												</div>
@@ -503,10 +556,14 @@ input {
 																	<div class="card btn-outline-primary"
 																		style="width: 10rem;">
 																		<div class="card-body">
-																			<div class="orderNumber">
-																				<h3>${indexStaff.count}</h3>
+																			<div class="orderNumber position-absolute top-0 start-0">
+																				<strong>${indexStaff.count}</strong>
 																			</div>
-																			<h5 class="card-title" style="font-size: 10px;">${shiftStaff.fullName}</h5>
+																			<h5 style="font-size: 10px;"><strong>${shiftStaff.jobPositionName}</strong></h5>
+																			<h5 class="card-title" style="font-size: 10px;">
+																				
+																				${shiftStaff.fullName}
+																			</h5>
 																			<c:choose>
 																				<c:when test = "${shiftStaff.isConfirmed == true}">
 																					<input type="checkbox" class = "confirmCheckBox" onclick="return false;" checked>
@@ -705,6 +762,7 @@ input {
 											</c:otherwise>
 										</c:choose></td>
 								</c:forEach>
+								
 							</tr>
 
 						</c:forEach>
@@ -1040,7 +1098,7 @@ input {
 			</div>
 			
 		<!--apply-for-day-->
-		<div class="modal" id="cancelConfirmWarning" tabindex="-1">
+		<div class="modal" id="applyDays" tabindex="-1">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1063,5 +1121,55 @@ input {
 				</div>
 			</div>
 			</div>
+			
+			<!--apply-for-week-->
+		<div class="modal" id="applyWeek" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>All shift registrations in the next day will be register for all days in the next week !!!</p>
+					</div>
+					<form action = "ManagerRegistration/applyTheNextWeek.htm" method = "get">
+						<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">No</button>
+						<button type="submit" class="btn btn-primary"
+							data-bs-dismiss="modal">Yes</button>
+					</div>
+					</form>
+					
+				</div>
+			</div>
+			</div>
+			
+		<!-- Update success notification -->
+		<div class="modal" id="updateSuccess" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">
+							<i class="fa fa-bell" aria-hidden="true" style="font-size: 1em;"></i> Notification
+						</h5>
+						 
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>Update successfully !!!</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success"
+							data-bs-dismiss="modal">OK</button>
+					</div>
+					
+				</div>
+			</div>
+			</div>
+		
 </body>
 </html>

@@ -72,9 +72,9 @@ public class SalaryController {
 		
 		String hql = "FROM StaffEntity WHERE MANV !='ADMIN' AND"
 				+ " MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = true) AND"
-				+ " (HO LIKE CONCAT('%',:search,'%')) OR "
+				+ " ((HO LIKE CONCAT('%',:search,'%')) OR "
 				+ " (TEN LIKE CONCAT('%',:search,'%')) OR "
-				+ " (jobPosition.TENVITRI LIKE CONCAT ('%',:search,'%'))"
+				+ " (jobPosition.TENVITRI LIKE CONCAT ('%',:search,'%')))"
 				+ " ORDER BY LUONGTICHLUY DESC";
 		Query query = session.createQuery(hql);
 		query.setParameter("search", searchText);
@@ -86,9 +86,9 @@ public class SalaryController {
 		
 		String hql = "FROM StaffEntity WHERE MANV !='ADMIN' AND"
 				+ " MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = false) AND"
-				+ " (HO LIKE CONCAT('%',:search,'%')) OR "
+				+ " ((HO LIKE CONCAT('%',:search,'%')) OR "
 				+ " (TEN LIKE CONCAT('%',:search,'%')) OR "
-				+ " (jobPosition.TENVITRI LIKE CONCAT ('%',:search,'%'))"
+				+ " (jobPosition.TENVITRI LIKE CONCAT ('%',:search,'%')))"
 				+ " ORDER BY LUONGTICHLUY DESC";
 		Query query = session.createQuery(hql);
 		query.setParameter("search", searchText);

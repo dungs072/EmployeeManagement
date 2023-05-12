@@ -20,7 +20,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "CHITIETDANGKICA")
-public class ShiftDetailEntity {
+public class ShiftDetailEntity  {
 
 	@Id
 	private String ID_CTCA;
@@ -136,5 +136,17 @@ public class ShiftDetailEntity {
 		openshift = null;
 		setMistakeHistoryEntities(null);
 	}
+	
+	public ShiftDetailEntity clone(OpenShiftEntity openShift) {
+		ShiftDetailEntity shiftDetail = new ShiftDetailEntity();
+        shiftDetail.CONGVIEC = this.CONGVIEC;
+        shiftDetail.LUONGCA = 0;
+        shiftDetail.staff = this.staff;
+        shiftDetail.ID_CTCA = staff.getMANV().trim()+"-"+openShift.getID_CA_MO();
+        shiftDetail.openshift = openShift;
+        shiftDetail.XACNHAN = false;
+        return shiftDetail;
+	}
+	
 
 }

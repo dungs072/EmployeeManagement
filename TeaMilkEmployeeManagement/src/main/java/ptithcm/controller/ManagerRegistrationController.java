@@ -8,6 +8,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 
 import static java.time.temporal.TemporalAdjusters.previousOrSame;
 
@@ -42,6 +43,7 @@ import ptithcm.entity.StaffEntity;
 @RequestMapping(value = "/ManagerRegistration")
 public class ManagerRegistrationController {
 
+	private String staffId = "";
 	@Autowired
 	SessionFactory factory;
 
@@ -62,6 +64,11 @@ public class ManagerRegistrationController {
 
 	@RequestMapping
 	public String displayRegistrationTable(HttpServletRequest request, ModelMap map) {
+		if(passDataBetweenControllerHandler!=null) {
+			if(passDataBetweenControllerHandler.getData()!=null) {
+				staffId = passDataBetweenControllerHandler.getData().toUpperCase();
+			}
+		}
 		setCanDisplayCancelButtons(false);
 		weekDateFromTo = getFirstDateAndLastDayOfCurrentWeek();
 		return displayMainView(request, map, weekDateFromTo);
@@ -93,13 +100,18 @@ public class ManagerRegistrationController {
 		int col = Integer.parseInt(shift_Date[1])-1;
 		shiftUIHash[row][col] = new ListShiftDataUI();
 		shiftUIHash[row][col].setMaxStaff(maxStaff);
+		shiftUIHash[row][col].setFullNameManager(openShift.getStaff().getHO()+" "+openShift.getStaff().getTEN());
 		canDisplayCancelButtons[row][col] = true;
 		
 		map.addAttribute("canDisplayCancelButton",canDisplayCancelButtons);
+		map.addAttribute("updateSuccess", true);
 		return functionDisplayMainView(request,map);
 	}
 	@RequestMapping(value = "/Cancel",method = RequestMethod.GET)
 	public String cancelSpecificShift(HttpServletRequest request, ModelMap map) {
+		if(weekDateFromTo==null) {
+			weekDateFromTo = getFirstDateAndLastDayOfCurrentWeek();
+		}
 		Session session = factory.getCurrentSession();
 		String shiftDaySpecific = request.getParameter("cancelShift");
 		String[] shift_Date = shiftDaySpecific.split(",");
@@ -126,6 +138,7 @@ public class ManagerRegistrationController {
 		int col = Integer.parseInt(shift_Date[1])-1;
 		shiftUIHash[row][col] = null;
 		canDisplayCancelButtons[row][col] = false;
+		map.addAttribute("updateSuccess", true);
 		return functionDisplayMainView(request,map);
 	}
 	
@@ -142,7 +155,9 @@ public class ManagerRegistrationController {
 
 	@RequestMapping(value = "/AddStaff", method = RequestMethod.GET)
 	public String addStaff(HttpServletRequest request, ModelMap map) {
-
+		if(weekDateFromTo==null) {
+			weekDateFromTo = getFirstDateAndLastDayOfCurrentWeek();
+		}
 		String shift_Date = request.getParameter("addStaffButton");
 		String[] shift_Dates = shift_Date.split(",");
 		String[] days = weekDateFromTo.split(" - ");
@@ -152,11 +167,15 @@ public class ManagerRegistrationController {
 		Date dateAfterPlus = sqlDatePlusDays(firstDate,Integer.parseInt(shift_Dates[1])-1);
 		List<StaffEntity> staffs = getCanDoWorkStaffs(dateAfterPlus.toString(), shift_Dates[0]);
 		map.addAttribute("staffs",staffs);
+		
 		return displayMainView(request,map,weekDateFromTo);
 	}
 	
 	@RequestMapping(value = "/SaveAddStaff",method = RequestMethod.GET)
 	public String saveAddStaff(HttpServletRequest request, ModelMap map) {
+		if(weekDateFromTo==null) {
+			weekDateFromTo = getFirstDateAndLastDayOfCurrentWeek();
+		}
 		Session session = factory.getCurrentSession();
 		if(request.getParameter("staffInfor")==null) {
 			return functionDisplayMainView(request,map);
@@ -186,16 +205,21 @@ public class ManagerRegistrationController {
 		
 		shiftUIHash[row][col].addShiftDataUI(new ShiftDataUI(shiftDetailId,staffInfor[1],staffInfor[2],toDoList));
 		shiftUIHash[row][col].calculateLeftStaff();
-		
+	
+		map.addAttribute("updateSuccess", true);
 		return functionDisplayMainView(request,map);
 		
 	}
 	@RequestMapping(value = "/DeleteStaffFromShift",method = RequestMethod.GET)
 	public String deleteStaffFromShift(HttpServletRequest request,ModelMap map) {
+		if(weekDateFromTo==null) {
+			weekDateFromTo = getFirstDateAndLastDayOfCurrentWeek();
+		}
 		Session session = factory.getCurrentSession();
 		String shiftDetailId = request.getParameter("yesWarningStaffButton");
 		if(!checkCanDeleteStaffFromShift(shiftDetailId)) {return functionDisplayMainView(request,map);}
-		ShiftDetailEntity shiftDetailEntity = getDateAndShiftId(shiftDetailId);
+		ShiftDetailEntity shiftDetailEntity = (ShiftDetailEntity)session.get(ShiftDetailEntity.class,shiftDetailId);
+		if(shiftDetailEntity==null) { return functionDisplayMainView(request,map);}
 		String[] first_last_Date = weekDateFromTo.split(" - ");
 		String firstDateStr = castToJavaSQLDateFormat(first_last_Date[0]);
 		Date firstDate=Date.valueOf(firstDateStr);
@@ -211,10 +235,14 @@ public class ManagerRegistrationController {
 		shiftDetailEntity.setStaff(null);
 		shiftDetailEntity.setMistakeHistoryEntities(null);
 		session.delete(shiftDetailEntity);
+		map.addAttribute("updateSuccess", true);
 		return functionDisplayMainView(request,map);
 	}
 	@RequestMapping(value = "/SettingStaffInShift",method = RequestMethod.GET)
 	public String settingStaffInShift(HttpServletRequest request,ModelMap map) {
+		if(weekDateFromTo==null) {
+			weekDateFromTo = getFirstDateAndLastDayOfCurrentWeek();
+		}
 		Session session = factory.getCurrentSession();
 		String toDoList = request.getParameter("toDoListInput");
 		String shiftDetailId = request.getParameter("saveChangeSettingShift");
@@ -232,6 +260,8 @@ public class ManagerRegistrationController {
 		int dateIndex = sqlDateMinsDays(firstDate,currentDate);
 		int shiftIndex = Integer.parseInt(shiftDetail.getOpenshift().getShift().getIDCA().toString().strip())-1;
 		shiftUIHash[shiftIndex][dateIndex].getShiftDataUI(shiftDetailId).setAdditionalJobs(toDoList);
+	
+		map.addAttribute("updateSuccess", true);
 		return functionDisplayMainView(request,map);
 	}
 	
@@ -250,25 +280,50 @@ public class ManagerRegistrationController {
 		Integer row = Integer.parseInt(shift_dates[0])-1;
 		Integer col = Integer.parseInt(shift_dates[1])-1;
 		shiftUIHash[row][col].setMaxStaff(Integer.parseInt(maxStaffStr));
+		if(weekDateFromTo==null) {
+			weekDateFromTo = getFirstDateAndLastDayOfCurrentWeek();
+		}
+		map.addAttribute("updateSuccess", true);
 		return functionDisplayMainView(request,map);
 	}
 	
 	@RequestMapping(value = "/confirmShifts",method = RequestMethod.GET)
 	public String confirmShifts(HttpServletRequest request,ModelMap map) {
+		if(weekDateFromTo==null) {
+			weekDateFromTo = getFirstDateAndLastDayOfCurrentWeek();
+		}
 		updateConfirmState(true);
 		resetUI();
 		putDataToView(weekDateFromTo);
+		map.addAttribute("updateSuccess", true);
 		return displayMainViewDontDeleteOldUI(request, map);
 	}
 	@RequestMapping(value = "/cancelConfirmShifts",method = RequestMethod.GET)
 	public String cancelConfirmShifts(HttpServletRequest request,ModelMap map){
+		if(weekDateFromTo==null) {
+			weekDateFromTo = getFirstDateAndLastDayOfCurrentWeek();
+		}
 		updateConfirmState(false);
+		map.addAttribute("updateSuccess", true);
 		return displayMainViewDontDeleteOldUI(request, map);
 	}
 	@RequestMapping(value = "/applyTheNextDay",method = RequestMethod.GET)
 	public String applyTheNextDayInCurrentWeek(HttpServletRequest request,ModelMap map) {
-		
-		return displayMainViewDontDeleteOldUI(request,map);
+		if(weekDateFromTo==null) {
+			weekDateFromTo = getFirstDateAndLastDayOfCurrentWeek();
+		}
+		handleApplyTheNextDayInCurrentWeek();
+		map.addAttribute("updateSuccess", true);
+		return displayMainView(request, map, weekDateFromTo);
+	}
+	@RequestMapping(value = "/applyTheNextWeek",method = RequestMethod.GET)
+	public String applyTheNextDayInNextWeek(HttpServletRequest request,ModelMap map) {
+		if(weekDateFromTo==null) {
+			weekDateFromTo = getFirstDateAndLastDayOfCurrentWeek();
+		}
+		handleApplyTheNextDayForNextWeek();
+		map.addAttribute("updateSuccess", true);
+		return displayMainView(request,map,weekDateFromTo);
 	}
 	@RequestMapping(value = "/showShiftDetail",method = RequestMethod.GET)
 	public String showShiftDetail(HttpServletRequest request, ModelMap map) {
@@ -298,26 +353,86 @@ public class ManagerRegistrationController {
 			firstDayOfWeek = firstDayOfWeek.minusDays(1);
 		}
 
-		// Create a list to store the days of the week
-		List<LocalDate> weekDays = new ArrayList<>();
 		
 		// Add the days of the week to the list
-        long daysDifference = ChronoUnit.DAYS.between(currentDate, firstDayOfWeek);
+        long daysDifference = ChronoUnit.DAYS.between(firstDayOfWeek, currentDate);
+        LocalDate theNextDate = currentDate.plusDays(1);
         int intDifference = Math.toIntExact(daysDifference);
+        ArrayList<OpenShiftEntity> openShifts = getCurrentOpenShifts(session, theNextDate);
 		for (int i = intDifference+2; i < 7; i++) {
 			LocalDate day = firstDayOfWeek.plusDays(i);
-			weekDays.add(day);
+			for(int j =0;j<openShifts.size();j++) {
+				String primaryDateAfterPlus = castToCreatePrimaryKeyFormat(day.toString());
+				String shiftId = openShifts.get(j).getShift().getIDCA();
+				String openShiftId = primaryDateAfterPlus+"-"+shiftId;
+				if(session.get(OpenShiftEntity.class, openShiftId)!=null) {
+					continue;
+				}
+				OpenShiftEntity openShift = new OpenShiftEntity();
+				openShift.setID_CA_MO(openShiftId);
+				openShift.setNGAYLAMVIEC(Date.valueOf(day));
+				openShift.setSOLUONGDANGKI(openShifts.get(j).getSOLUONGDANGKI());
+				openShift.setStaff(openShifts.get(j).getStaff());
+				openShift.setShift(openShifts.get(j).getShift());
+				
+				openShift.setDetailEntitiesClone(openShifts.get(j).getDetailEntities(),session);
+				session.saveOrUpdate(openShift);
+			}
+			
 			
 		}
-	
-
 	}
-//	private ArrayList<OpenShiftEntity> getCurrentOpenShifts(Session session,LocalDate currentDate){
-//		String primaryDateAfterPlus = castToCreatePrimaryKeyFormat(currentDate.toString());
-//		
-//		String openShiftId1 = primaryDateAfterPlus+"-"+"1";
-//		OpenShiftEntity openShiftEntity = (OpenShiftEntity) session.get(OpenShiftEntity.class, openShiftId);
-//	}
+	private void handleApplyTheNextDayForNextWeek() {
+		Session session = factory.getCurrentSession();
+		 // Get the current date
+        LocalDate currentDate = LocalDate.now();
+        LocalDate nextDate = currentDate.plusDays(1);
+        // Get the first day of the next week
+        LocalDate nextWeekFirstDay = currentDate.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
+        ArrayList<OpenShiftEntity> openShifts = getCurrentOpenShifts(session, nextDate);
+        // Print the days of the next week
+        for (int i = 0; i < 7; i++) {
+            LocalDate day = nextWeekFirstDay.plusDays(i);
+        	for(int j =0;j<openShifts.size();j++) {
+				String primaryDateAfterPlus = castToCreatePrimaryKeyFormat(day.toString());
+				String shiftId = openShifts.get(j).getShift().getIDCA();
+				String openShiftId = primaryDateAfterPlus+"-"+shiftId;
+				if(session.get(OpenShiftEntity.class, openShiftId)!=null) {
+					continue;
+				}
+				OpenShiftEntity openShift = new OpenShiftEntity();
+				openShift.setID_CA_MO(openShiftId);
+				openShift.setNGAYLAMVIEC(Date.valueOf(day));
+				openShift.setSOLUONGDANGKI(openShifts.get(j).getSOLUONGDANGKI());
+				openShift.setStaff(openShifts.get(j).getStaff());
+				openShift.setShift(openShifts.get(j).getShift());
+				
+				openShift.setDetailEntitiesClone(openShifts.get(j).getDetailEntities(),session);
+				session.saveOrUpdate(openShift);
+			}
+        }
+	}
+	private ArrayList<OpenShiftEntity> getCurrentOpenShifts(Session session,LocalDate currentDate){
+		ArrayList<OpenShiftEntity> list = new ArrayList<>();
+		String primaryDateAfterPlus = castToCreatePrimaryKeyFormat(currentDate.toString());
+		
+		String openShiftId1 = primaryDateAfterPlus+"-"+"1";
+		String openShiftId2 = primaryDateAfterPlus+"-"+"2";
+		String openShiftId3 = primaryDateAfterPlus+"-"+"3";
+		OpenShiftEntity openShiftEntity1 = (OpenShiftEntity) session.get(OpenShiftEntity.class, openShiftId1);
+		if(openShiftEntity1!=null&&openShiftEntity1.getStaff().getMANV().trim().equals(staffId)) {
+			list.add(openShiftEntity1);
+		}
+		OpenShiftEntity openShiftEntity2 = (OpenShiftEntity) session.get(OpenShiftEntity.class, openShiftId2);
+		if(openShiftEntity2!=null&&openShiftEntity2.getStaff().getMANV().trim().equals(staffId)) {
+			list.add(openShiftEntity2);
+		}
+		OpenShiftEntity openShiftEntity3 = (OpenShiftEntity) session.get(OpenShiftEntity.class, openShiftId3);
+		if(openShiftEntity3!=null&&openShiftEntity3.getStaff().getMANV().trim().equals(staffId)) {
+			list.add(openShiftEntity3);
+		}
+		return list;
+	}
 	private void updateConfirmState(boolean state) {
 		Session session = factory.getCurrentSession();
 		long millis=System.currentTimeMillis();  
@@ -392,10 +507,11 @@ public class ManagerRegistrationController {
 	@SuppressWarnings("unchecked")
 	private List<ShiftDetailEntity> getShiftDetails(String firstDay,String lastDay){
 		Session session = factory.getCurrentSession();
-		String hql = "FROM ShiftDetailEntity WHERE openshift.NGAYLAMVIEC BETWEEN :firstDay AND :lastDay";
+		String hql = "FROM ShiftDetailEntity WHERE openshift.NGAYLAMVIEC BETWEEN :firstDay AND :lastDay AND openshift.staff.MANV = :staffId";
 		Query query =session.createQuery(hql);
 		query.setString("firstDay", firstDay);
 		query.setString("lastDay", lastDay);
+		query.setString("staffId", staffId);
 		return query.list();
 	}
 	private void setCanInteractWithUI() {
@@ -419,7 +535,8 @@ public class ManagerRegistrationController {
 					
 				}
 				else {
-					shiftUIHash[i][j].setCanInteract(true);
+					
+					shiftUIHash[i][j].setCanInteract(staffId.trim());
 					
 				}
 			}
@@ -581,6 +698,9 @@ public class ManagerRegistrationController {
 				shiftUIHash[shiftIndex-1][dateIndex] = new ListShiftDataUI();
 			}
 			shiftUIHash[shiftIndex-1][dateIndex].setMaxStaff(maxStaff);
+			shiftUIHash[shiftIndex-1][dateIndex].setFullNameManager(openShift.getStaff().getHO()+" "+openShift.getStaff().getTEN());
+			shiftUIHash[shiftIndex-1][dateIndex].setStaffId(openShift.getStaff().getMANV());
+		
 			canDisplayCancelButtons[shiftIndex-1][dateIndex] = true;
 			if(openShifts[1]!=null) {
 				ShiftDetailEntity shiftDetailEntity = (ShiftDetailEntity) openShifts[1];
@@ -630,4 +750,5 @@ public class ManagerRegistrationController {
 
 		return first.format(dateTimeFormatter) + " - " + last.format(dateTimeFormatter);
 	}
+	
 }
