@@ -162,6 +162,7 @@ public class HomeController{
 		String idcamo = openshift.get(0).getID_CA_MO();
 		String idmistake = getIdMistake(fault);
 		updateFaultToDB(maNV, idcamo, idmistake, times,descrip);
+		model.addAttribute("updateSuccess",true);
 		return showDetailShift(model);
 	}
 	

@@ -13,6 +13,7 @@
 	height: 450px;
 	border-radius: 10px;
 	overflow: auto;
+	width:100%;
 }
 
 /* Set header to stick to the top of the container. */
@@ -67,7 +68,7 @@ tbody tr:hover {
 	background: #e6f7ff;
 }
 .searchBar{
-	margin-left:90px;
+	margin-left:10px;
 }
 
 </style>
@@ -85,7 +86,8 @@ tbody tr:hover {
 			var luongnhan = $(document).find(".salary");
 			maNV.val(data[0]);
 			hovaten.val(data[1] +" "+ data[2]);
-			luongnhan.val(data[3]);
+			var salary =  parseFloat(data[3]);
+			luongnhan.val(salary);
 			$('#BillSalaryModal').modal('show');
 			localStorage.setItem("isClickView", "false");
 		}
@@ -93,6 +95,11 @@ tbody tr:hover {
 			$('#HistorySalaryModal').modal('show');
 			localStorage.setItem("isClickViewHistory","false");
 		}
+		var isUpdateSuccess = [[${updateSuccess}]];
+		if(isUpdateSuccess=="true"){
+			$('#updateSuccess').modal("show");
+		}
+		
 	})
 	$(document).on('click', ".valueButton", function(e) {	
 		localStorage.setItem("isClickView", "true");
@@ -261,7 +268,7 @@ tbody tr:hover {
 				</div>
 			</div>
 			<div class="row mt-1 justify-content-center">
-				<div class="col-10">
+				<div class="col-12">
 					<div class="tableWrap">
 						<table class="employeeTable">
 							<thead>
@@ -376,7 +383,7 @@ tbody tr:hover {
 							name="salary" type="text" class="form-check-input" id="salary"
 							value="" required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
 							pattern="^(0*[1-9][0-9]*(\.[0-9]+)?|0+\.[0-9]*[1-9][0-9]*)$"
-							maxlength = "8">
+							maxlength = "20">
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -419,9 +426,12 @@ tbody tr:hover {
 										<td>${i.count}</td>
 										<td>${idStaffHS}</td>
 										<td>
-											<fmt:formatDate type = "both" dateStyle = "short" timeStyle = "medium" value="${hs.THOIGIANNHAN}"/>
+											<fmt:formatDate value="${hs.THOIGIANNHAN}" pattern="dd/MM/yyyy" />
 										</td>
-										<td>${hs.LUONGNHAN}</td>
+										
+										<td>
+											<fmt:formatNumber value = "${hs.LUONGNHAN}" type = "currency" pattern="#,##0.00 ₫"/>
+										</td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -435,6 +445,30 @@ tbody tr:hover {
 	</div>
 	</div>
 	</form>
+	
+	<!-- Update success notification -->
+		<div class="modal" id="updateSuccess" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">
+							<i class="fa fa-bell" aria-hidden="true" style="font-size: 1em;"></i> Notification
+						</h5>
+						 
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>Update successfully !!!</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success"
+							data-bs-dismiss="modal">OK</button>
+					</div>
+					
+				</div>
+			</div>
+			</div>
 
 </body>
 </html>

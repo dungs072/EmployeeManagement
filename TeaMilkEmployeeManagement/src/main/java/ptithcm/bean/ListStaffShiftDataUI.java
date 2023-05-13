@@ -6,8 +6,16 @@ public class ListStaffShiftDataUI {
 
 	private ArrayList<StaffShiftDataUI> list;
 	
+	
 	private boolean canSettingShift;
 	private int leftStaff;
+	private String fullNameManager;
+	public String getFullNameManager() {
+		return fullNameManager;
+	}
+	public void setFullNameManager(String fullNameManager) {
+		this.fullNameManager = fullNameManager;
+	}
 	public ListStaffShiftDataUI() {
 		list = new ArrayList<StaffShiftDataUI>();
 

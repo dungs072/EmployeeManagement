@@ -99,6 +99,7 @@ public class StaffRegisterShiftController {
 		shiftUIHash[row][col].calculateLeftStaff(openShiftEntity.getSOLUONGDANGKI());
 		shiftUIHash[row][col].setCanSettingShift(true);
 		canRegisterList[row][col] = false;
+		map.addAttribute("updateSuccess",true);
 		return functionDisplayMainView(request, map);
 	}
 
@@ -120,6 +121,7 @@ public class StaffRegisterShiftController {
 		shiftUIHash[row][col].deleteStaffShiftDataUI(shiftDetailId);
 		shiftUIHash[row][col].calculateLeftStaff(openShiftEntity.getSOLUONGDANGKI());
 		canRegisterList[row][col] = true;
+		map.addAttribute("updateSuccess",true);
 		return functionDisplayMainView(request,map);
 	}
 	
@@ -231,6 +233,7 @@ public class StaffRegisterShiftController {
 				shiftUIHash[shiftIndex - 1][dateIndex] = new ListStaffShiftDataUI();
 			}
 			canRegisterList[shiftIndex - 1][dateIndex] = true;
+			shiftUIHash[shiftIndex-1][dateIndex].setFullNameManager(openShift.getStaff().getHO()+" "+openShift.getStaff().getTEN());
 			if (openShifts[1] != null) {
 				ShiftDetailEntity shiftDetailEntity = (ShiftDetailEntity) openShifts[1];
 				StaffEntity staff = shiftDetailEntity.getStaff();
@@ -240,6 +243,7 @@ public class StaffRegisterShiftController {
 						.equals(staffPassDataBetweenControllerHandler.getData()));
 				dataUI.setStaffId(staff.getMANV().strip());
 				dataUI.setShiftDetailId(shiftDetailEntity.getID_CTCA().strip());
+				dataUI.setJobPositionName(staff.getJobPosition().getTENVITRI());
 				shiftUIHash[shiftIndex - 1][dateIndex].addStaffShiftDataUI(dataUI);
 
 				if (shiftUIHash[shiftIndex - 1][dateIndex].getStaffShitDataUI(ownerId) != null) {

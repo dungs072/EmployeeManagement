@@ -157,6 +157,12 @@ public class JobAndFaultController {
 		JobPositionEntity job = (JobPositionEntity) session.get(JobPositionEntity.class, jobId);
 		job.setTENVITRI(nameJob);
 		job.setLUONGTHEOGIO(salary);
+		if(job.getTENVITRI().equals("Manager")) {
+			String hql = "UPDATE StaffEntity SET LUONGTICHLUY = :LUONG WHERE jobPosition IN (SELECT j FROM JobPositionEntity j WHERE j.TENVITRI = 'Manager')";
+			Query query = session.createQuery(hql);
+			query.setParameter("LUONG", salary);
+			query.executeUpdate();
+		}
 		session.saveOrUpdate(job);
 		updateAllTable(model);
 		model.addAttribute("updateSuccess",true);
