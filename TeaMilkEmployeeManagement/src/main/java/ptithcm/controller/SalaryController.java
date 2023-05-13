@@ -27,6 +27,8 @@ import ptithcm.entity.StaffEntity;
 @Transactional
 @Controller
 public class SalaryController {
+	private List<StaffEntity> enabledList;
+	private List<StaffEntity> disabledList;
 	@Autowired
 	SessionFactory factory;
 	
@@ -50,6 +52,7 @@ public class SalaryController {
 		String maNV = request.getParameter("idStaff");
 		Float salary = Float.parseFloat(request.getParameter("salary"));
 		makeSalaryBill(maNV, salary);
+		model.addAttribute("updateSuccess",true);
 		return showSalary(model);
 	}
 	
@@ -57,8 +60,8 @@ public class SalaryController {
 	public String searchSalary(HttpServletRequest request, ModelMap model) {
 		Session session = factory.getCurrentSession();
 		String searchInput = request.getParameter("searchInput");
-		List<StaffEntity> enabledList = searchEnabledStaffs(session,searchInput);
-		List<StaffEntity> disabledList = searchDisabledStaffs(session,searchInput);
+		enabledList = searchEnabledStaffs(session,searchInput);
+		disabledList = searchDisabledStaffs(session,searchInput);
 		if(enabledList==null&&disabledList==null) {
 			return displayMainView(model);
 		}
@@ -146,9 +149,15 @@ public class SalaryController {
 			return query.list();
 	 }
 	 private String displayMainView(ModelMap model) {
-		 	List<StaffEntity> enabledList = getEnabledStaffs();
+		 	if(enabledList==null) {
+		 		enabledList = getEnabledStaffs();
+		 	}
+		 	if(disabledList==null) {
+		 		disabledList = getDisabledStaffs();
+		 	}
+		 	
 			model.addAttribute("salaryStaff", enabledList);
-			List<StaffEntity> disabledList = getDisabledStaffs();
+			
 			model.addAttribute("disabledStaff",disabledList);
 			return "/Admin/StaffSalary";
 	 }

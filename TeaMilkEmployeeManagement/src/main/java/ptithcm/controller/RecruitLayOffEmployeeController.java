@@ -305,6 +305,7 @@ public class RecruitLayOffEmployeeController {
 		PriorityEntity priority = (PriorityEntity) session.get(PriorityEntity.class, "NV");
 		if (staff.getJobPosition().getTENVITRI().equals("Manager")) {
 			priority = (PriorityEntity) session.get(PriorityEntity.class, "QL");
+			staff.setLUONGTICHLUY(staff.getJobPosition().getLUONGTHEOGIO());
 		}
 		
 		String defaultPassword = "123";
@@ -353,11 +354,20 @@ public class RecruitLayOffEmployeeController {
 		PriorityEntity priority = (PriorityEntity) session.get(PriorityEntity.class, "NV");
 		if (newStaff.getJobPosition().getTENVITRI().equals("Manager")) {
 			priority = (PriorityEntity) session.get(PriorityEntity.class, "QL");
+			newStaff.setLUONGTICHLUY(newStaff.getJobPosition().getLUONGTHEOGIO());
 		}
+		
 		AccountEntity account = (AccountEntity) session.get(AccountEntity.class, newStaff.getMANV());
 		account.setPriorityEntity(priority);
 		StaffEntity oldStaff = (StaffEntity) session.get(StaffEntity.class, newStaff.getMANV());
+		if(oldStaff.getJobPosition().getTENVITRI().equals("Manager")&&!newStaff.getJobPosition().getTENVITRI().equals("Manager")) {
+			oldStaff.setLUONGTICHLUY(0);
+			
+		}
 		oldStaff.updateInfor(newStaff);
+		if(newStaff.getLUONGTICHLUY()>0) {
+			oldStaff.setLUONGTICHLUY(newStaff.getLUONGTICHLUY());
+		}
 		session.saveOrUpdate(oldStaff);
 	}
 

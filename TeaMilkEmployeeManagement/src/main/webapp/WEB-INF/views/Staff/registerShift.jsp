@@ -78,6 +78,24 @@ input {
 	vertical-align: top;
 }
 </style>
+<style>
+  /* Add a fixed position to the table header */
+  .sticky-header {
+    position: sticky;
+    top: 0;
+    background-color: #4e73df; /* Optional styling for the header */
+    z-index: 1; /* Ensure the header appears above other elements */
+  }
+	.fixed-cell {
+	  position: relative;
+	}
+	
+	.move-effect {
+	  position: sticky;
+	  top: 0;
+	  /*background-color: #fff; /* Adjust the background color as needed */
+	}
+</style>
 
 <script type="text/javascript">
 	$(window).on('load', function() {
@@ -87,6 +105,11 @@ input {
 			$('.saveChangesAddStaff').val(localStorage.getItem("addValue"));
 			$('#addStaff').modal('show');
 			localStorage.setItem("isClickedAdd", "false");
+		}
+		
+		var isUpdateSuccess = [[${updateSuccess}]];
+		if(isUpdateSuccess=="true"){
+			$('#updateSuccess').modal("show");
 		}
 
 	});
@@ -337,7 +360,7 @@ input {
 			<div class="mt-2 row align-items-center scrollit">
 				<table class="table table-bordered" id="shiftTable">
 					<thead class="bg-primary">
-						<tr>
+						<tr class = "sticky-header">
 							<th scope="col">
 								<h6 class="text-center text-light">Time table</h6>
 							</th>
@@ -368,12 +391,15 @@ input {
 
 						<c:forEach var="shift" varStatus="indexShift" items="${shifts}">
 							<tr>
-								<th class="bg-primary">
-									<h6 class="text-center text-light">Shift ${shift.IDCA}</h6>
-									<h6 class="text-center text-light small">${shift.TENCA}</h6>
-									<h6 class="text-center text-light small">
-										<fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.startShiftTime}" /> - <fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.endShiftTime}" /> 
-									</h6>
+								<th style="background-color: #4e73df;" class = "fixed-cell">
+									<div class="move-effect">
+										<h6 class="text-center text-light">Shift ${shift.IDCA}</h6>
+										<h6 class="text-center text-light small">${shift.TENCA}</h6>
+										<h6 style="font-size: 12px;" class="text-center text-light small">
+											<fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.startShiftTime}" /> - <fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.endShiftTime}" /> 
+										</h6>
+									</div>
+									
 								</th>
 								<c:forEach var="i" begin="1" end="7">
 									<td><c:if
@@ -383,6 +409,16 @@ input {
 													<div class="card-body">
 														<h5 class="card-title" style="font-size: 10px;">Registrations
 															left: ${shiftStaffs[indexShift.index][i-1].leftStaff}</h5>
+													</div>
+												</div>
+											</div>
+											<div class="text-center d-flex justify-content-center mb-1">
+												<div class="card bg-info" style="width: 10rem;">
+													<div class="card-body">
+														<h5 class="card-title" style="font-size: 10px;"> <strong>Manager</strong> 
+														
+														 ${shiftStaffs[indexShift.index][i-1].fullNameManager}</h5>
+											
 													</div>
 												</div>
 											</div>
@@ -398,9 +434,10 @@ input {
 																<div class="card btn-outline-primary"
 																	style="width: 10rem;">
 																	<div class="card-body">
-																		<div class="orderNumber">
-																			<h3>${indexStaff.count}</h3>
+																		<div class="orderNumber position-absolute top-0 start-0">
+																			<strong>${indexStaff.count}</strong>
 																		</div>
+																		<h5 style="font-size: 10px;"><strong>${shiftStaff.jobPositionName}</strong></h5>
 																		<h5 class="card-title" style="font-size: 10px;">${shiftStaff.fullName}</h5>
 																		<c:choose>
 																			<c:when test="${shiftStaff.isConfirmed == true}">
@@ -537,5 +574,29 @@ input {
 				</div>
 			</div>
 		</div>
+		
+		<!-- Update success notification -->
+		<div class="modal" id="updateSuccess" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">
+							<i class="fa fa-bell" aria-hidden="true" style="font-size: 1em;"></i> Notification
+						</h5>
+						 
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>Update successfully !!!</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success"
+							data-bs-dismiss="modal">OK</button>
+					</div>
+					
+				</div>
+			</div>
+			</div>
 </body>
 </html>

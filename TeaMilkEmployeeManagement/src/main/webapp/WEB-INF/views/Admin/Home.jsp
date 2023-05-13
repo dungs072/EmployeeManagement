@@ -10,6 +10,27 @@ z<%@ page language="java" contentType="text/html; charset=UTF-8"
 
 <title>Main page</title>
 <style>
+ 		th {
+            padding: 16px;
+            padding-left: 15px;
+            border-left: 1px dotted rgba(200, 209, 224, 0.6);
+            border-bottom: 1px solid #e8e8e8;
+            background: #4e73df;
+            text-align: center;
+            /* With border-collapse, we must use box-shadow or psuedo elements
+    for the header borders */
+            box-shadow: 0px 0px 0 2px #e8e8e8;
+        } 
+         td {
+            text-align: center;
+        }
+        table {
+           
+            border-collapse: collapse;
+        }
+        .table-background{
+        	background: #4e73df;
+        }
 .info-shift {
 	height: 150px;
 	margin-bottom: 10px;
@@ -35,6 +56,10 @@ z<%@ page language="java" contentType="text/html; charset=UTF-8"
 			maNV.val(localStorage.getItem("valueOfButton"));
 			$('#SetFault').modal('show');
 			localStorage.setItem("isClick","false");
+		}
+		var isUpdateSuccess = [[${updateSuccess}]];
+		if(isUpdateSuccess=="true"){
+			$('#updateSuccess').modal("show");
 		}
 	})
 
@@ -222,23 +247,23 @@ z<%@ page language="java" contentType="text/html; charset=UTF-8"
 							</div>
 							<div class=" col-xs-10 col-sm-10 col-md-10 col-lg-10 shift-now">
 								<div class="row">
-									<div class=" col-md-6">
-										<h3>Shift number: ${idca}</h3>
+									<div class=" col-md-6 text-center">
+										<h5 style="background-color:DodgerBlue;" class = "border rounded-pill p-1 text-white ">Shift number: ${idca}</h5>
 
 									</div>
-									<div class="col-md-6 text-left">
-										<h3>Date: <fmt:formatDate value="${getDate}" pattern="dd/MM/yyyy" /> </h3>
+									<div class="col-md-6 text-center">
+										<h5 style="background-color:DodgerBlue;" class = "border rounded-pill p-1 text-white">Date: <fmt:formatDate value="${getDate}" pattern="dd/MM/yyyy" /> </h5>
 									</div>
-									<div class = "row">
-										<div class = "col-md-6 text-left">
-											<h3>Time: <fmt:formatDate type="time" timeStyle="short" value="${startTime}"/> - <fmt:formatDate type="time" timeStyle="short" value="${endTime}"/> </h3>
-										</div>
+								</div>
+								<div class = "row">
+									<div class = "col-md-6 text-center">
+										<h5 style="background-color:DodgerBlue;" class = "border rounded-pill p-1 text-white">Time: <fmt:formatDate type="time" timeStyle="short" value="${startTime}"/> - <fmt:formatDate type="time" timeStyle="short" value="${endTime}"/> </h5>
 									</div>
 								</div>
 								<table class="table table-striped table-hover">
-									<thead>
+									<thead class = "table-background text-white">
 										<tr>
-											<th>Employee Code</th>
+											<th>Employee Id</th>
 											<th>Full name</th>
 											<th>Job Position</th>
 											<th>Check in</th>
@@ -420,5 +445,29 @@ z<%@ page language="java" contentType="text/html; charset=UTF-8"
 				</div>
 			</div>
 		</div>
+		
+		<!-- Update success notification -->
+		<div class="modal" id="updateSuccess" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">
+							<i class="fa fa-bell" aria-hidden="true" style="font-size: 1em;"></i> Notification
+						</h5>
+						 
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>Update successfully !!!</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success"
+							data-bs-dismiss="modal">OK</button>
+					</div>
+					
+				</div>
+			</div>
+			</div>
 </body>
 </html>

@@ -293,7 +293,7 @@ tbody tr:hover {
 							<tr>
 								<th><span>STT</span></th>
 								<th><span>Job type</span></th>
-								<th><span>Salary per hour</span></th>
+								<th><span>Salary</span></th>
 								<th><span>Action</span></th>
 							</tr>
 						</thead>
@@ -303,22 +303,23 @@ tbody tr:hover {
 									<td>${i.count}</td>
 									<td>${job.TENVITRI}</td>
 									<td>
-										<fmt:setLocale value = "vi"/>
-         								<fmt:formatNumber value = "${job.LUONGTHEOGIO}" type = "currency" pattern="#,##0.00 ₫"/>
+										<c:choose>
+											<c:when test = "${job.canUpdate==false }">
+												<fmt:setLocale value = "vi"/>
+         										<fmt:formatNumber value = "${job.LUONGTHEOGIO}" type = "currency" pattern="#,##0.00 ₫"/> /month
+											</c:when>
+											<c:otherwise>
+												<fmt:setLocale value = "vi"/>
+         										<fmt:formatNumber value = "${job.LUONGTHEOGIO}" type = "currency" pattern="#,##0.00 ₫"/> /hour
+											</c:otherwise>
+										</c:choose>
+										
 									</td>
 									<td>
 										<form action="JobAndFault/ShowJob.htm" method="get">
 											<button type="submit" name="InforJob"
 												class="btn btn-secondary detailJob" value="${job.MACV}"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
-											<c:choose>
-												<c:when test="${job.canUpdate==true}">
-													
-												</c:when>
-												<c:otherwise>
-
-												</c:otherwise>
-											</c:choose>
-
+		
 											<c:choose>
 
 												<c:when test="${job.canDelete==true}">
@@ -467,7 +468,7 @@ tbody tr:hover {
 							<label for="firstname">Job type:</label> <input type="text"
 								class="form-control username" placeholder="job title"
 								name="TENVITRI" value="Server" maxlength="30" required pattern="([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]\s*)+"/>
-							<label for="firstname">Salary per hour:</label> <input type="text"
+							<label for="firstname">Salary:</label> <input type="text"
 								class="form-control username" id="LUONGTHEOGIO" placeholder="...."
 								name="LUONGTHEOGIO" value="10000.0" maxlength="30" pattern="^\d+(\.\d)?$"/>
 						</div>
@@ -585,10 +586,11 @@ tbody tr:hover {
 								</c:otherwise>
 							</c:choose>
 							
-							
-							<label for="firstname">Salary per hour:</label> <input type="text"
+							<c:set var="scientificNotation" value="${showJob.LUONGTHEOGIO}" />
+							<fmt:formatNumber var="formattedValue" value="${scientificNotation}" pattern="#.00"/>
+							<label for="firstname">Salary:</label> <input type="number" step = "any" required
 								class="form-control username" id="LUONGTHEOGIO" placeholder="...."
-								name="updateSalaryPerHour" value="${showJob.LUONGTHEOGIO}" maxlength="30" pattern="^\d+(\.\d)?$"/>
+								name="updateSalaryPerHour" value="${formattedValue}" maxlength="40" pattern="^\d+(\.\d)?$"/>
 						</div>
 						
 						<div class="modal-footer">

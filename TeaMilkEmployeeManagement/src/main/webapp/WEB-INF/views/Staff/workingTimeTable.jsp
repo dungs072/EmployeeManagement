@@ -44,7 +44,7 @@ td {
 	text-align: center;
 }
 .tableWrap {
-	margin-top: 40px;
+	margin-top: 20px;
 	height: 450px;
 	border: 2px solid black;
 	overflow: auto;
@@ -112,6 +112,24 @@ tbody tr:hover {
 	width: 100%;
 	height: 100%;
 }
+</style>
+<style>
+  /* Add a fixed position to the table header */
+  .sticky-header {
+    position: sticky;
+    top: 0;
+    background-color: #4e73df; /* Optional styling for the header */
+    z-index: 1; /* Ensure the header appears above other elements */
+  }
+	.fixed-cell {
+	  position: relative;
+	}
+	
+	.move-effect {
+	  position: sticky;
+	  top: 0;
+	  /*background-color: #fff; /* Adjust the background color as needed */
+	}
 </style>
 
 <script type="text/javascript">
@@ -297,7 +315,7 @@ tbody tr:hover {
 			<div class="mt-2 row align-items-center scrollit">
 				<table class="table table-bordered" id="shiftTable">
 					<thead class="bg-primary">
-						<tr>
+						<tr class = "sticky-header">
 							<th scope="col">
 								<h6 class="text-center text-light">Time table</h6>
 							</th>
@@ -328,10 +346,10 @@ tbody tr:hover {
 
 						<c:forEach var="shift" varStatus="indexShift" items="${shifts}">
 							<tr>
-								<th class="bg-primary">
+								<th style="background-color: #4e73df;" class = "fixed-cell">
 									<h6 class="text-center text-light">Shift ${shift.IDCA}</h6>
 									<h6 class="text-center text-light small">${shift.TENCA}</h6>
-									<h6 class="text-center text-light small">
+									<h6 style="font-size: 12px;" class="text-center text-light small">
 										<fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.startShiftTime}" /> - <fmt:formatDate type = "time" dateStyle = "short" timeStyle = "short" value = "${shift.endShiftTime}" /> 
 									</h6>
 								</th>
@@ -397,7 +415,11 @@ tbody tr:hover {
 								<label for="jobPositionDetail">Job Position: </label>
 								<h6 id="jobPositionDetail">${shiftDetailEntity.staff.jobPosition.TENVITRI}</h6>
 								<label for="salaryDetail">Salary: </label>
-								<h6 id="salaryDetail">${shiftDetailEntity.LUONGCA}</h6>
+								<h6>
+									<fmt:setLocale value = "vi"/>
+         							<fmt:formatNumber value = "${shiftDetailEntity.LUONGCA}" type = "currency" pattern="#,##0.00 ₫"/>
+								</h6>
+							
 								<label for="salaryDetail">Check in time: </label>
 								<h6 id="salaryDetail">${shiftDetailEntity.THOIGIANDILAM}</h6>
 								<label for="salaryDetail">Check out time: </label>

@@ -206,7 +206,7 @@ margin-top:5px;
 					</div>
 					<div class="form-group">
 						<label for="salary">Accumulated salary:</label> <input type="text" readonly
-							class="form-control username" id="salary" value = "${staff.LUONGTICHLUY}"
+							class="form-control username" id="salary" name="LUONGTICHLUY"  value = "${staff.LUONGTICHLUY}"
 							value="" maxlength="50" />
 					</div>
 				

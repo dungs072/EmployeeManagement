@@ -28,8 +28,7 @@ public class DisplayStaffMistakeController {
 	@Autowired
 	SessionFactory factory;
 	
-	List<StaffEntity> staffs;
-	
+	List<StaffEntity> staffList;
 	@Autowired
 	@Qualifier("staffPassDataHandler")
 	PassDataBetweenControllerHandler staffPassDataBetweenControllerHandler;
@@ -62,13 +61,14 @@ public class DisplayStaffMistakeController {
 			mistakeHistory.deleteLink();
 			session.delete(mistakeHistory);
 		}
+		map.addAttribute("deleteSuccess",true);
 		return displayMainView(map);
 	}
 	@RequestMapping(value = "/SearchStaff", method = RequestMethod.GET)
 	public String searchEmployee(HttpServletRequest request, ModelMap model) {
 		Session session = factory.getCurrentSession();
 		String searchText = request.getParameter("searchInput");
-		List<StaffEntity> staffList = searchStaffList(session, searchText);
+		staffList = searchStaffList(session, searchText);
 		model.addAttribute("staffs", staffList);
 		return returnToSpecificAccount();
 	}
@@ -104,8 +104,10 @@ public class DisplayStaffMistakeController {
 	}
 	
 	private String displayMainView(ModelMap map) {
-		staffs = getStaffsMistake();
-		map.addAttribute("staffs",staffs);
+		if(staffList==null) {
+			staffList = getStaffsMistake();
+		}
+		map.addAttribute("staffs",staffList);
 		return returnToSpecificAccount();
 	}
 	

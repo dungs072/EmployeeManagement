@@ -9,8 +9,17 @@ public class StaffShiftDataUI {
 	private String staffId;
 	private String shiftDetailId;
 	private String additionalJob;
+	private String jobPositionName;
 	
 	
+
+	public String getJobPositionName() {
+		return jobPositionName;
+	}
+
+	public void setJobPositionName(String jobPositionName) {
+		this.jobPositionName = jobPositionName;
+	}
 
 	public StaffShiftDataUI(String fullName, boolean isConfirmed) {
 		this.fullName = fullName;

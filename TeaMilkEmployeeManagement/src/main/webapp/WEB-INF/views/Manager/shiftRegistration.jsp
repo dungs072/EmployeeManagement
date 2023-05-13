@@ -604,10 +604,14 @@ input {
 																	<div class="card btn-outline-danger"
 																		style="width: 10rem;">
 																		<div class="card-body">
-																			<div class="orderNumber">
-																				<h3>${indexStaff.count}</h3>
+																			<div class="orderNumber position-absolute top-0 start-0">
+																				<strong>${indexStaff.count}</strong>
 																			</div>
-																			<h5 class="card-title" style="font-size: 10px;">${shiftStaff.fullName}</h5>
+																			<h5 style="font-size: 10px;"><strong>${shiftStaff.jobPositionName}</strong></h5>
+																			<h5 class="card-title" style="font-size: 10px;">
+																				
+																				${shiftStaff.fullName}
+																			</h5>
 																			<c:choose>
 																				<c:when test = "${shiftStaff.isConfirmed == true}">
 																					<input type="checkbox" class = "confirmCheckBox" onclick="return false;" checked>
@@ -845,7 +849,10 @@ input {
 								<label for="jobPositionDetail">Job Position: </label>
 								<h6 id="jobPositionDetail">${shiftDetailEntity.staff.jobPosition.TENVITRI}</h6>
 								<label for="salaryDetail">Salary: </label>
-								<h6 id="salaryDetail">${shiftDetailEntity.LUONGCA}</h6>
+								<h6>
+									<fmt:setLocale value = "vi"/>
+         							<fmt:formatNumber value = "${shiftDetailEntity.LUONGCA}" type = "currency" pattern="#,##0.00 ₫"/>
+								</h6>
 								<label for="salaryDetail">Check in time: </label>
 								<h6 id="salaryDetail">${shiftDetailEntity.THOIGIANDILAM}</h6>
 								<label for="salaryDetail">Check out time: </label>

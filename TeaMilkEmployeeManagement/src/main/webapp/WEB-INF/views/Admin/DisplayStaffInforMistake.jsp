@@ -9,7 +9,7 @@
 <title>Show Mistake of Staff</title>
 <style>
 .tableWrap {
-	margin-top: 50px;
+	margin-top: 20px;
 	height: 400px;
 	overflow: auto;
 	border-radius: 10px;
@@ -70,6 +70,10 @@ thead {
 tbody tr:hover {
 	background: #e6f7ff;
 }
+.search{
+	margin-left: 115px;
+	
+}
 </style>
 
 <script type="text/javascript">
@@ -81,6 +85,11 @@ $(window).on('load', function() {
 		$('#showStaffMistake').modal('show');
 		localStorage.setItem("isClickedView", "false");
 	}
+	var isDeleteSuccess = [[${deleteSuccess}]];
+	if(isDeleteSuccess=="true"){
+		$('#updateSuccess').modal("show");
+	}
+
 
 });
 $(document).on('click', ".viewButton", function(e) {
@@ -211,6 +220,15 @@ $(document).on('click',".deleteMistake",function(e){
 			</nav>
 		</div>
 		<div class="main">
+		<div class = "row">
+			<div class = "search">
+				<form action="DisplayStaffMistake/SearchStaff.htm" method="get">
+								<input type="text" name="searchInput"
+									placeholder="Name, Job position..">
+								<button type="submit" class="btn btn-outline-dark"><i class="fa fa-search" aria-hidden="true"></i></button>
+				</form>
+			</div>
+		</div>
 			<div class="container">
 		<div class="row justify-content-md-center">
 			<div class="col-10">
@@ -329,5 +347,28 @@ $(document).on('click',".deleteMistake",function(e){
     </div>
   </div>
 </div>
+	<!-- Update success notification -->
+		<div class="modal" id="updateSuccess" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">
+							<i class="fa fa-bell" aria-hidden="true" style="font-size: 1em;"></i> Notification
+						</h5>
+						 
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>Delete successfully !!!</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success"
+							data-bs-dismiss="modal">OK</button>
+					</div>
+					
+				</div>
+			</div>
+			</div>
 </body>
 </html>
