@@ -22,8 +22,19 @@ public class JobPositionEntity implements Primarykeyable {
 	@Column(name = "TENVITRI",unique = true)
 	private String TENVITRI;
 	
-	@Column(name = "LUONGTHEOGIO")
+	@Column(name = "LUONG")
 	private float LUONGTHEOGIO;
+	
+	@Column(name = "HINHTHUC")
+	private String HINHTHUC;
+
+	public String getHINHTHUC() {
+		return HINHTHUC;
+	}
+
+	public void setHINHTHUC(String hINHTHUC) {
+		HINHTHUC = hINHTHUC;
+	}
 
 	public float getLUONGTHEOGIO() {
 		return LUONGTHEOGIO;

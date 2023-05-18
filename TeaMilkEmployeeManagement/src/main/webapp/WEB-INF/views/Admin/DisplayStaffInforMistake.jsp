@@ -224,7 +224,7 @@ $(document).on('click',".deleteMistake",function(e){
 			<div class = "search">
 				<form action="DisplayStaffMistake/SearchStaff.htm" method="get">
 								<input type="text" name="searchInput"
-									placeholder="Name, Job position..">
+									placeholder="Name, Job position, type..">
 								<button type="submit" class="btn btn-outline-dark"><i class="fa fa-search" aria-hidden="true"></i></button>
 				</form>
 			</div>
@@ -249,7 +249,7 @@ $(document).on('click',".deleteMistake",function(e){
 									<td>${i.count}</td>
 									<td>${staff.MANV}</td>
 									<td>${staff.HO} ${staff.TEN}</td>
-									<td>${staff.jobPosition.TENVITRI}</td>
+									<td>${staff.jobPosition.TENVITRI} - ${staff.jobPosition.HINHTHUC}</td>
 									<td>
 										<form action = "DisplayStaffMistake/ShowMistake.htm" method = "get">
 											<button type="submit" class="btn btn-success viewButton" name = "staffId" value = "${staff.MANV}"><i class="fa fa-eye" aria-hidden="true"></i></button>

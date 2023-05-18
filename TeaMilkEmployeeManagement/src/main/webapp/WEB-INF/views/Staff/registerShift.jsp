@@ -495,12 +495,12 @@ input {
 																	test="${not empty shiftStaffs[indexShift.index][i-1] && shiftStaffs[indexShift.index][i-1].leftStaff>0 &&shiftStaffs[indexShift.index][i-1].canSettingShift==true}">
 																	<button type="submit" name="registerShift"
 																		class="btn btn-success openButton"
-																		value="${indexShift.count},${i}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Register</button>
+																		value="${indexShift.count},${i}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Register</button>
 																</c:when>
 																<c:otherwise>
 																	<button type="submit" name="registerShift"
 																		class="btn btn-success openButton" disabled
-																		value="${indexShift.count},${i}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Register</button>
+																		value="${indexShift.count},${i}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Register</button>
 																</c:otherwise>
 															</c:choose>
 														</form>

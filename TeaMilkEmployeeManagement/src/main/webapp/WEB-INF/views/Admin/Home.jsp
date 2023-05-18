@@ -79,6 +79,7 @@ z<%@ page language="java" contentType="text/html; charset=UTF-8"
 		$(document).find('.yesEdit').val($(this).val());
 	})
 </script>
+<link rel="icon" type="image/png" href="images/logo.png">
 </head>
 <body>
 
@@ -276,7 +277,7 @@ z<%@ page language="java" contentType="text/html; charset=UTF-8"
 											<tr>
 												<td>${s.staff.MANV}</td>
 												<td>${s.staff.HO} ${s.staff.TEN}</td>
-												<td>${s.staff.jobPosition.TENVITRI }</td>
+												<td>${s.staff.jobPosition.TENVITRI } - ${s.staff.jobPosition.HINHTHUC}</td>
 												<c:choose>
 													<c:when test="${empty s.THOIGIANDILAM}">
 														<td>
@@ -377,7 +378,7 @@ z<%@ page language="java" contentType="text/html; charset=UTF-8"
 	<br>
 	 <input name="times"
 	type="number"  id="times"
-	value="1">
+	value="1" min = 1>
 	</div>
 <div class="form-group">
 	<label for="times">Punishment:</label>
@@ -416,7 +417,7 @@ z<%@ page language="java" contentType="text/html; charset=UTF-8"
     </div>
   </div>
 </div>
-		<!-- open setting max staff -->
+
 
 		<div class="modal" id="editModal" tabindex="-1">
 			<div class="modal-dialog">
@@ -431,14 +432,14 @@ z<%@ page language="java" contentType="text/html; charset=UTF-8"
 							<label for="exampleInputEmail1" class="form-label">Salary amount: </label>
 							<div class="number">
 								<input type="text"
-									value="1" class="editInput" name=editInput required pattern="^(0*[1-9][0-9]*(\.[0-9]+)?|0+\.[0-9]*[1-9][0-9]*)$" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" />
+									value="1" class="editInput" name=editInput required pattern="-?[0-9]+(\.[0-9]+)?"/>
 							</div>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">No</button>
 							<button type="submit" class="btn btn-primary yesEdit"
-								name="yesEdit" data-bs-dismiss="modal">Yes</button>
+								name="yesEdit" >Yes</button>
 						</div>
 					</form>
 

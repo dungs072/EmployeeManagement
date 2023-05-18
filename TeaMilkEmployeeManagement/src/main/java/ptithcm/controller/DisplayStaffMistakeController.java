@@ -29,12 +29,14 @@ public class DisplayStaffMistakeController {
 	SessionFactory factory;
 	
 	List<StaffEntity> staffList;
+	private String searchTextInput = "";
 	@Autowired
 	@Qualifier("staffPassDataHandler")
 	PassDataBetweenControllerHandler staffPassDataBetweenControllerHandler;
 	
 	@RequestMapping
 	public String showEmployee(ModelMap map) {
+		searchTextInput = "";
 		return displayMainView(map);
 		
 	}
@@ -68,6 +70,7 @@ public class DisplayStaffMistakeController {
 	public String searchEmployee(HttpServletRequest request, ModelMap model) {
 		Session session = factory.getCurrentSession();
 		String searchText = request.getParameter("searchInput");
+		searchTextInput = searchText;
 		staffList = searchStaffList(session, searchText);
 		model.addAttribute("staffs", staffList);
 		return returnToSpecificAccount();
@@ -80,7 +83,8 @@ public class DisplayStaffMistakeController {
 				+ " MANV IN (SELECT TENTK FROM AccountEntity WHERE priorityEntity.MAQUYEN='NV') AND"
 				+ " ((HO LIKE CONCAT('%',:search,'%')) OR "
 				+ " (TEN LIKE CONCAT('%',:search,'%')) OR "
-				+ " (jobPosition.TENVITRI LIKE CONCAT ('%',:search,'%')))"
+				+ " (jobPosition.TENVITRI LIKE CONCAT ('%',:search,'%')) OR"
+				+ " (jobPosition.HINHTHUC LIKE CONCAT ('%',:search,'%')))"
 				+ " ORDER BY TEN";
 		Query query = session.createQuery(hql);
 		query.setParameter("search", searchText);
@@ -104,9 +108,8 @@ public class DisplayStaffMistakeController {
 	}
 	
 	private String displayMainView(ModelMap map) {
-		if(staffList==null) {
-			staffList = getStaffsMistake();
-		}
+		Session session = factory.getCurrentSession();
+		staffList = searchStaffList(session, searchTextInput);
 		map.addAttribute("staffs",staffList);
 		return returnToSpecificAccount();
 	}

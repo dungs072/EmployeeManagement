@@ -137,8 +137,17 @@ public class HomeController{
 				LocalTime startTime = startValue>=0?startWorkShiftTime:startShiftTime;
 				LocalTime endTime = endValue>=0?endShiftTime:endWorkShiftTime;
 		
-				long differenceHours = startTime.until(endTime, ChronoUnit.HOURS);
-		        salary = salaryPerHour* differenceHours;
+				
+				if(staff.getJobPosition().getHINHTHUC().equals("PART TIME")) {
+					long differenceHours = startTime.until(endTime, ChronoUnit.HOURS);
+					salary = salaryPerHour* differenceHours;
+				}
+				else {
+					long differenceHours = startShiftTime.until(endShiftTime,ChronoUnit.HOURS)- startTime.until(endTime, ChronoUnit.HOURS);
+					float salaryFullTimePerHour = (int)((int)(staff.getJobPosition().getLUONGTHEOGIO()/30)/8);
+					salary = -salaryFullTimePerHour*differenceHours;
+				}
+		       
 			}
 			
 		}

@@ -89,7 +89,7 @@ public class RankController {
 	public List<Object[]> getRecordStaffs(int month, int year,Date currentDate) {
 		Session session = factory.getCurrentSession();
 		String hql = "SELECT s, (SELECT COUNT(*) FROM ShiftDetailEntity "
-				+ "WHERE staff.MANV = s.MANV AND month(openshift.NGAYLAMVIEC) = :month AND year(openshift.NGAYLAMVIEC) = :year "
+				+ "WHERE staff.MANV = s.MANV AND THOIGIANCHAMCONG IS NOT NULL AND month(openshift.NGAYLAMVIEC) = :month AND year(openshift.NGAYLAMVIEC) = :year "
 				+ " AND openshift.NGAYLAMVIEC<:currentDate)"
 				+ " FROM StaffEntity AS s WHERE s.MANV in (SELECT TENTK FROM AccountEntity as a WHERE a.priorityEntity.MAQUYEN = 'NV')";
 		Query query = session.createQuery(hql);

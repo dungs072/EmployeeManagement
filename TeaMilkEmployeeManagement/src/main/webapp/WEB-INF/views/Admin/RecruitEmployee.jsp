@@ -190,6 +190,10 @@ margin-top:5px;
 							if(disableSuccess=="true"){
 								$('#disableSuccess').modal("show");
 							}
+							var isCannotAddWithSalary = [[${canUpdateStaffWithSalary}]]
+							if(isCannotAddWithSalary=="true"){
+								$('#updateStaffWithSalary').modal("show");
+							}
 						});
 	});
 </script>
@@ -329,7 +333,7 @@ margin-top:5px;
 
 					<form action="Recruit/SearchStaff.htm" method="get">
 						<input type="text" name="searchInput"
-							placeholder="Name, Job position..">
+							placeholder="Name, Job position, type...">
 						<button type="submit" class="btn btn-outline-dark"><i class="fa fa-search" aria-hidden="true"></i></button>
 					</form>
 				</div>
@@ -356,7 +360,7 @@ margin-top:5px;
 								<th><span>Full Name</span></th>
 								<th><span>Gender</span></th>
 								<th><span>Position</span></th>
-								<th><span>Type</span>
+							
 								<th><span>Action</span></th>
 							</tr>
 						</thead>
@@ -367,19 +371,8 @@ margin-top:5px;
 									<td>${staff.MANV}</td>
 									<td>${staff.HO} ${staff.TEN}</td>
 									<td><span>${staff.GIOITINH}</span></td>
-									<td><span>${staff.jobPosition.TENVITRI}</span></td>
-									<td>
-										<span>
-											<c:choose >
-												<c:when test = "${staff.HINHTHUC == 'PART'}">
-													Part time
-												</c:when>
-												<c:otherwise>
-													Full time
-												</c:otherwise>
-											</c:choose>
-										</span>
-									</td>
+									<td><span>${staff.jobPosition.TENVITRI} - ${staff.jobPosition.HINHTHUC}</span></td>
+							
 									<td>
 										<form action="Recruit/InforStaff.htm" method="get">
 											<button type="submit" name="InforStaff"
@@ -474,25 +467,15 @@ margin-top:5px;
 						</div>
 						<div class="form-group">
 							<label for="add-jobId">Job position:</label> <select
-								name="add-jobId" class="form-select jobSelection" id = "jobSelection"
+								name="jobId" class="form-select jobSelection" id = "jobSelection"
 								aria-label="Default select example">
 								<c:forEach var="job" varStatus="i" items="${jobs}">
-									<option value="${job.MACV}">${job.TENVITRI}</option>
+									<option value="${job.MACV}">${job.TENVITRI} - ${job.HINHTHUC}</option>
 								</c:forEach>
 
 							</select>
 						</div>
-						<div class="form-check typeJob">
-							<input class="form-check-input" type="radio" name="HINHTHUC"
-								value="FULL"> <label
-								class="form-check-label" for="flexRadioDefault1"> Full Time </label>
-						</div>
-						<div class="form-check typeJob">
-							<input class="form-check-input" type="radio" name="HINHTHUC"
-								value="PART" checked> <label
-								class="form-check-label" for="flexRadioDefault2"> Part Time
-							</label>
-						</div>
+						
 						
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
@@ -613,64 +596,16 @@ margin-top:5px;
 								<c:forEach var="job" varStatus="i" items="${jobs}">
 									<c:choose>
 										<c:when test="${staff.jobPosition.MACV == job.MACV}">
-											<option value="${job.MACV}" selected>${job.TENVITRI}</option>
+											<option value="${job.MACV}" selected>${job.TENVITRI} - ${job.HINHTHUC}</option>
 										</c:when>
 										<c:otherwise>
-											<option value="${job.MACV}">${job.TENVITRI}</option>
+											<option value="${job.MACV}">${job.TENVITRI} - ${job.HINHTHUC}</option>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
 							</select>
 						</div>
-						<c:if test = "${staff.jobPosition.TENVITRI != 'Manager'}">
-								<c:set var="hinhthuc" scope="session" value="${staff.HINHTHUC }" />
-								<c:if test="${hinhthuc == 'FULL'}">
-		
-									<div class="form-check typeJob">
-										<input class="form-check-input" type="radio" name="HINHTHUC"
-											id="gender1" value="FULL" checked> <label
-											class="form-check-label" for="flexRadioDefault1"> Full Time
-										</label>
-									</div>
-									<div class="form-check typeJob">
-										<input class="form-check-input gender" type="radio" name="HINHTHUC"
-											id="gender2" value="PART"> <label
-											class="form-check-label" for="flexRadioDefault2">
-											Part Time </label>
-									</div>
-								</c:if>
-		
-								<c:if test="${hinhthuc == 'PART'}">
-		
-									<div class="form-check typeJob">
-										<input class="form-check-input" type="radio" name="HINHTHUC"
-											id="gender1" value="FULL" > <label
-											class="form-check-label" for="flexRadioDefault1"> Full Time
-										</label>
-									</div>
-									<div class="form-check typeJob">
-										<input class="form-check-input gender" type="radio" name="HINHTHUC"
-											id="gender2" value="PART" checked> <label
-											class="form-check-label" for="flexRadioDefault2">
-											Part Time </label>
-									</div>
-								</c:if>
-						</c:if>
-						<c:if test = "${staff.jobPosition.TENVITRI == 'Manager'}">
-									<div class="form-check typeJob">
-										<input class="form-check-input" type="radio" name="HINHTHUC"
-											id="gender1" value="FULL" checked> <label
-											class="form-check-label" for="flexRadioDefault1"> Full Time
-										</label>
-									</div>
-									<div class="form-check typeJob">
-										<input class="form-check-input gender" type="radio" name="HINHTHUC"
-											id="gender2" value="PART"> <label
-											class="form-check-label" for="flexRadioDefault2">
-											Part Time </label>
-									</div>
-						</c:if>
-						
+					
 						<div class="modal-footer">
 
 							<button type="button" class="btn btn-secondary"
@@ -899,12 +834,33 @@ margin-top:5px;
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Warning !!!</h5>
+					<h5 class="modal-title text-danger">Warning !!!</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
 					<p>Fail to delete this employee because she or he has links to other information</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger"
+					data-bs-dismiss="modal">Ok</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Notification -->
+	<div class="modal" tabindex="-1" id="updateStaffWithSalary">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title text-danger">Warning !!!</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Ac salary for this staff at part time job is ${staffSalaryLeft}đ. You should pay for the staff</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-danger"

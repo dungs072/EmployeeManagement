@@ -75,7 +75,6 @@ public class LoginController {
 		HttpSession session = request.getSession();
 		if(priority.strip().equals("AD"))
 		{
-			
 			staffPassDataBetweenControllerHandler.setData(userName);
 			session.setAttribute("user", "AD");
 			return "redirect:/home.htm";

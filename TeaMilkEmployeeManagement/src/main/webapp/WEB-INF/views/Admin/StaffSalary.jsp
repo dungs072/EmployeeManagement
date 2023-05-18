@@ -261,7 +261,7 @@ tbody tr:hover {
 	
 						<form action="searchSalary.htm" method="get">
 							<input type="text" name="searchInput"
-								placeholder="Name, Job position..">
+								placeholder="Name, Job position, type">
 							<button type="submit" class="btn btn-outline-dark"><i class="fa fa-search" aria-hidden="true"></i></button>
 						</form>
 					</div>
@@ -277,7 +277,6 @@ tbody tr:hover {
 									<th><span>Employee Id</span></th>
 									<th><span>Full Name</span></th>
 									<th><span>Job position</span></th>
-									<th><span>Type</span></th>
 									<th><span>Ac Salary</span></th>
 									<th><span>Print Salary Bill</span></th>
 									<th><span>History</span></th>
@@ -289,8 +288,7 @@ tbody tr:hover {
 										<td>${i.count}</td>
 										<td>${staff.MANV}</td>
 										<td>${staff.HO}  ${staff.TEN}</td>
-										<td>${staff.jobPosition.TENVITRI}</td>
-										<td>${staff.HINHTHUC}</td>
+										<td>${staff.jobPosition.TENVITRI} - ${staff.jobPosition.HINHTHUC}</td>
 										<td>
 											<span>
 												 	<fmt:setLocale value = "vi"/>
@@ -298,7 +296,7 @@ tbody tr:hover {
 											</span>
 										</td>
 										<td>
-											<form action = "salary.htm">
+											<form action = "ShowSalary.htm">
 														<button type="submit" class="btn btn-success valueButton"
 														value="${staff.MANV}+${staff.HO}+${staff.TEN}+${staff.LUONGTICHLUY}"><i class="fa fa-print" aria-hidden="true"></i></button>
 											</form>	
@@ -319,8 +317,8 @@ tbody tr:hover {
 										<td>${i.count + salaryStaff.size()}</td>
 										<td>${staff.MANV}</td>
 										<td>${staff.HO}  ${staff.TEN}</td>
-										<td>${staff.jobPosition.TENVITRI}</td>
-										<td>${staff.HINHTHUC}</td>
+										<td>${staff.jobPosition.TENVITRI} - ${staff.jobPosition.HINHTHUC}</td>
+										
 										<td><span>
 											<fmt:setLocale value = "vi"/>
          									<fmt:formatNumber value = "${staff.LUONGTICHLUY}" type = "currency" pattern="#,##0.00 ₫"/>

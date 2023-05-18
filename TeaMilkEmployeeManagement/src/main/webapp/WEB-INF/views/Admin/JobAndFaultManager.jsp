@@ -157,6 +157,10 @@ tbody tr:hover {
 			if(updateSuccess=="true"){
 				$('#updateSuccess').modal("show");
 			}
+			var updateJobFail = [[${updateFail}]]
+			if(updateJobFail=="true"){
+				$('#updateFail').modal("show");
+			}
 			var cannotUpdateTime = [[${cannotUpdateTime}]]
 			if(cannotUpdateTime=="false"){
 				$('#cannotSetTime').modal("show");
@@ -284,15 +288,15 @@ tbody tr:hover {
 		</div>
 	<div class="main">
 		<div class="container">
-
 		<div class="row">
-			<div class="col-6">
+			<div class="col-12">
 				<div class="tableWrap">
 					<table class="employeeTable">
 						<thead>
 							<tr>
 								<th><span>STT</span></th>
-								<th><span>Job type</span></th>
+								<th><span>Job</span></th>
+								<th><span>Type</span>
 								<th><span>Salary</span></th>
 								<th><span>Action</span></th>
 							</tr>
@@ -302,9 +306,10 @@ tbody tr:hover {
 								<tr>
 									<td>${i.count}</td>
 									<td>${job.TENVITRI}</td>
+									<td>${job.HINHTHUC}</td>
 									<td>
 										<c:choose>
-											<c:when test = "${job.canUpdate==false }">
+											<c:when test = "${job.canUpdate==false || job.HINHTHUC == 'FULL TIME'}">
 												<fmt:setLocale value = "vi"/>
          										<fmt:formatNumber value = "${job.LUONGTHEOGIO}" type = "currency" pattern="#,##0.00 ₫"/> /month
 											</c:when>
@@ -342,7 +347,7 @@ tbody tr:hover {
 							</c:forEach>
 
 							<tr class="footButton">
-								<td colspan="4">
+								<td colspan="5">
 									<button type="button" class="btn btn-success addBtn"
 										data-bs-toggle="modal" data-bs-target="#addJobModal">
 										+</button>
@@ -355,6 +360,9 @@ tbody tr:hover {
 					</table>
 				</div>
 			</div>
+			
+		</div>
+		<div class="row mt-2 justify-content-md-center">
 			<div class="col-6">
 				<div class="tableWrap">
 					<table class="employeeTable">
@@ -405,8 +413,6 @@ tbody tr:hover {
 					</table>
 				</div>
 			</div>
-		</div>
-		<div class="row mt-2 justify-content-md-center">
 			<div class="col-6">
 				<div class="tableShift">
 					<table class="shiftTable">
@@ -468,6 +474,17 @@ tbody tr:hover {
 							<label for="firstname">Job type:</label> <input type="text"
 								class="form-control username" placeholder="job title"
 								name="TENVITRI" value="Server" maxlength="30" required pattern="([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]\s*)+"/>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="HINHTHUC"
+									value="FULL TIME"> <label
+									class="form-check-label" for="flexRadioDefault1"> FULL TIME </label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="HINHTHUC"
+									value="PART TIME" checked> <label
+									class="form-check-label" for="flexRadioDefault2"> PART TIME
+								</label>
+							</div>
 							<label for="firstname">Salary:</label> <input type="text"
 								class="form-control username" id="LUONGTHEOGIO" placeholder="...."
 								name="LUONGTHEOGIO" value="10000.0" maxlength="30" pattern="^\d+(\.\d)?$"/>
@@ -578,13 +595,53 @@ tbody tr:hover {
 									<label for="firstname">Job title:</label> <input type="text" readonly
 										class="form-control username" id="TENVITRI" placeholder="...."
 										name="updateTENVITRI" value="${showJob.TENVITRI}" maxlength="30" pattern="([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]\s*)+" />			
+									<div class="form-check">
+												<input class="form-check-input" type="radio" name="type" checked
+													value="FULL TIME"> <label
+													class="form-check-label" for="flexRadioDefault1"> FULL TIME </label>
+											</div>
+											<div class="form-check">
+												<input class="form-check-input" type="radio" name="type" disabled
+													value="PART TIME"> <label
+													class="form-check-label" for="flexRadioDefault2"> PART TIME
+												</label>
+									</div>
 								</c:when>
 								<c:otherwise>
 									<label for="firstname">Job title:</label> <input type="text"
 									class="form-control username" id="TENVITRI" placeholder="...."
 									name="updateTENVITRI" value="${showJob.TENVITRI}" maxlength="30" pattern="([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]\s*)+" />
+									<c:choose>
+										<c:when test = "${showJob.HINHTHUC eq 'FULL TIME'}">
+											<div class="form-check">
+												<input class="form-check-input" type="radio" name="type" checked 
+													value="FULL TIME"> <label
+													class="form-check-label" for="flexRadioDefault1"> FULL TIME </label>
+											</div>
+											<div class="form-check">
+												<input class="form-check-input" type="radio" name="type" 
+													value="PART TIME"> <label
+													class="form-check-label" for="flexRadioDefault2"> PART TIME
+												</label>
+											</div>
+										</c:when>
+										<c:otherwise>
+											<div class="form-check">
+												<input class="form-check-input" type="radio" name="type" 
+													value="FULL TIME"> <label
+													class="form-check-label" for="flexRadioDefault1"> FULL TIME </label>
+											</div>
+											<div class="form-check">
+												<input class="form-check-input" type="radio" name="type" checked
+													value="PART TIME"> <label
+													class="form-check-label" for="flexRadioDefault2"> PART TIME
+												</label>
+											</div>
+										</c:otherwise>
+									</c:choose>
 								</c:otherwise>
 							</c:choose>
+							
 							
 							<c:set var="scientificNotation" value="${showJob.LUONGTHEOGIO}" />
 							<fmt:formatNumber var="formattedValue" value="${scientificNotation}" pattern="#.00"/>
@@ -732,12 +789,12 @@ tbody tr:hover {
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Error</h5>
+					<h5 class="modal-title text-danger">Error</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<p>Cannot add fault with same name</p>
+					<p>Cannot add fault with same name and type</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-success"
@@ -776,6 +833,25 @@ tbody tr:hover {
 				</div>
 				<div class="modal-body">
 					<p>Update successfully</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success"
+							data-bs-dismiss="modal">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal" tabindex="-1" id="updateFail">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title text-danger">Error</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Update fail because there is job has same name and type !</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-success"

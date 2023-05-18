@@ -61,8 +61,9 @@ public class SelfInforController {
 			Date birthday = Date.valueOf(birthdayStr);
 			updatedStaff.setNGAYSINH(birthday);
 		}
-		map.addAttribute("staff",updatedStaff);
 		updateStaff(session,updatedStaff);
+		map.addAttribute("staff",updatedStaff);
+		map.addAttribute("updateSuccess",true);
 		return returnToSpecificAccount();
 	}
 	
@@ -86,6 +87,7 @@ public class SelfInforController {
 	private void updateStaff(Session session,StaffEntity newStaff) {
 		String staffId = passDataBetweenControllerHandler.getData();
 		StaffEntity oldStaff = (StaffEntity) session.get(StaffEntity.class,staffId);
+		newStaff.setJobPosition(oldStaff.getJobPosition());
 		oldStaff.updateInfor(newStaff);
 		session.saveOrUpdate(oldStaff);
 	}

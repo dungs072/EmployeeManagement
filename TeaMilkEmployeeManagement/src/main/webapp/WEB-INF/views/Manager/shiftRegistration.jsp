@@ -804,6 +804,7 @@ input {
 								<h6 id="settingNameModal">ABC</h6>
 								<label for="settingJobPosition">Job Position: </label>
 								<h6 id="settingJobPositionModal">CBA</h6>
+								
 							</div>
 							<div class="mb-3">
 								<label for="exampleInputPassword1" class="form-label">To
@@ -847,7 +848,7 @@ input {
 								<label for="nameDetail">Name: </label>
 								<h6 id="nameDetail">${shiftDetailEntity.staff.HO} ${shiftDetailEntity.staff.TEN}</h6>
 								<label for="jobPositionDetail">Job Position: </label>
-								<h6 id="jobPositionDetail">${shiftDetailEntity.staff.jobPosition.TENVITRI}</h6>
+								<h6 id="jobPositionDetail">${shiftDetailEntity.staff.jobPosition.TENVITRI} - ${shiftDetailEntity.staff.jobPosition.HINHTHUC}</h6>
 								<label for="salaryDetail">Salary: </label>
 								<h6>
 									<fmt:setLocale value = "vi"/>
@@ -916,7 +917,7 @@ input {
 									<c:forEach var="staff" varStatus="i" items="${staffs}">
 										<option
 											value="${staff.MANV},${staff.HO} ${staff.TEN},${staff.jobPosition.TENVITRI}">${staff.HO}
-											${staff.TEN} - ${staff.jobPosition.TENVITRI} - ${staff.HINHTHUC}</option>
+											${staff.TEN} - ${staff.jobPosition.TENVITRI} - ${staff.jobPosition.HINHTHUC}</option>
 									</c:forEach>
 								</select>
 

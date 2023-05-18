@@ -231,9 +231,12 @@ tbody tr:hover {
 										<tr>
 											<td>${i.count}</td>
 											<td>
-												<fmt:formatDate type = "both" dateStyle = "short" timeStyle = "medium" value="${bill.THOIGIANNHAN}"/>
+												<fmt:formatDate value="${bill.THOIGIANNHAN}"  pattern="dd/MM/yyyy"/>
 											</td>
-											<td>${bill.LUONGNHAN}</td>
+											<td>
+												<fmt:setLocale value = "vi"/>
+         										<fmt:formatNumber value = "${bill.LUONGNHAN}" type = "currency" pattern="#,##0.00 ₫"/>
+											</td>
 										</tr>
 									</c:forEach>
 

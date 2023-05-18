@@ -15,6 +15,14 @@ margin-left:5px;
 margin-top:5px;
 }
 </style>
+<script>
+	$(window).on('load',function() {
+		var isUpdateSuccess = [[${updateSuccess}]];
+		if(isUpdateSuccess=="true"){
+			$('#updateSuccess').modal("show");
+		}
+	});
+</script>
 </head>
 <body>
 <div class="main-container">
@@ -210,33 +218,12 @@ margin-top:5px;
 							value="" maxlength="50" />
 					</div>
 				
+					<div class="form-group">
+						<label for="salary">Job position:</label> <input type="text" readonly
+							class="form-control username" id="salary" name="LUONGTICHLUY"  value = "${staff.jobPosition.TENVITRI} - ${staff.jobPosition.HINHTHUC}"
+							value="" maxlength="50" />
+					</div>
 					
-					<c:if test="${staff.HINHTHUC=='PART'}">
-						<div class="form-check">
-							<input class="form-check-input" type="radio"
-								id="gender1" value = "PART" checked disabled> <label class="form-check-label"
-								for="flexRadioDefault1"> Part time </label>
-							
-						</div>
-						<div class="form-check">
-						<input class="form-check-input" type="radio" 
-							id="gender2" value = "FULL" disabled> <label class="form-check-label"
-							for="flexRadioDefault2"> Full time </label>
-					</div>
-					</c:if>
-					<c:if test="${staff.HINHTHUC=='FULL'}">
-						<div class="form-check">
-							<input class="form-check-input" type="radio" 
-								id="gender1" value = "PART" disabled > <label class="form-check-label"
-								for="flexRadioDefault1"> Part time </label>
-							
-						</div>
-						<div class="form-check">
-						<input class="form-check-input" type="radio"
-							id="gender2" checked value = "FULL" disabled> <label class="form-check-label"
-							for="flexRadioDefault2"> Full time </label>
-					</div>
-					</c:if>
 					
 					
 					<button type="submit" class="btn btn-success btn-customized mt-4">
@@ -248,5 +235,28 @@ margin-top:5px;
 	</div>
 	</div>
 	</div>
+		<!-- Update success notification -->
+		<div class="modal" id="updateSuccess" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">
+							<i class="fa fa-bell" aria-hidden="true" style="font-size: 1em;"></i> Notification
+						</h5>
+						 
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>Update successfully !!!</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success"
+							data-bs-dismiss="modal">OK</button>
+					</div>
+					
+				</div>
+			</div>
+			</div>
 </body>
 </html>
