@@ -67,7 +67,7 @@ public class JobAndFaultController {
 	@RequestMapping(value = "/AddJob", method = RequestMethod.GET)
 	public String addJob(ModelMap model, JobPositionEntity job) {
 		String jobId = jobKeyHandler.getNewKey("CV");
-		if(canAddJob(job.getTENVITRI())) {
+		if(canAddJob(job.getTENVITRI(),job.getHINHTHUC())) {
 			addJobToDB(job, jobId);
 
 			updateAllTable(model);
@@ -153,10 +153,17 @@ public class JobAndFaultController {
 		Session session = factory.getCurrentSession();
 		String jobId = request.getParameter("updateJobId");
 		String nameJob = request.getParameter("updateTENVITRI");
+		String typeJob = request.getParameter("type");
+		if(!canUpdateJob(nameJob, typeJob, jobId)) {
+			updateAllTable(model);
+			model.addAttribute("updateFail",true);
+			return "/Admin/JobAndFaultManager";
+		}
 		float salary = Float.parseFloat(request.getParameter("updateSalaryPerHour"));
 		JobPositionEntity job = (JobPositionEntity) session.get(JobPositionEntity.class, jobId);
 		job.setTENVITRI(nameJob);
 		job.setLUONGTHEOGIO(salary);
+		job.setHINHTHUC(typeJob);
 		if(job.getTENVITRI().equals("Manager")) {
 			String hql = "UPDATE StaffEntity SET LUONGTICHLUY = :LUONG WHERE jobPosition IN (SELECT j FROM JobPositionEntity j WHERE j.TENVITRI = 'Manager')";
 			Query query = session.createQuery(hql);
@@ -264,11 +271,22 @@ public class JobAndFaultController {
 		query.setString("id", id);
 		return (long) query.uniqueResult() == 0;
 	}
-	private boolean canAddJob(String jobName) {
+	private boolean canAddJob(String jobName,String type) {
+		if(jobName.equals("Manager")) {return false;}
 		Session session = factory.getCurrentSession();
-		String hql = "SELECT COUNT(*) FROM JobPositionEntity  WHERE TENVITRI = :jobName";
+		String hql = "SELECT COUNT(*) FROM JobPositionEntity  WHERE TENVITRI = :jobName AND HINHTHUC = :type";
 		Query query = session.createQuery(hql);
 		query.setString("jobName", jobName);
+		query.setString("type", type);
+		return (long)query.uniqueResult()==0;
+	}
+	private boolean canUpdateJob(String jobName,String type,String oldId) {
+		Session session = factory.getCurrentSession();
+		String hql = "SELECT COUNT(*) FROM JobPositionEntity  WHERE MACV != :oldId AND TENVITRI = :jobName AND HINHTHUC = :type";
+		Query query = session.createQuery(hql);
+		query.setString("jobName", jobName);
+		query.setString("type", type);
+		query.setString("oldId", oldId);
 		return (long)query.uniqueResult()==0;
 	}
 	private boolean canAddFault(String faultName) {

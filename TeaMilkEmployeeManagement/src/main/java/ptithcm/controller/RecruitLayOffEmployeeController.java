@@ -91,16 +91,16 @@ public class RecruitLayOffEmployeeController {
 		}
 		else {
 			Session session = factory.getCurrentSession();
-			String jobId = request.getParameter("add-jobId");
+			String jobId = request.getParameter("jobId");
 			String staffId = staffKeyHandler.getNewKey("NV");
 			JobPositionEntity job = (JobPositionEntity) session.get(JobPositionEntity.class, jobId);
-			if(job.getTENVITRI().strip().equals("Manager")) {
-				staff.setHINHTHUC("FULL");
-			}
 			staff.setHO(formatString.getTextFormat(staff.getHO()));
 			staff.setTEN(formatString.getTextFormat(staff.getTEN()));
 			if(staff.getDIACHI()!=null) {
 				staff.setDIACHI(formatString.getTextFormat(staff.getDIACHI()));
+			}
+			if(job.getHINHTHUC().equals("FULL TIME")) {
+				staff.setLUONGTICHLUY(job.getLUONGTHEOGIO());
 			}
 			staff.setJobPosition(job);
 			addEmloyeeToDB(staff, staffId);
@@ -195,6 +195,17 @@ public class RecruitLayOffEmployeeController {
 			return "/Admin/RecruitEmployee";
 		}
 		String maCV = request.getParameter("jobId");
+		JobPositionEntity job = (JobPositionEntity) session.get(JobPositionEntity.class, maCV);
+		StaffEntity oldstaff = getStaff(currentStaffId);
+		if(oldstaff.getJobPosition().getHINHTHUC().equals("PART TIME")&&oldstaff.getLUONGTICHLUY()>0) {
+			if(job.getHINHTHUC().equals("FULL TIME")) {
+				model.addAttribute("staffs", staffList);
+				model.addAttribute("canUpdateStaffWithSalary",true);
+				model.addAttribute("staffSalaryLeft",oldstaff.getLUONGTICHLUY());
+				return "/Admin/RecruitEmployee";
+			}
+		}
+		
 		String birthdayStr = request.getParameter("birthday");
 		if (!birthdayStr.isEmpty()) {
 			Date birthday = Date.valueOf(birthdayStr);
@@ -209,10 +220,16 @@ public class RecruitLayOffEmployeeController {
 		staff.setHO(formatString.getTextFormat(staff.getHO()));
 		staff.setTEN(formatString.getTextFormat(staff.getTEN()));
 		staff.setMANV(currentStaffId);
-
-		JobPositionEntity job = (JobPositionEntity) session.get(JobPositionEntity.class, maCV);
-		if(job.getTENVITRI().strip().equals("Manager")) {
-			staff.setHINHTHUC("FULL");
+		
+		
+		if(job.getHINHTHUC().equals("FULL TIME")) {
+			if(oldstaff.getJobPosition().getMACV().equals(job.getMACV())) {
+				staff.setLUONGTICHLUY(oldstaff.getLUONGTICHLUY());
+			}
+			else {
+				staff.setLUONGTICHLUY(job.getLUONGTHEOGIO());
+			}
+			
 		}
 		staff.setJobPosition(job);
 		updateStaff(session, staff);
@@ -360,9 +377,8 @@ public class RecruitLayOffEmployeeController {
 		AccountEntity account = (AccountEntity) session.get(AccountEntity.class, newStaff.getMANV());
 		account.setPriorityEntity(priority);
 		StaffEntity oldStaff = (StaffEntity) session.get(StaffEntity.class, newStaff.getMANV());
-		if(oldStaff.getJobPosition().getTENVITRI().equals("Manager")&&!newStaff.getJobPosition().getTENVITRI().equals("Manager")) {
-			oldStaff.setLUONGTICHLUY(0);
-			
+		if(oldStaff.getJobPosition().getHINHTHUC().equals("FULL TIME")&&!newStaff.getJobPosition().getTENVITRI().equals("PART TIME")) {
+			oldStaff.setLUONGTICHLUY(0);	
 		}
 		oldStaff.updateInfor(newStaff);
 		if(newStaff.getLUONGTICHLUY()>0) {
@@ -379,7 +395,8 @@ public class RecruitLayOffEmployeeController {
 				+ " MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = true) AND"
 				+ " ((HO LIKE CONCAT('%',:search,'%')) OR "
 				+ " (TEN LIKE CONCAT('%',:search,'%')) OR "
-				+ " (jobPosition.TENVITRI LIKE CONCAT ('%',:search,'%')))"
+				+ " (jobPosition.TENVITRI LIKE CONCAT ('%',:search,'%')) OR"
+				+ "  (jobPosition.HINHTHUC LIKE CONCAT ('%',:search,'%')))"
 				+ " ORDER BY TEN";
 		Query query = session.createQuery(hql);
 		query.setParameter("search", searchText);

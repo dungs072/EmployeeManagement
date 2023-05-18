@@ -15,6 +15,14 @@ margin-left:5px;
 margin-top:5px;
 }
 </style>
+<script>
+	$(window).on('load',function() {
+		var isUpdateSuccess = [[${updateSuccess}]];
+		if(isUpdateSuccess=="true"){
+			$('#updateSuccess').modal("show");
+		}
+	});
+</script>
 </head>
 <body>
 	<div class="main-container">
@@ -230,6 +238,30 @@ margin-top:5px;
 	</div>
 		</div>
 	</div>
+	
+		<!-- Update success notification -->
+		<div class="modal" id="updateSuccess" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">
+							<i class="fa fa-bell" aria-hidden="true" style="font-size: 1em;"></i> Notification
+						</h5>
+						 
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>Update successfully !!!</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success"
+							data-bs-dismiss="modal">OK</button>
+					</div>
+					
+				</div>
+			</div>
+			</div>
 	
 </body>
 </html>

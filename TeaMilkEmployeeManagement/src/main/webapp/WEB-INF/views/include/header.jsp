@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +20,7 @@
     <link rel="stylesheet" href="extensions/sticky-header/bootstrap-table-sticky-header.css">
     <script src="extensions/sticky-header/bootstrap-table-sticky-header.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-
+	<link rel="icon" type="image/png" href="images/logo1.png">
 	<Script>
 	$(document).ready(
 			function() {

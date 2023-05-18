@@ -29,13 +29,21 @@ import ptithcm.entity.StaffEntity;
 public class SalaryController {
 	private List<StaffEntity> enabledList;
 	private List<StaffEntity> disabledList;
+	private String searchTextInput = "";
 	@Autowired
 	SessionFactory factory;
 	
 	@RequestMapping(value="salary", method = RequestMethod.GET)
 	public String showSalary(ModelMap model) {
+		searchTextInput = "";
 		return displayMainView(model);
 	}
+	
+	@RequestMapping(value="ShowSalary", method = RequestMethod.GET)
+	public String showSpecificSalary(ModelMap model) {
+		return displayMainView(model);
+	}
+	
 	
 	@RequestMapping(value="historySalary", method=RequestMethod.GET)
 	public String historySalary(HttpServletRequest request, ModelMap model) {
@@ -43,7 +51,7 @@ public class SalaryController {
 		List<SalaryBillEntity> list = getHistorySalary(maNV);
 		model.addAttribute("historySalary", list);
 		model.addAttribute("idStaffHS", maNV);
-		return showSalary(model);
+		return displayMainView(model);
 	}
 	
 	
@@ -53,13 +61,15 @@ public class SalaryController {
 		Float salary = Float.parseFloat(request.getParameter("salary"));
 		makeSalaryBill(maNV, salary);
 		model.addAttribute("updateSuccess",true);
-		return showSalary(model);
+		return displayMainView(model);
 	}
 	
 	@RequestMapping(value = "searchSalary",method = RequestMethod.GET)
 	public String searchSalary(HttpServletRequest request, ModelMap model) {
 		Session session = factory.getCurrentSession();
 		String searchInput = request.getParameter("searchInput");
+		searchTextInput = searchInput;
+		
 		enabledList = searchEnabledStaffs(session,searchInput);
 		disabledList = searchDisabledStaffs(session,searchInput);
 		if(enabledList==null&&disabledList==null) {
@@ -77,7 +87,8 @@ public class SalaryController {
 				+ " MANV IN (SELECT TENTK FROM AccountEntity WHERE TRANGTHAI = true) AND"
 				+ " ((HO LIKE CONCAT('%',:search,'%')) OR "
 				+ " (TEN LIKE CONCAT('%',:search,'%')) OR "
-				+ " (jobPosition.TENVITRI LIKE CONCAT ('%',:search,'%')))"
+				+ " (jobPosition.TENVITRI LIKE CONCAT ('%',:search,'%')) OR"
+				+ " (jobPosition.HINHTHUC LIKE CONCAT ('%',:search,'%')))"
 				+ " ORDER BY LUONGTICHLUY DESC";
 		Query query = session.createQuery(hql);
 		query.setParameter("search", searchText);
@@ -103,8 +114,11 @@ public class SalaryController {
 		 long milies = System.currentTimeMillis();
 		 Timestamp currentDateTime = new Timestamp(milies);
 		 StaffEntity staff = (StaffEntity) session.get(StaffEntity.class, maNV);
-		 AccountEntity account = (AccountEntity) session.get(AccountEntity.class, maNV);
-		 if(!account.getPriorityEntity().getMAQUYEN().strip().equals("QL")) {
+		 if(staff.getJobPosition().getHINHTHUC().equals("FULL TIME")) {
+			 staff.setLUONGTICHLUY(staff.getJobPosition().getLUONGTHEOGIO());
+			 
+		 }
+		 else {
 			 staff.paySalary(salary);
 		 }
 		 session.saveOrUpdate(staff);
@@ -149,12 +163,15 @@ public class SalaryController {
 			return query.list();
 	 }
 	 private String displayMainView(ModelMap model) {
-		 	if(enabledList==null) {
-		 		enabledList = getEnabledStaffs();
-		 	}
-		 	if(disabledList==null) {
-		 		disabledList = getDisabledStaffs();
-		 	}
+		 	Session session = factory.getCurrentSession();
+			enabledList = searchEnabledStaffs(session,searchTextInput);
+			disabledList = searchDisabledStaffs(session,searchTextInput);
+			if(enabledList==null) {
+				enabledList = getEnabledStaffs();
+			}
+			if(disabledList==null) {
+				disabledList = getDisabledStaffs();
+			}
 		 	
 			model.addAttribute("salaryStaff", enabledList);
 			

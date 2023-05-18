@@ -265,7 +265,7 @@
 											<tr>
 												<td>${s.staff.MANV}</td>
 												<td>${s.staff.HO} ${s.staff.TEN}</td>
-												<td>${s.staff.jobPosition.TENVITRI }</td>
+												<td>${s.staff.jobPosition.TENVITRI} - ${s.staff.jobPosition.HINHTHUC}</td>
 												<c:choose>
 													<c:when test="${empty s.THOIGIANDILAM}">
 														<td>
@@ -357,7 +357,7 @@
 																			<label for="times">Times</label> 
 																			<br>
 																			<input name="times"
-																				type="number" id="times"
+																				type="number" id="times" min = 1
 																				value="1">
 																		</div>
 																		<div class="form-group">
