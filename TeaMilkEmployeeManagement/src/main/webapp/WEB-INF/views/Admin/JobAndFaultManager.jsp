@@ -776,7 +776,7 @@ tbody tr:hover {
 						aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<p>Cannot add job with same name </p>
+					<p>Cannot add job with same name and type </p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-success"
